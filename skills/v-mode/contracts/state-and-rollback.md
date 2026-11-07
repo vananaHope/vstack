@@ -21,13 +21,17 @@ workflow: vstack · contract: vstack-contract@1 · recipe: bug-fix@1 · 소유: 
 | ID | 필수 | 내용 |
 
 ## 시도
-| 시도 ID | 역할 | scope | 맡은 수용 기준 | 실행기 | 세션 | dispatch ID | 대상 H | 대상 B | 상태 | 보관 경로 | manifest sha256 | 비고 |
+| 시도 ID | 역할 | 작업 종류 | scope | 맡은 수용 기준 | 실행기 | 세션 | dispatch ID | 배정 대상 H·B | 결과 대상 H·B | 상태 | 보관 경로 | manifest sha256 | 비고 |
 
 ## 관문
 | 시각 | H | B | G1 | G2 | G3 | G4 | G5 | 결과 |
+
+## 게시
+| 시각 | 브랜치 | 게시한 SHA | 방법(첫 게시 / push / force-with-lease(확인받음) / 원격 일치 확인) |
 ```
 
-- `세션`은 Orca 작업자 터미널 핸들, `dispatch ID`는 전체 값이다. 역할 자격(evidence.md)과 집계를 재시작 뒤에도 판정하려고 남긴다.
+- `배정 대상`은 맡길 때의 `H`·`B`(새 수정이면 시작 커밋과 `B`), `결과 대상`은 완료 보고를 받고 manifest와 worktree를 확인해 관리자가 적는 `H`·`B`다. 수용 기준 집계(evidence.md)는 결과 대상을 쓴다.
+- `세션`은 Orca 작업자 터미널 핸들, `dispatch ID`는 전체 값이다. 둘 다 띄운 뒤 `worker-start`·`send` 결과에서 읽어 채운다. 시도 ID의 세션 키는 관리자가 띄우기 전에 정한 것이다. 역할 자격(evidence.md)과 집계를 재시작 뒤에도 판정하려고 남긴다.
 - `비고`에는 `impl 인계(<이유>)`, `취소(<제출 확인 실패>)`, 정산 이유 등을 적는다.
 
 ## 소유권

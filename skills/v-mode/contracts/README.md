@@ -15,6 +15,6 @@ vstack 관리자와 작업자가 지키는 계약이다. 관리자는 작업 명
 
 레시피 형식은 [../recipes/FORMAT.md](../recipes/FORMAT.md)에 있다. 계약이 끝까지 판정되는지는 저장소의 `docs/contract-examples/`로 확인한다.
 
-**버전**: 이 계약 묶음은 `vstack-contract@1`이다. `state.md`와 증거 manifest에 이 값을 적는다. 계약을 바꾸면 숫자를 올린다.
+**버전**: 이 계약 묶음은 `vstack-contract@1`이다. `state.md`와 증거 manifest에 이 값을 적는다. 첫 시범을 시작하기 전까지는 `@1` 안에서 고치고, 시범을 시작한 뒤부터는 계약을 바꾸면 숫자를 올린다.
 
 **보장 범위**: 관문은 vstack 관리자가 실행하는 병합에만 보장된다. 첫 버전의 검증 대상은 Orca 실행 환경이고, 아직 실행 시범 전이다. herdr는 검증 대상이 아니다.

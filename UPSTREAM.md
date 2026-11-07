@@ -106,7 +106,21 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 `backends/herdr.md`, 나머지 문서, `scripts/*.py`는 그대로 옮겼다. herdr는 vstack 첫 버전에서 검증하지 않았다.
 
-계약 칸(작업 종류·역할·scope·맡은 수용 기준·증거 폴더·권한), 병합 관문, 증거 보관, `관리자` 검토 건너뛰기는 3-2단계에서 넣는다.
+### vstack 계약 연결(3-2단계)
+
+| 파일 | 바꾼 것 |
+| --- | --- |
+| `orchestrate-issues/vstack.md`(새 파일) | 단계별 계약 적용을 한곳에 모음: 레시피 없는 작업, 배정 전(입력 검사·시도·역할 자격·보관 준비·명세), 완료 보고 보관, 보고 없이 멈춤, 검토 보고 처리(실패·막힘·무효 증거), 교차 검토 배정, 대상이 바뀌면 재검증, 병합 관문, 사람이 병합, 그만둘 때, UI 다듬기 제외, worktree 지우기 전 정산, PR 본문 |
+| `orchestrate-issues/SKILL.md` | 단계마다 vstack.md를 가리키는 연결, 실행 환경 표에 **정지**, `state.md`에 `병합 대기`와 계약 형식, 4단계 `관리자` 검토 제외, 6단계 병합 명령에 관문과 `--match-head-commit`, worktree 지우기 전 확인 넷(정산 추가), "그만둬"·UI 다듬기 경로 |
+| `orchestrate-issues/task-template.md` | "vstack 계약" 절(역할·작업 종류·시도 ID·대상·계약·레시피·후보 원칙·맡은 수용 기준·seam·준비·증거 폴더·권한), 증거는 커밋하지 않고 증거 폴더에, 완료 보고 항목 |
+| `orchestrate-issues/review-template.md` | "vstack 계약" 절(scope review, 대상 확인, 검토 범위, scratch, 권한), "파일 수정 금지·흔적 금지·화면은 사람 몫" → 역할별 권한과 실창 잠금·막힘, 수용 기준 판정표, 재검토를 새 대상의 `review` 시도로, "재실행 전용(rerun-only)" 양식 |
+| `orchestrate-issues/tiers.md` | 검토 목록의 `관리자` 건너뜀, "구현자"를 변경 작성자로 읽고 역할 자격 확인, 관리자 확인은 검토 결론이 아님 |
+| `orchestrate-issues/fixes.md` | 수정 명세에 계약 절과 필수 수용 기준 전부, 수정 뒤 항상 rev `review` 시도(사소 수정 포함), 완료 기준 |
+| `orchestrate-issues/opencode.md` | rebase 검증에 재검증(range-diff가 같아도) |
+| `orchestrate-issues/pr-template.md` | "검증"에 수용 기준별 판정과 증거 위치 |
+| `orchestrate-issues/ui-polish.md` | 첫 버전에서 하지 않는다는 머리말 |
+
+계약 쪽: 시도 ID의 가운데 8자를 dispatch ID에서 관리자가 띄우기 전에 정하는 세션 키로 바꿈(dispatch ID는 띄운 뒤에야 생겨 명세의 증거 폴더에 넣을 수 없었다). evidence.md·archive.md·state-and-rollback.md.
 
 ## 출처 참조
 

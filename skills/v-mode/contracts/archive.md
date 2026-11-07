@@ -6,7 +6,7 @@
 
 1. ignore 경로를 찾는다: `git -C <worktree> rev-parse --git-path info/exclude`. 결과가 상대 경로면 `<worktree>` 기준으로 절대 경로로 바꾼다.
 2. 그 파일에 `.vstack/` 줄이 없으면 더한다. 작업자는 이 파일을 고치지 않는다.
-3. `state.md`의 "시도" 표에 이번 시도를 `배정됨`으로 적는다. 역할, scope, 맡은 수용 기준, 실행기, 세션, dispatch ID, 대상을 함께 적는다([state-and-rollback.md](state-and-rollback.md)).
+3. `state.md`의 "시도" 표에 이번 시도를 `배정됨`으로 적는다. 시도 ID, 역할, scope, 맡은 수용 기준, 실행기, 대상을 적는다. 세션과 dispatch ID는 띄운 뒤 결과에서 읽어 채운다([state-and-rollback.md](state-and-rollback.md)).
 4. 명세에 증거 폴더를 적는다: `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`.
 
 ## 시도의 상태

@@ -51,7 +51,7 @@ SKILL.md 6단계 2의 rebase는 `light`다.
 - 명세에 rebase 전 `HEAD`를 적어 둔다.
 - import, 목록 순서, 붙어 있는 줄처럼 양쪽 의도를 모두 살리기 쉬운 충돌은 OpenCode가 해결한다.
 - 같은 함수의 동작이 양쪽에서 바뀐 충돌이면 `git rebase --abort`로 되돌리고 보고하게 한다. 관리자는 그 rebase를 원래 구현 작업자에게 맡긴다.
-- 검증: 관리자가 `git range-diff <rebase 전 HEAD>...HEAD`로 충돌 해결분 말고는 변경이 같은지 보고, 관련 테스트 통과를 확인한다.
+- 검증: 관리자가 `git range-diff <rebase 전 HEAD>...HEAD`로 충돌 해결분 말고는 변경이 같은지 본다. 그다음 `<vstack>/skills/orchestrate-issues/vstack.md` "대상이 바뀌면"대로 재검증한다(rebase 작업자가 필수 수용 기준 전부, 그다음 rev `review` 시도). range-diff가 같아도 재검증을 건너뛰지 않는다.
 
 ## 빠른 답변·빠른 판단
 
@@ -64,6 +64,6 @@ SKILL.md 6단계 2의 rebase는 `light`다.
 
 주 검토와 따로, 같은 diff를 `plan` 에이전트에 보여 2차 의견을 받는다. 검토 보고서의 지적과 함께 판정한다.
 
-- **언제**: 같은 계열끼리 검토할 때는 항상([tiers.md](tiers.md) "검토자 고르기" 2). 그 밖에는 프로젝트 설정의 2차 의견 값(`standard 이상` / `모든 검토`)을 따른다. 관리자 확인과 rebase에는 받지 않는다.
+- **언제**: 같은 계열끼리 검토할 때는 항상([tiers.md](tiers.md) "검토자 고르기" 2). 그 밖에는 프로젝트 설정의 2차 의견 값(`standard 이상` / `모든 검토`)을 따른다. 관리자 확인과 rebase 작업 자체에는 받지 않는다. rebase 뒤에 맡기는 rev `review` 시도가 같은 계열이면 그 검토에는 받는다(계약의 같은 계열 조건).
 - **묻는 내용**: diff 범위(`main..HEAD`), 이슈의 완료 기준, `common-findings.md`의 절대 경로를 주고, 유형별로 해당하는 결함이 있는지 파일·줄 근거와 함께 답하게 한다.
 - **쓰는 법**: 2차 의견의 지적은 관리자가 근거를 직접 확인한 것만 판정에 넣는다. 주 검토 보고서와 겹치지 않는 지적이 있으면 보고서 옆에 `second-opinion-<k>.md`로 남긴다.
