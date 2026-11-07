@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "vstack",
+  "description": "개인 Claude Code 플러그인(vstack)",
+  "owner": {
+    "name": "vananaHope"
+  },
+  "plugins": [
+    {
+      "name": "vstack",
+      "source": "./",
+      "description": "v-mode 라우터가 레시피·원칙·검증 계약을 골라 쓰게 하는 스킬 묶음",
+      "category": "productivity"
+    }
+  ]
+}

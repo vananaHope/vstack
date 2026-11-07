@@ -11,6 +11,7 @@ vstack 관리자와 작업자가 지키는 계약이다. 관리자는 작업 명
 | [archive.md](archive.md) | 관리자 | 증거 보관 절차, 중단 복구, 정리 조건 |
 | [intake.md](intake.md) | 관리자 | 배정 전 입력 검사, 시범 부트스트랩 |
 | [state-and-rollback.md](state-and-rollback.md) | 관리자 | 작업 파일 위치와 형식, 소유권, 되돌리기 |
+| [reference-policy.md](reference-policy.md) | 작업자 | 원문 안의 출처 참조 가운데 실행하지 않는 것(스크립트가 만든다) |
 
 레시피 형식은 [../recipes/FORMAT.md](../recipes/FORMAT.md)에 있다. 계약이 끝까지 판정되는지는 저장소의 `docs/contract-examples/`로 확인한다.
 
