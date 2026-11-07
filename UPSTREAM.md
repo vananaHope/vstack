@@ -35,9 +35,56 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 ## 고친 내용
 
-`adapted`·`extracted`·`moved` 파일을 고칠 때마다 여기에 적는다. 형식은 `파일 — 바꾼 것 — 이유`.
+`adapted`·`extracted`·`moved` 파일을 고칠 때마다 여기에 적는다. 원본과의 차이는 `diff --strip-trailing-cr <원본> <vstack 파일>`로 다시 볼 수 있다. 아래 줄 번호는 원본 기준이다.
 
-(아직 없음. 2단계부터 채운다.)
+### 공통(2단계 adapted 3개)
+
+- frontmatter에 `disable-model-invocation: true`(create-verification-skill은 원래 있음). 기존 mattpocock-skills 플러그인이 설치된 동안 같은 이름의 스킬이 두 벌 생겨 모델이 어느 쪽을 부를지 알 수 없기 때문이다. vstack에서는 레시피가 경로로 읽는다.
+- 본문 첫머리에 "vstack 사본이며 고친 내용은 UPSTREAM.md에 있다"는 한 줄과, "관리자"가 누구인지 적은 한 줄.
+
+### `skills/diagnosing-bugs/SKILL.md`(mattpocock-skills 1.3.1 `engineering/diagnosing-bugs`)
+
+| 원본 줄 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| 3 | description을 "vstack 레시피가 경로로 읽는다"로 | 모델이 스스로 부르지 않는다 |
+| 16, 55 | "ask the user" → "ask the manager" | 작업자는 사용자에게 직접 묻지 않는다(worker-contract) |
+| 35 | HITL 스크립트를 링크로, 무인 작업자는 직접 돌려 기다리지 않고 사본을 준비해 `막힘`으로 관리자에게 요청 | 실행 경로 표기, 스크립트가 `read`로 입력을 기다려 무인 실행에서 멈춘다 |
+| 64 | HITL 스크립트를 링크로, "관리자를 통해" | 실행 경로 표기 |
+| 74 | "the **user** described" → "the **ticket** describes" | 증상의 출처는 티켓이다 |
+| 98 | 가설 목록을 "사용자에게 보여 주기" → "적어 두고 답을 기다리지 않기" | 작업자는 사용자와 대화하지 않는다. 원문도 "막지 말라"고 했다 |
+| 138 | "commit / PR message" → "commit message and the completion report" | 작업자는 PR을 만들지 않는다 |
+
+`scripts/hitl-loop.template.sh`는 원문 그대로. `agents/openai.yaml`은 제외.
+
+### `skills/tdd/SKILL.md`(mattpocock-skills 1.3.1 `engineering/tdd`)
+
+| 원본 줄 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| 3 | description을 "vstack 레시피가 경로로 읽는다"로 | 모델이 스스로 부르지 않는다 |
+| 22 | seam을 "사용자와 확인" → "작업과 함께 온다(배정 전에 사용자와 합의됨)" | seam은 정렬 단계에서 정한다(priority.md 충돌표) |
+| 24 | "Ask: …" → "명명된 seam이 동작에 닿지 않으면 관리자에게 묻고 기다린다. 스스로 새 seam을 고르지 않는다" | 같은 이유 |
+| 26 | "call the Skill tool with codebase-design" → `references/codebase-vocabulary.md` 링크 | 특정 런타임의 도구 문장 제거, 용어 부분만 추출해 둠 |
+| 38 | "`code-review` skill" → "vstack's cross-review" | vstack에 없는 스킬. 검토는 orchestra 교차 검토가 맡는다 |
+
+`tests.md`, `mocking.md`는 원문 그대로. `agents/openai.yaml`은 제외.
+
+### `skills/tdd/references/codebase-vocabulary.md`(mattpocock-skills 1.3.1 `engineering/codebase-design/SKILL.md`에서 추출)
+
+- 가져온 절: Glossary, Principles, Relationships, Rejected framings(원문 그대로)와 첫 문단의 목표 문장.
+- 뺀 절: Deep vs shallow 그림, Designing for testability(`mocking.md`와 겹침), Going deeper.
+- `dropped`: `DEEPENING.md`(용어 참고 범위 밖), `DESIGN-IT-TWICE.md`(하위 에이전트 3개 이상을 띄우는 절차라 작업자 계약과 맞지 않음).
+
+### `skills/create-verification-skill/SKILL.md`(pstack 0.15.36)
+
+| 원본 줄 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| 3 | `/create-verification-skill` → `/vstack:create-verification-skill` | Claude Code의 플러그인 명령 접두사 |
+| 9, 25, 36 | `.cursor/skills/` → `.claude/skills/` | Claude Code 경로(pstack `docs/harness/claude-code.md` "Paths") |
+| 13 | "ask the user" → "ask the manager" | 작업자 계약 |
+| 30 | Evidence 끝에 "산출물 폴더를 호출하는 쪽이 정할 수 있게(인자나 환경 변수), 기본값을 명시. vstack 작업자는 명세의 증거 폴더를 넘긴다" | 생성되는 verify 스킬이 vstack 증거 폴더(evidence.md)에 쓸 수 있어야 한다 |
+| 42~44 | "5. Offer the maintenance loop"(`/maintain-verification-skill` 안내) → "5. Report the map's coverage"(지도 범위를 보고, 지도가 낡으면 관리자에게 알림) | maintain-verification-skill은 첫 버전에서 뺐다(하위 에이전트 병렬 실행, PR 생성) |
+
+`references/feature-map-example/`은 원문 그대로.
 
 ## 출처 참조
 
@@ -45,7 +92,7 @@ verbatim 원문 안에서 vstack에 없는 스킬을 가리키는 곳은 [`skill
 
 ## 갱신 절차
 
-1. 출처의 새 버전을 받는다(pstack은 `cursor/plugins` 저장소, 나머지는 플러그인 캐시나 원격 저장소).
+1. 출처의 새 버전을 받는다(pstack은 `cursor/plugins` 저장소, 나머지는 플러그인 캐시나 원격 저장소). 처음 가져올 때와 verbatim 갱신은 `node scripts/import.mjs --stage <n> --source …`로 한다. verbatim은 덮어쓰고, adapted는 파일이 없을 때만 원본으로 깔아 둔다(있으면 손대지 않는다). `--check`는 verbatim이 원본과 다른지만 본다.
 2. 받은 체크아웃이 깨끗한지(`git status --short`가 빈 출력) 확인한다.
 3. `upstream.json`의 각 항목을 이전 커밋과 비교한다. 경로는 출처의 `path`와 항목의 `from`을 이은 것이다. 예: pstack은 `git diff <이전 커밋> <새 커밋> -- pstack/skills/principle-prove-it-works`.
 4. `verbatim`은 원문을 그대로 덮는다. `adapted`·`extracted`는 바뀐 부분을 보고 "고친 내용"을 다시 적용한다.
