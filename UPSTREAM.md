@@ -86,6 +86,28 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 `references/feature-map-example/`은 원문 그대로.
 
+### agent-orchestra 옮기기(3-1단계, 0.20.0 `c62be33`)
+
+`skills/orchestrate-issues`, `skills/check-limits`, `skills/configure`를 옮겼다. 원본은 `plugins/marketplaces/agent-orchestra` 클론(깨끗한 체크아웃)이다. 여기서부터 vstack이 소유한다.
+
+| 파일 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| `orchestrate-issues/SKILL.md`, `check-limits/SKILL.md` | frontmatter에 `disable-model-invocation: true`, description 앞에 "vstack 사본", 머리말 한 줄 | 기존 agent-orchestra가 설치된 동안 이름이 겹친다. 사용자가 `/vstack:...`로 실행한다 |
+| 모든 md | `/agent-orchestra:configure` → `/vstack:configure` | 플러그인 이름 |
+| `orchestrate-issues/SKILL.md`, `limits.md`, `codex-fast.md`, `setup.md` | "`check-limits` 스킬로" → `[check-limits](../check-limits/SKILL.md)` 링크 | 스킬 이름 호출 대신 경로 |
+| `orchestrate-issues/SKILL.md`, `check-limits/SKILL.md` | "스킬 폴더"를 `Base directory`만으로 정하지 않고, 경로로 읽는 경우 "이 SKILL.md가 있는 폴더" | v-mode·레시피가 파일을 경로로 읽어 따를 수 있다 |
+| `configure/SKILL.md` | 인라인 경로 → `[setup.md](../orchestrate-issues/setup.md)` | 실행 경로 표기 |
+| 작업 파일 경로 전부 | `.local/orchestration/<작업 이름>/`, `assign-log.md`, `*/review*.md`, `tracker-state.md` → `.local/vstack/...` | state-and-rollback.md "위치": 기존 관리자가 자동으로 읽지 않게. 설정 파일(`settings.md`)과 `common-findings.md`는 두 쪽이 함께 쓰므로 그대로 |
+| `orchestrate-issues/SKILL.md` 1단계 | 기존 `.local/orchestration/*/state.md`에 끝나지 않은 작업이 있으면 이어받지 않고 알린다 | state-and-rollback.md "소유권" |
+| `orchestrate-issues/SKILL.md`, `spec-check.md` | 결과 파일 `spec-check.md`를 `.local/vstack/<작업 이름>/spec-check.md` 전체 경로로 | 절차 문서 `spec-check.md`와 이름이 같아 구분이 안 됐다 |
+| `orchestrate-issues/backends/orca.md` | 다시 씀. Orca 1.4.253 안내와 `--help` 기준: `check --wait` 대기·터미널 키 입력·`--terminal` 재사용 대신 턴 끝내기·`send`·`reply --id`, `worker-retain` → `worker-keep-open`, 명세는 `--spec-file`, 정지 확인(종료 코드 0 + `stop_unknown` 없음 + `worker-show`에서 settled, `processAction`만으로 판정하지 않음), 정리(시도별 터미널 상태표, 새 worktree 작업자는 기본으로 열린 채 남음, `released` 전에는 worktree 삭제 금지), `worktree create --branch`, `worktree rm --delete-branch`(지금은 기본으로 브랜치를 남김, squash·rebase 병합 브랜치는 `-D`로 강제 삭제하지 않고 보고), `.codex/` 제외는 `--git-path info/exclude` | 옛 방식은 지금 Orca 안내가 금지하거나 동작이 바뀌었다 |
+| `orchestrate-issues/SKILL.md` 6단계 6 | 터미널 확인을 실행 환경 문서의 **정리** 완료로, 브랜치를 지울 수 없으면 남기고 알림 | Orca 정리 의미가 바뀌었다 |
+| `orchestrate-issues/setup.md` | AGENTS.md 한 줄의 "agent-orchestra plugin" → "shared by the vstack and agent-orchestra plugins" | 설정을 두 플러그인이 함께 쓴다 |
+
+`backends/herdr.md`, 나머지 문서, `scripts/*.py`는 그대로 옮겼다. herdr는 vstack 첫 버전에서 검증하지 않았다.
+
+계약 칸(작업 종류·역할·scope·맡은 수용 기준·증거 폴더·권한), 병합 관문, 증거 보관, `관리자` 검토 건너뛰기는 3-2단계에서 넣는다.
+
 ## 출처 참조
 
 verbatim 원문 안에서 vstack에 없는 스킬을 가리키는 곳은 [`skills/v-mode/contracts/reference-policy.md`](skills/v-mode/contracts/reference-policy.md)에 있다. 이 파일은 스크립트가 만든다.

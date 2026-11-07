@@ -287,5 +287,12 @@
       "stage": 5,
       "to": "skills/v-mode/SKILL.md"
     }
-  ]
+  ],
+  "runtime_commands": {
+    "note": "런타임 내장 명령. 스킬이 아니므로 check-links의 SKILL 검사에서 뺀다.",
+    "names": [
+      "status",
+      "usage"
+    ]
+  }
 }

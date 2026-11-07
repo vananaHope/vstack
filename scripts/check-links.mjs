@@ -12,7 +12,7 @@
 //    A dependency that was never carried over is caught by the closure check (4).
 // 3. Skill references must name a skill vstack ships, and tool-specific invocation
 //    phrases ("Skill tool") are not allowed (workers on other runtimes cannot follow them).
-// 4. Closure (with --source): every file an adapted or extracted source file points to
+// 4. Closure (with --source): every file an adapted, extracted or moved source file points to
 //    must have been carried into vstack, or be listed in the entry's "dropped".
 //
 // Skipped: URLs, #anchors, paths that still hold a <placeholder>.
@@ -41,6 +41,7 @@ for (let i = 0; i < args.length; i++) {
 const upstream = loadUpstream(root);
 const planned = plannedTargets(upstream);
 const shipped = plannedSkillNames(upstream);
+const runtimeCommands = new Set(upstream.runtime_commands?.names ?? []);
 const failures = [];
 const later = [];
 let checked = 0;
@@ -95,7 +96,7 @@ for (const file of walkMarkdown(join(root, 'skills'))) {
 
     const { names, tool } = skillRefs(line);
     for (const { name } of names) {
-      if (!shipped.has(name) && !shipped.has(`principle-${name}`)) {
+      if (!shipped.has(name) && !shipped.has(`principle-${name}`) && !runtimeCommands.has(name)) {
         failures.push({ kind: 'SKILL', at, detail: `\`${name}\` is not a vstack skill` });
       }
     }
@@ -105,7 +106,7 @@ for (const file of walkMarkdown(join(root, 'skills'))) {
 
 // Closure: compare adapted/extracted imports against their sources.
 for (const entry of upstream.imports) {
-  if (entry.stage > stage || !['adapted', 'extracted'].includes(entry.mode)) continue;
+  if (entry.stage > stage || !['adapted', 'extracted', 'moved'].includes(entry.mode)) continue;
   const srcRoot = sources[entry.source];
   if (!srcRoot) {
     failures.push({ kind: 'CLOSURE', at: entry.to, detail: `needs --source ${entry.source}=<dir> to check closure` });

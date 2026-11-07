@@ -4,7 +4,7 @@
 //   adapted   seed the destination from the source only when the destination file is missing.
 //             Existing files are local edits and are never overwritten.
 //   extracted not copied; the destination is written by hand. Reported if missing.
-//   moved     not handled here yet (stage 3).
+//   moved     like adapted: seeded once, then owned by vstack.
 //
 // Usage: node scripts/import.mjs --stage <n> --source <name>=<dir> [...] [--check]
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'node:fs';
@@ -33,7 +33,7 @@ const isText = (p) => !/\.(png|jpe?g|gif|ico|pdf)$/i.test(p);
 const report = { copied: 0, same: 0, drift: [], seeded: 0, kept: 0, missing: [] };
 
 for (const entry of upstream.imports) {
-  if (entry.stage > stage || entry.mode === 'moved') continue;
+  if (entry.stage > stage) continue;
   const dest = join(root, entry.to);
   if (entry.mode === 'extracted') {
     if (!existsSync(dest)) report.missing.push(`${entry.to} (extracted, write by hand)`);
@@ -60,9 +60,9 @@ for (const entry of upstream.imports) {
       mkdirSync(dirname(target), { recursive: true });
       writeFileSync(target, data);
       report.copied++;
-    } else if (entry.mode === 'adapted') {
+    } else if (entry.mode === 'adapted' || entry.mode === 'moved') {
       if (existsSync(target)) { report.kept++; continue; }
-      if (check) { report.missing.push(`${rel(root, target)} (adapted, not seeded)`); continue; }
+      if (check) { report.missing.push(`${rel(root, target)} (${entry.mode}, not seeded)`); continue; }
       mkdirSync(dirname(target), { recursive: true });
       writeFileSync(target, data);
       report.seeded++;
@@ -74,6 +74,6 @@ for (const d of report.drift) console.error(`DRIFT    ${d} differs from its verb
 for (const m of report.missing) console.error(`MISSING  ${m}`);
 console.log(
   `verbatim: ${report.copied} copied, ${report.same} unchanged, ${report.drift.length} drift. ` +
-  `adapted: ${report.seeded} seeded, ${report.kept} kept. missing: ${report.missing.length}.`,
+  `adapted/moved: ${report.seeded} seeded, ${report.kept} kept. missing: ${report.missing.length}.`,
 );
 process.exit(report.drift.length || (check && report.missing.length) ? 1 : 0);

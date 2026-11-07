@@ -1,0 +1,51 @@
+---
+name: check-limits
+description: (vstack 사본) Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화 시각)로 재서 ok/warning/exhausted/unknown으로 판정한다. 한도·사용량·남은 양을 물을 때, 작업을 맡기기 전에 한도를 판단해야 할 때 사용.
+disable-model-invocation: true
+---
+
+> vstack이 agent-orchestra 0.20.0에서 옮겨 온 사본이다. 바꾼 내용은 vstack의 UPSTREAM.md에 있다.
+
+# 한도 확인
+
+경고 문구, 지난 세션 기록, 메모리를 근거로 한도를 말하지 않는다. 언제나 지금 잰 숫자로 말한다.
+
+## 재기
+
+이 SKILL.md가 있는 폴더(`/vstack:check-limits`로 실행했으면 `Base directory for this skill`)의 `scripts/`에 있는 스크립트를 쓴다. 기본은 둘 다 잰다. 사용자가 하나만 물었으면 그것만 잰다.
+
+- **Codex**: `python -I <스킬 폴더>/scripts/codex_limit.py --json`
+  - Codex 로그인 정보(`$CODEX_HOME/auth.json`, 없으면 `~/.codex/auth.json`)로 Codex의 `/status`가 쓰는 사용량 API를 읽는다. 사용량이 들지 않고 1초 안에 끝나므로 필요할 때마다 다시 잰다. 결과의 `source`가 `usage-api`다.
+  - API가 실패하면(로그인 만료, 응답 형식 변경 등) 짧은 `codex exec`를 한 번 돌리고, 그 실행이 남긴 세션 기록(`$CODEX_HOME/sessions/`)의 `rate_limits`를 읽는다. `source`가 `exec`이고 실패 이유가 `api_error`에 있다. 이 경로는 사용량이 조금 들고 수십 초가 걸린다. 이때는 30분 안에 잰 결과가 이번 대화에 있으면 그것을 쓰고, 측정 시각을 함께 적는다. `--exec`로 이 경로를 바로 쓸 수 있다.
+  - Python에 딸린 OpenSSL이 새 인증서 체인을 검증하지 못하면(`CERTIFICATE_VERIFY_FAILED`) `codex exec`로 넘어가기 전에 운영체제 인증서 저장소를 쓰는 `curl`로 한 번 더 읽는다. 성공하면 `source`는 그대로 `usage-api`다.
+  - 창은 `primary`와 `secondary`이고 길이는 `window_minutes`로 본다(요금제에 따라 창이 하나뿐이거나 `primary`가 7일 창일 수 있다). 창마다 `elapsed_percent`(창이 지난 비율)도 낸다.
+- **Claude**: `python -I <스킬 폴더>/scripts/claude_limit.py --json`
+  - Claude Code 로그인 정보(`$CLAUDE_CONFIG_DIR/.credentials.json`, 없으면 `~/.claude/.credentials.json`)로 Claude Code의 `/usage`가 쓰는 사용량 API를 읽는다. 상태 표시줄이나 다른 플러그인에 기대지 않아 Orca·herdr 어디서나 같다. macOS는 로그인 정보가 키체인에 있어 지원하지 않는다.
+  - 창은 `five_hour`와 `seven_day`이고, 창마다 `elapsed_percent`(창이 지난 비율)도 낸다. 아직 열리지 않은 창(쓴 적이 없는 5시간 창 등)은 결과에 없다.
+  - 사용량이 들지 않는다. 자주 부르면 API가 막으므로(HTTP 429) 결과를 1분 동안 보관했다가 다시 쓴다(`source`가 `cache`). 조회가 실패하면 10분 안의 보관 결과를 쓰고 실패 이유를 `api_error`에 적는다. 그 밖에는 `source`가 `usage-api`다.
+
+## 판정
+
+스크립트가 내는 `status`를 그대로 쓴다.
+
+| 판정 | 뜻 | 종료 코드 |
+| --- | --- | --- |
+| `ok` | 모든 창이 80% 미만 | 0 |
+| `warning` | 한 창이라도 80% 이상 | 1 |
+| `exhausted` | 한 창이라도 100%이거나 한도 도달 표시가 있음 | 2 |
+| `unknown` | 확인 실패 | 2 |
+
+`unknown`이면 추측하지 않는다. 원인을 함께 알린다.
+- Claude: 사용량 API가 실패했고 10분 안의 보관 결과도 없다. 스크립트가 낸 `error`를 보여 준다. 로그인 토큰이 없거나 만료됐으면(HTTP 401 포함) Claude Code를 한 번 실행해 로그인을 갱신하라고 안내한다. 스크립트는 토큰을 직접 갱신하지 않는다.
+- Codex: 사용량 API와 `codex exec`가 둘 다 실패했다(로그인 만료, 세션 기록에 `rate_limits` 없음 등). 스크립트가 낸 `api_error`와 `error` 끝부분을 보여 준다.
+
+## 보고
+
+에이전트마다 한 줄씩 쓴다: 판정, 창별 사용률과 초기화 시각, 측정 시각.
+
+```
+Claude ok — 5시간 26%(14:40 초기화), 7일 50%(10-22 07:00 초기화) · 10:55 측정
+Codex warning — primary 83%(13:10 초기화), secondary 41%(10-23 09:00 초기화) · 10:56 측정
+```
+
+**완료 기준**: 잰 에이전트마다 판정과 창별 숫자, 초기화 시각, 측정 시각이 보고에 있다. `unknown`이면 원인이 있다.
