@@ -14,7 +14,7 @@ vstack 작업의 파일은 메인 저장소의 `.local/vstack/<작업 이름>/`�
 ```
 <단계>                      ← 첫 줄. orchestra 단계 이름 + `병합 대기`
 등급: standard · 작업자: codex@high
-workflow: vstack · contract: vstack-contract@1 · recipe: bug-fix@1 · 소유: vstack
+workflow: vstack · contract: vstack-contract@2 · recipe: bug-fix@2 · 소유: vstack
 막힘: <풀릴 조건>            ← 막혔을 때만
 
 ## 수용 기준
@@ -31,8 +31,8 @@ workflow: vstack · contract: vstack-contract@1 · recipe: bug-fix@1 · 소유: 
 ```
 
 - `배정 대상`은 맡길 때의 `H`·`B`(새 수정이면 시작 커밋과 `B`), `결과 대상`은 완료 보고를 받고 manifest와 worktree를 확인해 관리자가 적는 `H`·`B`다. 수용 기준 집계(evidence.md)는 결과 대상을 쓴다.
-- `세션`은 Orca 작업자 터미널 핸들, `dispatch ID`는 전체 값이다. 둘 다 띄운 뒤 `worker-start`·`send` 결과에서 읽어 채운다. 시도 ID의 세션 키는 관리자가 띄우기 전에 정한 것이다. 역할 자격(evidence.md)과 집계를 재시작 뒤에도 판정하려고 남긴다.
-- `비고`에는 `impl 인계(<이유>)`, `취소(<제출 확인 실패>)`, 정산 이유 등을 적는다.
+- `세션`은 Orca 작업자 터미널 핸들, `dispatch ID`는 전체 값이다. 둘 다 띄운 뒤 `worker-start`·`send` 결과에서 읽어 채운다. 시도 ID의 세션 키는 관리자가 띄우기 전에 정한 것이고, manifest의 `session`도 이 키다(작업자는 터미널 핸들을 모른다). 이 표가 세션 키와 터미널 핸들을 잇는다. 역할 자격(evidence.md)과 집계를 재시작 뒤에도 판정하려고 남긴다.
+- `비고`에는 `impl 인계(<이유>)`, `취소(<제출 확인 실패 또는 시작 실패의 근거>)`, 정산 이유 등을 적는다.
 
 ## 소유권
 

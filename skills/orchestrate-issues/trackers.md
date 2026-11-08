@@ -17,7 +17,7 @@
 | --- | --- |
 | 목록 | 맡길 이슈 표시(기본 `ready-for-agent` 라벨)로 `gh issue list --label <라벨>`. 마일스톤이면 `--milestone`, "열린 이슈 전부"면 제외 라벨만 거른다. |
 | 선행 관계 | 기본은 GitHub 이슈 의존 관계: `gh api repos/<owner>/<repo>/issues/<n>`의 `issue_dependencies_summary.blocked_by == 0`. 설정에 따라 본문의 `Blocked by #<m>` 줄(가리킨 이슈가 모두 닫혔는지)이나 없음. |
-| 읽기 | `gh issue view <n> --comments`. 작업자와 검토자도 직접 읽을 수 있다. |
+| 읽기 | `gh issue view <n> --json title,body,comments`. 작업자와 검토자도 직접 읽을 수 있다. `--comments`만 주면 터미널이 아닌 곳(작업자의 셸 도구)에서는 본문 없이 댓글만 나온다(댓글이 없으면 빈 출력. 측정: gh, 2026-11-08). |
 | 진행 중 표시 | `state.md`와 열린 PR로 안다(SKILL.md 1단계). 설정에 진행 중 라벨이 있으면 맡길 때 붙이고 끝날 때 뗀다(`gh issue edit --add-label`/`--remove-label`). |
 | 댓글 | `gh issue comment <n> --body "..."` |
 | 닫기 | PR 본문의 `Closes #<n>`으로 병합 때 닫힌다. |

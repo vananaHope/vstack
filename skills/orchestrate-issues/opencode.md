@@ -18,21 +18,36 @@ OpenCode Go는 빠르고 범위가 분명한 일을 맡는다. 어느 일에 쓰
 
 ## 모델과 강도
 
-OpenCode 대화형 화면은 모델 옵션을 받지 않는다(Orca `worker-start`도 OpenCode에는 `--model`을 받지 않는다). 대신 OpenCode가 worktree 루트의 `opencode.json`을 읽으므로, 띄우기 전에 거기에 기본 에이전트(`build`)의 모델과 강도(`variant`)를 적는다. 모델과 강도를 둘 다 정하지 않았으면 이 절을 건너뛰고 기본값으로 띄운다.
+### 모델 확인(OpenCode를 쓸 때마다)
 
-1. worktree가 아직 없으면 먼저 만든다(실행 환경 문서의 "worktree 만들기"). 저장소에 이미 커밋된 `opencode.json`이 있으면 이 방법을 쓰지 않고 기본값으로 띄운 뒤 사용자에게 알린다.
-2. worktree 루트에 쓴다. `model`은 `opencode models`가 보여 주는 `provider/model` 이름이고, 모델을 정하지 않았으면 `~/.config/opencode/opencode.json`의 기본 모델을 적는다.
+OpenCode는 정한 모델을 쓸 수 없으면 오류 없이 기본 무료 모델로 넘어간다. 첫 시범(2026-11-08)에서 계정 로그인이 없어(`opencode auth list` → `No authenticated integrations`) `opencode-go/` 모델을 쓸 수 없었다. 그래서 명세 새 눈 점검이 `opencode/big-pickle`로 돌았고, 턴마다 30~160초가 걸려 660초 제한에 끊겼다(측정: OpenCode 로그). 같은 질문을 DeepSeek 4.1 Flash(무료판 `opencode/deepseek-v4.1-flash-free`로 잼)로 돌리면 턴마다 2~20초였다(측정). 넘어가는 방식(측정, OpenCode 2.2.5):
+
+- `-m opencode-go/deepseek-v4.1-flash`로 주면 로그인이 없을 때 `Error: Model unavailable`로 멈춘다.
+- `-m` 없이 전역 설정에만 그 모델을 적으면, 로그인이 없을 때 **오류 없이** `big-pickle`로 돈다.
+
+1. **쓸 모델**: 등급 표기의 모델(`opencode:<provider/model>`), 없으면 `~/.config/opencode/opencode.json`의 `model`. 둘 다 없으면 OpenCode를 쓰지 않는다. 기본 모델에 맡기지 않는다.
+2. **쓸 수 있는지**: `opencode models`에 그 이름이 있는지 본다. 없으면 OpenCode를 건너뛰고(한도가 `ok`가 아닌 것과 같다) 사용자에게 알린다. `opencode-go/` 모델은 OpenCode Go 로그인(`opencode auth login`)이 있어야 목록에 나온다. 로그인은 사용자가 한다.
+3. **실제로 쓰였는지**: `opencode run`이면 출력의 `> <에이전트> · <모델>` 줄**과** 종료 코드 0, 그리고 그 뒤에 답이 있는지를 함께 본다. 그 줄은 모델 호출 전에 찍혀서 호출이 실패해도 나온다(측정: 키가 모델을 부를 수 없을 때 그 줄 다음에 `Error: This API key can't call models`, 종료 코드 1). 대화형 작업자면 `~/.local/share/opencode/opencode.db`에서 그 세션의 `session_message` 기록에 든 `"model"`(`providerID`와 `id`)을 본다. `session_v2.model`은 `-m`으로 줬을 때만 채워지고, 전역 설정으로 돌면 비어 있다(측정). 그래서 빈 값만으로 기본 모델이라고 판단하지 않는다. 1의 모델이 아니면 그 결과를 쓰지 않고 사용자에게 알린다.
+
+정한 모델을 쓸 수 없을 때 다른 모델(무료판 `-free` 포함)로 바꿔 쓰지 않는다. 바꾸는 것은 사용자가 정한다. 무료판은 데이터 처리 조건이 유료 요금제와 다를 수 있다.
+
+### 모델과 강도 적기
+
+OpenCode 대화형 화면은 모델 옵션을 받지 않는다(Orca `worker-start`도 OpenCode에는 `--model`을 받지 않는다). 대신 OpenCode가 worktree 루트의 `opencode.json`을 읽으므로, 띄우기 전에 거기에 기본 에이전트(`build`)의 모델(위 "모델 확인" 1)과, 정했으면 강도(`variant`)를 적는다. 모델은 정하지 않았어도 적는다.
+
+1. worktree가 아직 없으면 먼저 만든다(실행 환경 문서의 "worktree 만들기"). 저장소에 이미 커밋된 `opencode.json`이 있으면 덮어쓰지 않는다. 그 worktree에서 `opencode debug agents`를 돌려 `build`의 `model`이 "모델 확인" 1의 모델과 같으면(강도를 정했으면 `variant`도) 5로 간다. 다르면 OpenCode를 띄우지 않고 등급 목록의 다음 실행기로 넘긴 뒤 사용자에게 알린다.
+2. worktree 루트에 쓴다. `model`은 `opencode models`가 보여 주는 `provider/model` 이름이다. 예(OpenCode Go 로그인이 있을 때):
 
    ```json
    { "agent": { "build": { "model": "opencode-go/deepseek-v4.1-flash", "variant": "high" } } }
    ```
 3. 이 파일이 커밋되지 않게 메인 저장소의 `.git/info/exclude`에 `/opencode.json`을 더한다(worktree가 함께 쓰는 파일이라 한 번이면 된다).
 4. worktree에서 `opencode debug agents`를 돌려 `build`의 `model`에 정한 모델과 `variant`가 보이는지 확인한다.
-5. 실행 환경 문서의 "띄우기"대로 그 worktree에 띄운다.
+5. 실행 환경 문서의 "띄우기"대로 그 worktree에 띄운다. 작업자가 처음 응답하면 "모델 확인" 3을 한다.
 
-같은 worktree에서 다음 OpenCode 작업자의 강도가 다르면 파일을 고치고 4번을 다시 한다. 실제로 쓰인 값은 `~/.local/share/opencode/opencode.db`의 `session_v2.model`에서 확인할 수 있다.
+같은 worktree에서 다음 OpenCode 작업자의 강도가 다르면 파일을 고치고 4번을 다시 한다.
 
-`opencode run`(아래 빠른 답변)에서는 `-m provider/model#variant`로 준다.
+`opencode run`(아래 빠른 답변, 2차 의견, [spec-check.md](spec-check.md))에서는 **언제나** `-m provider/model`(강도를 정했으면 `#variant`)로 준다. 빼면 전역 설정이 없거나 그 모델을 쓸 수 없을 때 기본 모델로 돈다.
 
 **`opencode run` 공통 주의**(OpenCode 2.2.5에서 확인)
 - 표준 입력을 `< /dev/null`로 닫는다. 표준 입력이 터미널이 아니고 열려 있으면(셸 도구가 그렇게 넘기는 경우가 있다) 입력이 끝나기를 기다리며 세션도 만들지 않고 멈춘다.
@@ -57,7 +72,7 @@ SKILL.md 6단계 2의 rebase는 `light`다.
 
 관리자가 결론을 내기 전에 넓게 훑어야 하는 짧은 질문이다. 예를 들어 어느 파일이 무엇을 맡는지, 이슈가 어느 영역을 건드리는지, 지적의 심각도 첫 의견 같은 것이다.
 
-- 메인 저장소에서 읽기 전용 `plan` 에이전트로 묻는다: `opencode run --agent plan "<질문>" < /dev/null`. 20초 안팎이 걸린다(위 "`opencode run` 공통 주의").
+- 메인 저장소에서 읽기 전용 `plan` 에이전트로 묻는다: `opencode run --agent plan -m <모델> "<질문>" < /dev/null`. 20초 안팎이 걸린다(위 "`opencode run` 공통 주의"). 답을 쓰기 전에 "모델 확인" 3을 한다.
 - 답은 관리자가 근거(파일·줄)를 직접 확인한 뒤에만 쓴다. 사용자만 정할 결정은 사용자에게 묻는다.
 
 ## 2차 의견

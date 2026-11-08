@@ -151,6 +151,7 @@ disable-model-invocation: true
 - **지금 고침**: 차단·중요 지적 전부. 사소한 지적 중 고치는 비용이 작은 것.
 - **다른 이슈로 넘김**: 다른 이슈의 범위에 속하는 것. 그 이슈에 댓글로 근거와 함께 기록한다.
 - **사용자에게 물음**: 제품 방향을 정해야 하는 것.
+- **근거를 들어 유지**: `사소` 지적 가운데, 지적이 틀렸거나 명세·프로젝트 설정이 이미 그렇게 정해서 고치지 않는 것. 근거(명세의 줄, 파일·줄, 실행 결과)를 `state.md`와 PR 본문에 적는다. `차단`·`중요` 지적에는 쓰지 않는다. 그것이 틀렸다고 보면 `사용자에게 물음`으로 둔다. 유지는 검토 결론을 바꾸지 않는다(관문 G3은 여전히 결론 `통과`를 요구한다).
 
 "지금 고침"이 하나라도 있으면 [fixes.md](fixes.md)대로 수정을 맡긴다. 수정으로 대상이 바뀌므로 [vstack.md](vstack.md) "대상이 바뀌면"대로 재검증한다(사소 수정을 관리자가 확인했어도).
 
@@ -174,7 +175,7 @@ disable-model-invocation: true
 
 병합 방식이 `자동`이면 1부터 차례로 한다.
 
-1. 브랜치를 push하고([vstack.md](vstack.md) "원격 반영") [pr-template.md](pr-template.md)로 PR을 만든다. GitHub 이슈면 본문에 `Closes #<n>`을 넣고, 다른 저장소면 이슈 위치를 적는다.
+1. 브랜치를 push하고([vstack.md](vstack.md) "원격 반영") [pr-template.md](pr-template.md)로 PR을 만든다. GitHub 이슈면 본문에 `Closes #<n>`을 넣고, 다른 저장소면 이슈 위치를 적는다. PR 번호는 `gh pr create`가 출력한 URL에서 읽어 `state.md`에 적는다. 이슈 번호와 같다고 보지 않는다(이슈와 PR은 번호를 함께 쓴다).
 2. `main`이 그사이 앞으로 갔으면, 같은 worktree에 `light` 목록의 작업자(기본은 OpenCode)를 새로 **띄우기**해 `main` 위로 rebase하고 관련 테스트를 다시 돌리라고 맡긴다. 충돌 해결도 그 작업자가 한다. 같은 동작이 양쪽에서 바뀐 충돌이라 되돌리고 보고하면 원래 구현 작업자에게 맡긴다([opencode.md](opencode.md)의 "rebase"). rebase 작업자는 레시피의 "구현자: rebase"를 따르고(작업 종류 `rebase`), 끝나면 [vstack.md](vstack.md) "대상이 바뀌면"대로 재검증한다. "main 변경" 안내는 **진행 중인 작업이 구현일 때만** **보내기**한다. 검토 중인 이슈는 그 검토가 끝난 뒤 다음 구현 지시에 rebase를 넣는다(검토자에게 rebase 안내를 보내지 않는다).
 3. [vstack.md](vstack.md) "병합 관문"을 한다. 관문을 통과해야만 `gh pr merge <PR> --<병합 방법> --match-head-commit <H> --subject "<제목> (<이슈 표시>)"`로 병합한다. `MERGED`를 확인한 뒤 원격 브랜치를 지운다. 병합 방법은 프로젝트 설정 "병합" 절(`merge`/`squash`/`rebase`, 없으면 `merge`)이다.
 4. 메인 저장소의 `main`을 pull하고, GitHub 이슈가 아니면 이슈를 닫는다([trackers.md](trackers.md)). `state.md`를 `끝`으로 바꾼다.

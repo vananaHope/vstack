@@ -4,7 +4,7 @@
 
 ## 읽을 것
 
-작업 명세, 이 계약, 명세가 가리키는 계약 파일, 선택된 레시피 하나, 후보 원칙, 작업에 필요한 소스와 참조. vstack 라우터(v-mode)와 다른 레시피는 읽지 않는다.
+작업 명세, 이 계약, 명세가 가리키는 계약 파일, 선택된 레시피 하나, 후보 원칙, 작업에 필요한 소스와 참조. 레시피가 링크나 `<vstack>/` 경로로 가리키는 스킬은 맡은 작업 종류의 절차에 나오는 것만, 가리킨 절만 읽는다(예: "`tdd` 스킬의 Anti-patterns"). vstack 라우터(v-mode)와 다른 레시피는 읽지 않는다.
 
 ## 일하는 방식
 
@@ -34,7 +34,8 @@
 ## 증거 쓰기
 
 - 폴더는 명세가 준다: `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`. 이 폴더에만 쓴다.
-- 수용 기준마다 [evidence.md](evidence.md)의 필드를 채워 `manifest.json`에 넣고, 원본 산출물(터미널 기록, 스크린샷, 로그)을 같은 폴더에 둔다. 산출물 경로는 폴더 기준 상대 경로로 쓴다.
+- 수용 기준마다 [evidence.md](evidence.md)의 필드를 채워 `manifest.json`에 넣고, 원본 산출물(터미널 기록, 스크린샷, 로그)을 같은 폴더에 둔다. manifest의 `session`에는 명세가 준 세션 키를 쓴다.
+- 산출물·과정 증거·`report.md`의 위치와 경로 표기는 [evidence.md](evidence.md) "manifest.json"을 따른다: 과정 증거는 `process/` 아래, 증거 파일을 가리키는 경로는 시도 폴더 기준 상대 경로(관리자가 보관하면 폴더가 옮겨진다).
 - 실행 전에 `git status --porcelain=v1 --untracked-files=all`을 기록한다. 출력이 비어 있지 않으면 그 실행은 승인 증거가 아니다(과정 증거로만 남긴다).
 - 실행이 의존하는 ignore된 파일(`.env.local` 등)은 `env.ignored_inputs`에 경로와 sha256을 적는다.
 - 서버·빌드는 이 시도에서 대상 커밋으로 새로 띄우거나 빌드한다. 어떻게 확인했는지 `env.build_from_head`에 적는다.
