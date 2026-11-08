@@ -8,7 +8,7 @@
 2. 그 파일에 `.vstack/` 줄이 없으면 더한다. 작업자는 이 파일을 고치지 않는다.
 3. `state.md`의 "시도" 표에 이번 시도를 `배정됨`으로 적는다. 시도 ID, 역할, scope, 맡은 수용 기준, 실행기, 대상을 적는다. 세션과 dispatch ID는 띄운 뒤 결과에서 읽어 채운다([state-and-rollback.md](state-and-rollback.md)).
 4. 명세에 증거 폴더를 적는다: `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`.
-5. **띄우기 직전 기록**: `git -C <worktree> rev-parse HEAD`와 `git -C <worktree> status --porcelain=v1 --untracked-files=all`의 출력을 `.local/vstack/<작업 이름>/pre/<시도 ID>.txt`에 그대로 쓰고, 시도 표 비고에 그 경로를 적는다. 아래 "시작 실패" 4가 이 기록과 비교한다.
+5. **띄우기 직전 기록**: `git -C <worktree> rev-parse HEAD`와 `git -C <worktree> status --porcelain=v1 --untracked-files=all`의 출력을 `.local/vstack/<작업 이름>/pre/<시도 ID>.txt`에 그대로 쓰고, status에 나온 파일마다(지워진 파일 제외) sha256도 함께 적고, 시도 표 비고에 그 경로를 적는다. 아래 "시작 실패" 4가 이 기록과 비교한다.
 
 ## 시도의 상태
 
@@ -33,7 +33,7 @@
 1. 근거: 제출 실패 출력, 또는 작업자 터미널의 시작 오류(Orca면 `worker-read`). 비고에 한 줄로 적는다.
 2. 그 작업자의 정지가 확인됐다(실행 환경 문서의 **정지**).
 3. 시도의 증거 폴더가 없거나 비었다.
-4. worktree가 띄우기 전 그대로다: `HEAD`와 `git status --porcelain=v1 --untracked-files=all`의 출력이 "준비" 5의 기록과 같다. 기록이 없으면 비교를 추측하지 않고, 시작 실패로 정산하지 않는다.
+4. worktree가 띄우기 전 그대로다: `HEAD`와 `git status --porcelain=v1 --untracked-files=all`의 출력, 그리고 그 파일들의 sha256이 "준비" 5의 기록과 같다. 기록이 없으면 비교를 추측하지 않고, 시작 실패로 정산하지 않는다.
 
 다시 맡기면 **새 시도**다. 새 터미널은 새 세션이므로 새 세션 키로 시도 ID를 새로 만든다. 실행 환경의 재시도 기능(Orca `--retry-of`)을 써도 시도 ID는 다시 쓰지 않는다. 한 시도 ID는 한 번의 작업자 실행만 가리킨다.
 

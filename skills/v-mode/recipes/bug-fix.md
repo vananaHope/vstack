@@ -1,6 +1,6 @@
 # 버그 수정
 
-id: bug-fix · version: 2 · contract: vstack-contract@2
+id: bug-fix · version: 3 · contract: vstack-contract@3
 
 흐름은 pstack `playbooks/bug-fix.md`(재현 → 원인 좁히기 → 수정 → 같은 화면에서 재확인 → 실패 테스트를 수정보다 먼저 커밋)를 따른다. 원본의 하위 에이전트 위임, `how`·`why`·`architect` 호출, Cursor의 loop 명령, PR 단계는 vstack에서 관리자가 맡거나 첫 버전에서 뺐다.
 
