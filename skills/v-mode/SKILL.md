@@ -27,7 +27,7 @@ disable-model-invocation: true
 크기를 보기 전에, 요청이 이 저장소에서 이미 지휘 중인 작업에 속하는지 본다. 메인 저장소의 `.local/vstack/*/state.md` 가운데 첫 줄이 `끝`이 아닌 것, 그 작업의 브랜치·PR·worktree가 기준이다([contracts/state-and-rollback.md](contracts/state-and-rollback.md) "소유권").
 
 - 속하면 크기와 관계없이 지휘 절차로 보낸다. 그 작업의 수정, 검토 반영, "PR 올려", "병합해", "병합됐어", "그만둬"는 [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md) 6단계 표와 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "그만둘 때"를 따른다. 지휘 중인 작업의 코드를 이 대화가 직접 고치지 않는다(관리자는 작업자 역할을 맡지 않는다, [contracts/worker-contract.md](contracts/worker-contract.md)).
-  - 사용자가 그 작업의 코드를 고쳐 달라고 하면(작은 수정 포함) 검토 지적처럼 받는다. orchestrate-issues 5단계 판정으로 `지금 고침`에 넣고 [../orchestrate-issues/fixes.md](../orchestrate-issues/fixes.md)대로 지적 수정을 맡긴다. 그 worktree에서 작업자가 일하는 중이면 그 작업자의 보고를 받은 뒤에 맡긴다(두 역할이 같은 worktree에 동시에 쓰지 않는다). 수정은 대상을 바꾸므로 재검증과 새 `review` 시도가 따른다. 그 비용이 요청에 비해 크면 맡기기 전에 말한다(고정 규칙 6).
+  - 사용자가 그 작업의 코드를 고쳐 달라고 하면(작은 수정 포함) 검토 지적처럼 받는다. 요청을 `.local/vstack/<작업 이름>/user-request-<k>.md`에 지적 형식(심각도, 내용, 근거: 사용자 요청과 시각)으로 적는다. orchestrate-issues 5단계 판정으로 `지금 고침`에 넣고 [../orchestrate-issues/fixes.md](../orchestrate-issues/fixes.md)대로 지적 수정을 맡긴다. 수정 명세의 "검토 보고서 경로"에는 그 파일(검토 보고서가 있으면 함께)을 적는다. 그 worktree에서 작업자가 일하는 중이면 그 작업자의 보고를 받은 뒤에 맡긴다(두 역할이 같은 worktree에 동시에 쓰지 않는다). 수정은 대상을 바꾸므로 재검증과 새 `review` 시도가 따른다. 그 비용이 요청에 비해 크면 맡기기 전에 말한다(고정 규칙 6).
 - 관리자가 바뀌었거나 다시 시작했으면 orchestrate-issues가 `state.md`와 보관된 증거로 이어 간다([contracts/archive.md](contracts/archive.md) "중단 복구"). 이 경로는 아직 시범으로 돌려 보지 않았다. 이어 가기 전에 사용자에게 그렇게 알린다.
 - `소유: vstack`이 아닌 작업(기존 agent-orchestra 등)이면 건드리지 않고 사용자에게 알린다.
 
@@ -88,8 +88,8 @@ disable-model-invocation: true
 2. **vstack 절 채우기**: 맡길 티켓마다 "vstack" 절이 있어야 한다. 티켓에는 바뀌지 않는 입력만 적는다: 레시피 ID와 버전, 수용 기준(`AC-<n>@<버전>`, 필수 여부, 관찰 가능한 결과, 검증 명령), seam, 재현 경로와 간헐 반복(버그 수정), 실행 조건, 준비·정리(verify 스킬 경로), 건드리지 말 영역.
    - 역할, 시도별 증거 폴더·scratch·보고서 경로, 보관 준비처럼 [contracts/intake.md](contracts/intake.md)의 나머지 항목은 orchestrate-issues가 배정 전에 명세에 채운다. 티켓에 적지 않는다.
    - 절이 없으면 티켓 본문과 코드로 초안을 쓰고, 사용자에게 보여 승인을 받은 뒤 티켓에 더한다(티켓 수정은 외부로 나가는 동작이다). 사용자만 정할 수 있는 항목(필수 여부, 제품 동작)은 묻는다.
-   - 검증 명령이 없으면 고정 규칙 7을 먼저 한다. 작업자 worktree는 기본 브랜치에서 시작하므로 검증 수단은 기본 브랜치에 먼저 들어가야 한다. 그 커밋과 push는 사용자에게 방법(시나리오 추가, 명령 한 줄 등)과 함께 확인받는다.
-   - 프로젝트 설정 "이슈 저장소" 절이 요구하는 것도 함께 본다: 맡길 이슈 표시(예: `ready-for-agent` 라벨)와 완료 기준의 위치(예: 본문 체크리스트). 빠졌으면 vstack 절 초안과 함께 보이고, 승인을 받아 라벨을 붙이고 완료 기준을 이슈에 남긴다([../orchestrate-issues/trackers.md](../orchestrate-issues/trackers.md) 공통).
+   - 검증 명령이 없으면 고정 규칙 7을 먼저 한다. 수용 기준의 검증 명령은 배정 전에 정해져야 하므로([contracts/intake.md](contracts/intake.md)), 그 명령이 쓰는 검증 수단(시나리오 등)이 아직 없으면 지휘를 시작하기 전에 기본 브랜치에 들어가야 한다. 이 준비 변경은 지휘 중 작업의 원격 반영([../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "원격 반영", 기준 브랜치에 push하지 않음)과 별개다. 방법(별도 PR, 직접 커밋 등)과 함께 사용자에게 확인받고, 그 방법으로 반영된 뒤에 맡긴다.
+   - 프로젝트 설정 "이슈 저장소" 절과 [../orchestrate-issues/trackers.md](../orchestrate-issues/trackers.md)의 그 종류 절이 요구하는 것도 함께 본다: 맡길 이슈 표시(GitHub 라벨·마일스톤, 로컬 md·아티팩트의 상태 값 등 프로젝트가 정한 것)와 완료 기준의 위치(예: 본문 체크리스트). 빠졌으면 vstack 절 초안과 함께 보이고, 승인을 받아 그 종류의 방법으로 표시하고 완료 기준을 이슈에 남긴다(trackers.md 공통).
 3. **지휘**: [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md)를 읽고 따른다. vstack 계약 연결은 그 스킬이 가리키는 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md)에 있다.
 
 ## 그 밖의 요청
