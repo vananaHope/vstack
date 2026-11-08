@@ -14,7 +14,7 @@ vstack 작업의 파일은 메인 저장소의 `.local/vstack/<작업 이름>/`�
 ```
 <단계>                      ← 첫 줄. orchestra 단계 이름 + `병합 대기`
 등급: standard · 작업자: codex@high
-workflow: vstack · contract: vstack-contract@2 · recipe: bug-fix@2 · 소유: vstack
+workflow: vstack · contract: vstack-contract@3 · recipe: bug-fix@3 · 소유: vstack
 막힘: <풀릴 조건>            ← 막혔을 때만
 
 ## 수용 기준

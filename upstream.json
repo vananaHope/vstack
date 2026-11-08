@@ -1,5 +1,5 @@
 {
-  "contract": "vstack-contract@2",
+  "contract": "vstack-contract@3",
   "sources": {
     "pstack": {
       "repo": "https://github.com/cursor/plugins",

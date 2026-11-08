@@ -16,7 +16,7 @@ Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 �
 ```
 .claude-plugin/          플러그인·마켓플레이스 정의
 skills/v-mode/
-  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@2)
+  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
   recipes/               레시피 형식과 레시피(bug-fix)
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
