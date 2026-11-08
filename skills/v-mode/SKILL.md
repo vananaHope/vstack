@@ -14,9 +14,9 @@ disable-model-invocation: true
 2. 사실·수치·완료 주장·불확실한 원인에 `측정`/`추론`/`추측`을 붙인다.
 3. 원칙은 이번 세션에 원문을 끝까지 읽은 것만, 그 원칙 때문에 선택이 바뀐 경우에만 밝힌다.
 4. 사람만 정할 수 있는 것(제품 방향, 취향)은 묻는다. 돌려 보면 아는 것은 돌려 본다. 실험 비용이 크거나 읽기 전용 조사면 기존 자료로 답한다.
-5. 되돌릴 수 있는 일은 묻지 않고 진행한다. force-push(자기 PR 브랜치도 포함), 배포, 데이터 삭제는 멈추고 확인한다. 확인받은 force-push도 `--force-with-lease=<브랜치>:<기대하는 원격 SHA>`로만 한다. 외부로 나가는 동작(push, PR, 이슈·댓글)은 사용자 지시나 프로젝트 설정이 허락한 범위에서만 한다.
+5. 되돌릴 수 있는 일은 묻지 않고 진행한다. force-push(자기 PR 브랜치도 포함), 배포, 데이터 삭제는 멈추고 확인한다. 확인받은 force-push도 `--force-with-lease=<브랜치>:<기대하는 원격 SHA>`로만 한다. 외부로 나가는 동작(push, PR, 이슈·댓글)은 사용자 지시나 프로젝트 설정이 허락한 범위에서만 한다. 승인을 구할 때 병합처럼 되돌리기 어려운 동작은 질문에 이름으로 적는다. 그렇게 적지 않은 짧은 승인("추천대로")으로는 그 동작을 하지 않는다.
 6. 동의는 기본값이 아니다. 필요하면 반대하고 "할 가치가 없다"고 말한다.
-7. 사소하지 않은 작업인데 요구 동작을 검증할 수단이 없으면(테스트·스크립트로도 안 되면) 검증 수단부터 만든다([create-verification-skill](../create-verification-skill/SKILL.md)). 문서·스킬만 바꾸는 작업에는 만들지 않는다.
+7. 사소하지 않은 작업인데 요구 동작을 검증할 수단이 없으면(테스트·스크립트로도 안 되면) 검증 수단부터 만든다([create-verification-skill](../create-verification-skill/SKILL.md)). 프로젝트에 verify 스킬이 이미 있으면 새로 만들지 않고 그 스킬과 스크립트에 시나리오를 더한다(create-verification-skill은 새로 만드는 일만 다룬다). 문서·스킬만 바꾸는 작업에는 만들지 않는다.
 
 계약([contracts/priority.md](contracts/priority.md))과 이 규칙이 다르면 계약이 이긴다.
 
@@ -27,6 +27,7 @@ disable-model-invocation: true
 크기를 보기 전에, 요청이 이 저장소에서 이미 지휘 중인 작업에 속하는지 본다. 메인 저장소의 `.local/vstack/*/state.md` 가운데 첫 줄이 `끝`이 아닌 것, 그 작업의 브랜치·PR·worktree가 기준이다([contracts/state-and-rollback.md](contracts/state-and-rollback.md) "소유권").
 
 - 속하면 크기와 관계없이 지휘 절차로 보낸다. 그 작업의 수정, 검토 반영, "PR 올려", "병합해", "병합됐어", "그만둬"는 [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md) 6단계 표와 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "그만둘 때"를 따른다. 지휘 중인 작업의 코드를 이 대화가 직접 고치지 않는다(관리자는 작업자 역할을 맡지 않는다, [contracts/worker-contract.md](contracts/worker-contract.md)).
+  - 사용자가 그 작업의 코드를 고쳐 달라고 하면(작은 수정 포함) 검토 지적처럼 받는다. 요청을 `.local/vstack/<작업 이름>/user-request-<k>.md`에 지적 형식(심각도, 내용, 근거: 사용자 요청과 시각)으로 적는다. orchestrate-issues 5단계 판정으로 `지금 고침`에 넣고 [../orchestrate-issues/fixes.md](../orchestrate-issues/fixes.md)대로 지적 수정을 맡긴다. 수정 명세의 "검토 보고서 경로"에는 그 파일(검토 보고서가 있으면 함께)을 적는다. 그 worktree에서 작업자가 일하는 중이면 그 작업자의 보고를 받은 뒤에 맡긴다(두 역할이 같은 worktree에 동시에 쓰지 않는다). 수정은 대상을 바꾸므로 재검증과 새 `review` 시도가 따른다. 그 비용이 요청에 비해 크면 맡기기 전에 말한다(고정 규칙 6).
 - 관리자가 바뀌었거나 다시 시작했으면 orchestrate-issues가 `state.md`와 보관된 증거로 이어 간다([contracts/archive.md](contracts/archive.md) "중단 복구"). 이 경로는 아직 시범으로 돌려 보지 않았다. 이어 가기 전에 사용자에게 그렇게 알린다.
 - `소유: vstack`이 아닌 작업(기존 agent-orchestra 등)이면 건드리지 않고 사용자에게 알린다.
 
@@ -70,7 +71,7 @@ disable-model-invocation: true
 
 ### 레시피 직접 따르기
 
-1. **입력을 정한다.** 레시피가 명세에서 받는 입력([recipes/bug-fix.md](recipes/bug-fix.md) "입력")을 대화에 먼저 적는다: 증상과 기대 동작, 수용 기준(증상 해소, 회귀 테스트)과 각 검증 명령, seam, 재현 경로, 간헐 반복 횟수, 준비·정리. 코드와 실행으로 알 수 있는 것은 직접 조사해 정하고, 제품 동작처럼 사용자만 정할 것은 묻는다. 이 기록이 레시피가 말하는 "명세"다.
+1. **입력을 정한다.** 레시피가 명세에서 받는 입력([recipes/bug-fix.md](recipes/bug-fix.md) "입력")을 대화에 먼저 적는다: 증상과 기대 동작, 수용 기준(증상 해소, 회귀 테스트)과 각 검증 명령, seam, 재현 경로, 간헐 반복 횟수, 준비·정리. 코드와 실행으로 알 수 있는 것은 직접 조사해 정하고, 제품 동작처럼 사용자만 정할 것은 묻는다. 코드가 이미 정한 정의(예: 다른 함수가 쓰는 "빈 값"의 기준)를 따르는 것은 조사로 본다. 이 기록이 레시피가 말하는 "명세"다. 물을 것이 없으면 확인을 기다리지 않고 2로 간다.
 2. 레시피의 "구현자: 새 수정" 1~7을 따른다. 레시피의 "관리자"는 사용자로 읽는다. seam이 이 버그를 잡지 못하면(레시피 4) 다른 seam을 고르기 전에 사용자에게 묻는다.
 3. 레시피 8(증거 만들기)·9(완료 보고) 대신, 끝에 1의 수용 기준마다 실행한 명령과 결과를 보고한다.
 
@@ -87,7 +88,8 @@ disable-model-invocation: true
 2. **vstack 절 채우기**: 맡길 티켓마다 "vstack" 절이 있어야 한다. 티켓에는 바뀌지 않는 입력만 적는다: 레시피 ID와 버전, 수용 기준(`AC-<n>@<버전>`, 필수 여부, 관찰 가능한 결과, 검증 명령), seam, 재현 경로와 간헐 반복(버그 수정), 실행 조건, 준비·정리(verify 스킬 경로), 건드리지 말 영역.
    - 역할, 시도별 증거 폴더·scratch·보고서 경로, 보관 준비처럼 [contracts/intake.md](contracts/intake.md)의 나머지 항목은 orchestrate-issues가 배정 전에 명세에 채운다. 티켓에 적지 않는다.
    - 절이 없으면 티켓 본문과 코드로 초안을 쓰고, 사용자에게 보여 승인을 받은 뒤 티켓에 더한다(티켓 수정은 외부로 나가는 동작이다). 사용자만 정할 수 있는 항목(필수 여부, 제품 동작)은 묻는다.
-   - 검증 명령이 없으면 고정 규칙 7을 먼저 한다.
+   - 검증 명령이 없으면 고정 규칙 7을 먼저 한다. 수용 기준의 검증 명령은 배정 전에 정해져야 하므로([contracts/intake.md](contracts/intake.md)), 그 명령이 쓰는 검증 수단(시나리오 등)이 아직 없으면 지휘를 시작하기 전에 기본 브랜치에 들어가야 한다. 이 준비 변경은 지휘 중 작업의 원격 반영([../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "원격 반영", 기준 브랜치에 push하지 않음)과 별개다. 방법(별도 PR, 직접 커밋 등)과 함께 사용자에게 확인받고, 그 방법으로 반영된 뒤에 맡긴다.
+   - 프로젝트 설정 "이슈 저장소" 절과 [../orchestrate-issues/trackers.md](../orchestrate-issues/trackers.md)의 그 종류 절이 요구하는 것도 함께 본다: 맡길 이슈 표시(GitHub 라벨·마일스톤, 로컬 md·아티팩트의 상태 값 등 프로젝트가 정한 것)와 완료 기준의 위치(예: 본문 체크리스트). 빠졌으면 vstack 절 초안과 함께 보이고, 승인을 받아 그 종류의 방법으로 표시하고 완료 기준을 이슈에 남긴다(trackers.md 공통).
 3. **지휘**: [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md)를 읽고 따른다. vstack 계약 연결은 그 스킬이 가리키는 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md)에 있다.
 
 ## 그 밖의 요청
