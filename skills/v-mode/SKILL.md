@@ -1,0 +1,114 @@
+---
+name: v-mode
+description: vstack 라우터. 요청을 크기와 작업 유형으로 나눠, 바로 처리하거나, 레시피를 이 대화에서 따르거나, 정렬→티켓→지휘로 보낸다. 사용자가 /vstack:v-mode로 실행한다.
+disable-model-invocation: true
+---
+
+# v-mode
+
+이 파일은 `<vstack>/skills/v-mode/SKILL.md`이고, `<vstack>`은 이 파일 기준 `../..`다. 아래 경로는 이 파일 기준 상대 경로다. 작업자 명세에 넣을 때는 절대 경로로 바꾼다.
+
+## 고정 규칙
+
+1. 새 목표를 시작할 때 목표, 풀려는 문제, 예상하는 가장 작은 변경을 한 번 되짚는다. 단순한 후속 수정마다 반복하지 않는다. 증거가 요청한 변경을 반박하면 그것을 보여 주고 멈춘다.
+2. 사실·수치·완료 주장·불확실한 원인에 `측정`/`추론`/`추측`을 붙인다.
+3. 원칙은 이번 세션에 원문을 끝까지 읽은 것만, 그 원칙 때문에 선택이 바뀐 경우에만 밝힌다.
+4. 사람만 정할 수 있는 것(제품 방향, 취향)은 묻는다. 돌려 보면 아는 것은 돌려 본다. 실험 비용이 크거나 읽기 전용 조사면 기존 자료로 답한다.
+5. 되돌릴 수 있는 일은 묻지 않고 진행한다. force-push(자기 PR 브랜치도 포함), 배포, 데이터 삭제는 멈추고 확인한다. 확인받은 force-push도 `--force-with-lease=<브랜치>:<기대하는 원격 SHA>`로만 한다. 외부로 나가는 동작(push, PR, 이슈·댓글)은 사용자 지시나 프로젝트 설정이 허락한 범위에서만 한다.
+6. 동의는 기본값이 아니다. 필요하면 반대하고 "할 가치가 없다"고 말한다.
+7. 사소하지 않은 작업인데 요구 동작을 검증할 수단이 없으면(테스트·스크립트로도 안 되면) 검증 수단부터 만든다([create-verification-skill](../create-verification-skill/SKILL.md)). 문서·스킬만 바꾸는 작업에는 만들지 않는다.
+
+계약([contracts/priority.md](contracts/priority.md))과 이 규칙이 다르면 계약이 이긴다.
+
+## 고르기
+
+### 0. 진행 중인 지휘 작업인가
+
+크기를 보기 전에, 요청이 이 저장소에서 이미 지휘 중인 작업에 속하는지 본다. 메인 저장소의 `.local/vstack/*/state.md` 가운데 첫 줄이 `끝`이 아닌 것, 그 작업의 브랜치·PR·worktree가 기준이다([contracts/state-and-rollback.md](contracts/state-and-rollback.md) "소유권").
+
+- 속하면 크기와 관계없이 지휘 절차로 보낸다. 그 작업의 수정, 검토 반영, "PR 올려", "병합해", "병합됐어", "그만둬"는 [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md) 6단계 표와 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "그만둘 때"를 따른다. 지휘 중인 작업의 코드를 이 대화가 직접 고치지 않는다(관리자는 작업자 역할을 맡지 않는다, [contracts/worker-contract.md](contracts/worker-contract.md)).
+- 관리자가 바뀌었거나 다시 시작했으면 orchestrate-issues가 `state.md`와 보관된 증거로 이어 간다([contracts/archive.md](contracts/archive.md) "중단 복구"). 이 경로는 아직 시범으로 돌려 보지 않았다. 이어 가기 전에 사용자에게 그렇게 알린다.
+- `소유: vstack`이 아닌 작업(기존 agent-orchestra 등)이면 건드리지 않고 사용자에게 알린다.
+
+### 1. 크기
+
+| 크기 | 뜻 | 예 |
+| --- | --- | --- |
+| 바로 | 읽기 전용 질문·조사, 한두 줄의 자명한 수정, 문서 수정 | "이 함수 왜 이래", 오타, README |
+| 한 세션 | 이 대화에서 끝낼 수 있는 한 단위의 일 | 재현되는 버그 하나, 파일 몇 개의 작은 기능 |
+| 지휘 | 여러 티켓으로 나눠야 하거나, 교차 검토·병합 관문을 거쳐야 하거나, 사용자가 이슈 진행을 요청함 | "이 기능 만들자", "이슈 진행해", "다음 묶음" |
+
+크기와 위험은 따로 본다. 위험(난도, 틀리면 드는 비용)은 지휘 경로에서 등급이 정한다. 위험이 큰데 한 세션 크기면 사용자에게 지휘 경로를 권한다(교차 검토와 관문이 붙는다).
+
+### 2. 작업 유형과 레시피
+
+한 요청에 작업 유형 레시피는 최대 하나다.
+
+| 작업 유형 | 레시피 |
+| --- | --- |
+| 버그 수정(보고된 결함을 재현해 원인을 고침) | [recipes/bug-fix.md](recipes/bug-fix.md) |
+| 기능, 리팩토링, 성능, 프로토타입, 조사 | 없음(첫 버전) |
+
+### 3. 갈래
+
+| 크기 | 레시피 있음 | 레시피 없음 |
+| --- | --- | --- |
+| 바로 | 바로 처리한다. 아래 "후보 원칙"만 쓴다 | 같다 |
+| 한 세션 | 아래 "한 세션" 공통 규칙 + "레시피 직접 따르기" | 아래 "한 세션" 공통 규칙. "레시피 없음"을 알리고 후보 원칙을 쓴다 |
+| 지휘 | 아래 "지휘" | 지휘하지 않는다. "레시피 없음: 기존 agent-orchestra로 하거나 레시피를 먼저 만든다"를 알린다 |
+
+갈래를 고른 근거(진행 중 작업 여부, 크기, 작업 유형, 레시피)를 첫 메시지에 한 줄로 적는다.
+
+## 한 세션
+
+### 공통 규칙(레시피 유무와 관계없이 소스를 바꾸는 일)
+
+- **계약 밖이다**: 증거 폴더·manifest·교차 검토·병합 관문은 없다. 첫 메시지에 그렇게 알린다. 증거는 대화에 남긴다.
+- 시작 전에 `git status`로 남은 변경을 본다. 이 일과 상관없는 변경이 있으면 건드리지 않고 사용자에게 알린다.
+- 기본 브랜치가 아닌 작업 브랜치에서 한다. 기본 브랜치에 있으면 먼저 브랜치를 만든다. push와 PR은 사용자가 지시할 때만 한다.
+- 도중에 범위가 커지거나(여러 단위), 교차 검토가 필요해 보이면 멈추고 지휘 경로를 권한다.
+
+### 레시피 직접 따르기
+
+1. **입력을 정한다.** 레시피가 명세에서 받는 입력([recipes/bug-fix.md](recipes/bug-fix.md) "입력")을 대화에 먼저 적는다: 증상과 기대 동작, 수용 기준(증상 해소, 회귀 테스트)과 각 검증 명령, seam, 재현 경로, 간헐 반복 횟수, 준비·정리. 코드와 실행으로 알 수 있는 것은 직접 조사해 정하고, 제품 동작처럼 사용자만 정할 것은 묻는다. 이 기록이 레시피가 말하는 "명세"다.
+2. 레시피의 "구현자: 새 수정" 1~7을 따른다. 레시피의 "관리자"는 사용자로 읽는다. seam이 이 버그를 잡지 못하면(레시피 4) 다른 seam을 고르기 전에 사용자에게 묻는다.
+3. 레시피 8(증거 만들기)·9(완료 보고) 대신, 끝에 1의 수용 기준마다 실행한 명령과 결과를 보고한다.
+
+## 지휘
+
+정렬 → 명세 → 티켓 → vstack 절 → 지휘 순서다. 이미 있는 단계는 건너뛴다(예: 티켓이 이미 있으면 "vstack 절"부터).
+
+1. **정렬·명세·티켓**: mattpocock 스킬로 사용자가 직접 한다. 이 스킬들은 사용자가 실행하는 명령이다(모델이 부르지 않는다).
+   - 생각을 맞추기: `/mattpocock-skills:grill-with-docs`
+   - 명세 쓰기: `/mattpocock-skills:to-spec`
+   - 티켓 나누기: `/mattpocock-skills:to-tickets`
+
+   어느 단계가 남았는지 알려 주고, 사용자가 그 명령을 실행하게 한다. 설치돼 있지 않으면 그렇게 알리고, 사용자가 쓰는 다른 방법(직접 쓴 이슈 등)을 받는다.
+2. **vstack 절 채우기**: 맡길 티켓마다 "vstack" 절이 있어야 한다. 티켓에는 바뀌지 않는 입력만 적는다: 레시피 ID와 버전, 수용 기준(`AC-<n>@<버전>`, 필수 여부, 관찰 가능한 결과, 검증 명령), seam, 재현 경로와 간헐 반복(버그 수정), 실행 조건, 준비·정리(verify 스킬 경로), 건드리지 말 영역.
+   - 역할, 시도별 증거 폴더·scratch·보고서 경로, 보관 준비처럼 [contracts/intake.md](contracts/intake.md)의 나머지 항목은 orchestrate-issues가 배정 전에 명세에 채운다. 티켓에 적지 않는다.
+   - 절이 없으면 티켓 본문과 코드로 초안을 쓰고, 사용자에게 보여 승인을 받은 뒤 티켓에 더한다(티켓 수정은 외부로 나가는 동작이다). 사용자만 정할 수 있는 항목(필수 여부, 제품 동작)은 묻는다.
+   - 검증 명령이 없으면 고정 규칙 7을 먼저 한다.
+3. **지휘**: [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md)를 읽고 따른다. vstack 계약 연결은 그 스킬이 가리키는 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md)에 있다.
+
+## 그 밖의 요청
+
+| 요청 | 할 일 |
+| --- | --- |
+| 한도·사용량 | [../check-limits/SKILL.md](../check-limits/SKILL.md)를 읽고 따른다 |
+| 지휘 설정(등급 배치, 병합 방식 등) | [../configure/SKILL.md](../configure/SKILL.md)를 읽고 따른다 |
+| 지휘 밖에서 하던 일(한 세션 대화 등)의 이어받기, 자율 실행, UI 다듬기 | 첫 버전에 없다. 그렇게 알린다. 진행 중인 지휘 작업의 이어 가기와 중단은 위 "0"이다 |
+
+## 후보 원칙
+
+원칙을 쓰려면 그 원칙의 원문(`../principle-<이름>/SKILL.md`)을 끝까지 읽는다. 레시피가 있는 작업은 레시피의 "후보 원칙"을 쓴다. 레시피가 없는 작업은 아래에서 고른다.
+
+| 경우 | 후보 원칙 |
+| --- | --- |
+| 기능 | `model-the-domain`, `type-system-discipline`(타입 있는 언어), `boundary-discipline`, `laziness-protocol`, `test-behavior-not-implementation`, `prove-it-works` |
+| 리팩토링 | `subtract-before-you-add`, `minimize-reader-load`, `test-behavior-not-implementation`, `prove-it-works`, `sequence-verifiable-units`, `migrate-callers-then-delete-legacy-apis`(API 모양이 바뀔 때) |
+| 성능 | `explain-the-number`, `fix-root-causes`, `prove-it-works` |
+| 조사 | `prove-it-works`, `explain-the-number`(수치 주장이 있을 때) |
+| 지휘·이어받기 | `guard-the-context-window`, `make-operations-idempotent`, `separate-before-serializing-shared-state` |
+| 정렬 | `foundational-thinking`(데이터 구조·기반 결정을 할 때), `experience-first`, `model-the-domain` |
+
+원칙 원문 안의 다른 스킬 언급과 링크는 출처 참조다. 따라가지 않는다([contracts/reference-policy.md](contracts/reference-policy.md)).

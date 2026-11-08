@@ -75,7 +75,7 @@ export function skillRefs(line) {
   const patterns = [
     /\*\*([a-z][a-z0-9-]*)\*\*(?: principle)? (?:skill|스킬)/g,
     /`([a-z][a-z0-9-]*)` (?:skill|스킬)/g,
-    /`\/([a-z][a-z0-9-]*)`/g,
+    /`\/([a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)?)`/g,
     /Skill tool with "([a-z][a-z0-9-]*)"/g,
   ];
   for (const re of patterns) for (const m of line.matchAll(re)) out.push({ name: m[1] });
