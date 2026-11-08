@@ -294,5 +294,14 @@
       "status",
       "usage"
     ]
+  },
+  "user_commands": {
+    "note": "사용자가 직접 실행하는 다른 플러그인의 명령(모델이 부르지 않는다). vstack에 싣지 않으므로 check-links의 SKILL 검사에서 뺀다. v-mode의 정렬 단계가 안내하는 mattpocock 명령과, 옮기기 전 기존 agent-orchestra 명령(이전 기록에서 언급).",
+    "names": [
+      "mattpocock-skills:grill-with-docs",
+      "mattpocock-skills:to-spec",
+      "mattpocock-skills:to-tickets",
+      "agent-orchestra:configure"
+    ]
   }
 }

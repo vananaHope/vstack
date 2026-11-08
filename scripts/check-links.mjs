@@ -42,6 +42,7 @@ const upstream = loadUpstream(root);
 const planned = plannedTargets(upstream);
 const shipped = plannedSkillNames(upstream);
 const runtimeCommands = new Set(upstream.runtime_commands?.names ?? []);
+const userCommands = new Set(upstream.user_commands?.names ?? []);
 const failures = [];
 const later = [];
 let checked = 0;
@@ -96,7 +97,8 @@ for (const file of walkMarkdown(join(root, 'skills'))) {
 
     const { names, tool } = skillRefs(line);
     for (const { name } of names) {
-      if (!shipped.has(name) && !shipped.has(`principle-${name}`) && !runtimeCommands.has(name)) {
+      const local = name.startsWith('vstack:') ? name.slice('vstack:'.length) : name;
+      if (!shipped.has(local) && !shipped.has(`principle-${local}`) && !runtimeCommands.has(name) && !userCommands.has(name)) {
         failures.push({ kind: 'SKILL', at, detail: `\`${name}\` is not a vstack skill` });
       }
     }
