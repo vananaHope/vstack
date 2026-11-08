@@ -25,9 +25,9 @@
 4. **역할 자격 확인**(rev): evidence.md "역할 자격". 그 대상에 커밋한 세션도, impl 세션도 아니어야 하고, 계열이 변경 작성자와 달라야 한다. 다를 수 없으면 [tiers.md](tiers.md) "검토자 고르기" 2의 같은 계열 조건을 모두 채운다.
 5. **보관 준비**: [archive.md](../v-mode/contracts/archive.md) "준비" 1~3(ignore 설정, 시도 표에 `배정됨`).
 6. **명세 채우기**: [task-template.md](task-template.md) 또는 [review-template.md](review-template.md)의 "vstack 계약" 절을 채운다. 증거 폴더는 `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`, scratch는 `<worktree>/.vstack/scratch/<시도 ID>/`.
-7. **띄우기**: `--worktree path:<worktree 경로>`. 결과의 `dispatchId`, `terminal`(세션)을 시도 표에 적는다.
+7. **띄우기**: 바로 전에 archive.md "준비" 5(띄우기 직전 `HEAD`·status 기록)를 한다. 그다음 `--worktree path:<worktree 경로>`. 결과의 `dispatchId`, `terminal`(세션)을 시도 표에 적는다.
 
-`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@1 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
+`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@2 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
 
 ## 완료 보고를 받으면
 
@@ -73,6 +73,7 @@ SKILL.md 5단계 판정 **전에** 한다. 병합 직전 관문에서 처음 알
 | impl이 보고 없이 멈춤, **구현은 끝났다**(커밋이 있고 원인·수정이 완료 보고 직전이었음을 worktree와 `worker-read`로 확인) | 실행 환경 문서의 **정지**로 정지를 확인 → archive.md "증거 없음 정산" → 같은 세션이나 impl 인계에 **재검증** |
 | impl이 보고 없이 멈춤, **구현이 끝나지 않았다** | 정지 확인 → 증거 없음 정산 → 새 impl 시도에 **새 수정**을 **같은 worktree에서**(새로 만들지 않는다, 위 "배정 전" 2). 명세의 "이어받기" 칸에 남은 커밋과 변경을 적고 "레시피 1(재현)부터 지금 상태에서 다시 확인한다"를 적는다 |
 | rev가 보고 없이 멈춤 | 정지 확인 → 증거 없음 정산 → 자격 있는 rev 세션에 같은 scope로 새 시도 |
+| 작업자가 시작하지 못함(제출 실패, 또는 에이전트가 명세를 받기 전에 끝남) | archive.md "시작 실패"의 확인을 모두 한 뒤 `취소` → 원인을 고치고, 고친 것이 도구 설정이면 그 도구가 설정을 읽는지 확인한다 → 새 세션 키로 같은 작업 종류의 새 시도 |
 
 정지가 확인되지 않으면 아무것도 정산하지 않고 사용자에게 "정지 미확인"을 알린다.
 

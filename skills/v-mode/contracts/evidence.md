@@ -6,7 +6,7 @@
 
 - **대상(target)**: `(H, B)`. `H`는 브랜치 head 커밋, `B`는 기준 브랜치 tip 커밋이다.
 - **시도(attempt)**: 작업자 한 번의 실행 단위. ID는 `<역할>-<세션 키>-<n>`(역할은 `impl` 또는 `rev`). **세션 키**는 관리자가 새 세션을 띄우기 전에 정하는 8자 16진수다(dispatch ID는 띄운 뒤에야 생기므로 쓰지 않는다). 같은 세션에 다시 맡기는 시도는 같은 키를 쓰고 `n`을 올린다. ASCII만 쓴다.
-- **세션**: 작업자 하나의 실행 맥락. Orca에서는 작업자 터미널 핸들로 식별한다. 끝난 작업자에게 `send`로 다시 맡기면 dispatch ID는 새로 생겨도 세션은 같다.
+- **세션**: 작업자 하나의 실행 맥락. 세션 키로 식별한다. 관리자는 `state.md` 시도 표에 세션 키와 함께 실행 환경의 식별자(Orca 작업자 터미널 핸들)를 적는다. 작업자는 자기 터미널 핸들을 알 수 없으므로 manifest에는 세션 키를 쓴다. 끝난 작업자에게 `send`로 다시 맡기면 dispatch ID는 새로 생겨도 세션은 같다.
 - **변경 작성자**: 대상 `T`를 만든 마지막 커밋을 만든 세션(구현자, 지적 수정자, rebase 작업자 중 하나).
 - **수용 기준**: 티켓의 `AC-<n>@<버전>`. 필수 여부는 명세가 정한다.
 
@@ -16,14 +16,14 @@
 
 ```json
 {
-  "contract": "vstack-contract@1",
+  "contract": "vstack-contract@2",
   "task": "issue-42",
   "attempt": "rev-3ecbf1e7-1",
   "role": "rev",
   "scope": "review",
   "executor": "claude",
-  "session": "<작업자 터미널 핸들>",
-  "recipe": "bug-fix@1",
+  "session": "3ecbf1e7",
+  "recipe": "bug-fix@2",
   "target": { "head": "<40자 SHA>", "base": "<40자 SHA>", "base_ref": "main" },
   "tree_before": "",
   "env": {
@@ -54,6 +54,11 @@
   ]
 }
 ```
+
+- `session`은 시도 ID의 세션 키다(위 "용어"). 명세가 값을 준다.
+- **과정 증거**(유효하지 않은 실행, 재현·진단 기록, 커밋 전 red→green)는 시도 폴더의 `process/` 아래에 두고 `files`에만 올린다. `results[].artifacts`에는 넣지 않는다.
+- 완료 보고를 파일로도 남기면 시도 폴더의 `report.md`에 두고 `files`에 올린다.
+- manifest와 `report.md` 안의 증거 경로(증거 파일을 가리키는 경로)는 **시도 폴더 기준 상대 경로**로만 쓴다. `results[].cwd` 같은 실행 위치는 절대 경로 그대로 쓴다. 보관하면 폴더가 메인 저장소로 옮겨지므로 worktree 절대 경로는 곧 틀린 경로가 된다. 보관 뒤의 위치는 `state.md` 시도 표의 보관 경로가 정본이다.
 
 `scope`는 rev 시도에만 쓴다.
 

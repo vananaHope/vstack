@@ -2,7 +2,7 @@
 
 ## 티켓
 
-- 작업 이름: `issue-42` · 레시피: `bug-fix@1` · 등급: `standard` · PR: #57
+- 작업 이름: `issue-42` · 레시피: `bug-fix@2` · 등급: `standard` · PR: #57
 - 증상: 할 일을 완료로 체크한 뒤 새로고침하면 미완료로 돌아온다.
 
 | ID | 필수 | 내용 | 검증 명령 |
@@ -14,7 +14,7 @@
 
 | 항목 | 값 |
 | --- | --- |
-| 레시피 | `bug-fix@1`, `<vstack>/skills/v-mode/recipes/bug-fix.md` |
+| 레시피 | `bug-fix@2`, `<vstack>/skills/v-mode/recipes/bug-fix.md` |
 | seam | 저장소에서 목록을 읽는 경계(`loadTodos`) |
 | 재현 경로 | 앱 실행 → 할 일 하나 체크 → 새로고침 |
 | 실행 조건 | bash(Git Bash), 실창 불필요 |

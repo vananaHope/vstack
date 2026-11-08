@@ -39,6 +39,7 @@
 - OpenCode는 [opencode.md](opencode.md)의 "맡기지 않는 일"에 들면 목록에서 건너뛴다. `standard`는 크기 상한(프로젝트 설정, 없으면 파일 4개·변경 200줄 안팎)을 넘을 것 같아도 건너뛴다.
 - 모델과 강도 값은 에이전트·모델마다 다르고 도구가 업데이트되면 바뀐다. 없는 값을 쓰면 시작이 실패한다. 표기를 새로 쓰거나 고칠 때는 `python -I <스킬 폴더>/scripts/check_tiers.py <표기...>`로 본다. 이 스크립트는 각 도구가 스스로 갱신하는 목록(Codex `$CODEX_HOME/models_cache.json`(없으면 `~/.codex`), `opencode models`)을 읽는다.
   - OpenCode 강도(`variant`)는 목록이 없어 스크립트가 보지 않는다. `deepseek-v4.1-flash`는 `low`/`high`/`max`다.
+  - 모델을 뺀 OpenCode 표기(`opencode@high`)는 `~/.config/opencode/opencode.json`의 `model`을 쓴다. 그 값이 없거나 `opencode models`에 없으면 OpenCode를 건너뛴다([opencode.md](opencode.md) "모델 확인"). `opencode-go/` 모델은 OpenCode Go 로그인이 있어야 쓸 수 있다.
 
 ## 고르기
 

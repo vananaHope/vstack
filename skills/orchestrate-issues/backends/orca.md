@@ -36,7 +36,7 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 - **Claude·Codex**: `--model <모델> --effort <강도>`. `--effort`는 `--model`이 있어야 한다. 강도만 정했으면 모델은 그 에이전트 설정의 기본 모델을 적는다. 둘 다 없으면 두 옵션을 뺀다.
 - **Codex fast**: `worker-start`에는 Codex 설정을 넘길 옵션이 없다. 아래 "Codex fast"대로 worktree의 Codex 설정으로 준다.
-- **OpenCode**: 모델 선택은 이미 있는 worktree에서만 된다. 강도(`--effort`)는 지원하지 않는다. 모델이나 강도를 정했으면 아래 "OpenCode 모델과 강도"대로 준다. 둘 다 없으면 `--agent opencode`만 쓴다.
+- **OpenCode**: 모델 선택은 이미 있는 worktree에서만 된다. 강도(`--effort`)는 지원하지 않는다. 언제나 아래 "OpenCode 모델과 강도"대로 worktree에 모델을 적고 확인한 뒤 띄운다(모델을 정하지 않았어도 [opencode.md](../opencode.md) "모델 확인" 1의 모델을 적는다). `--agent opencode`만으로 띄우지 않는다.
 
 `worker-start`가 실패하면 같은 명령을 다시 돌리지 않는다. 결과의 `failedStage`를 보고 `orca skills get orchestration --reference references/recovery-and-cleanup.md`를 따른다.
 
@@ -48,6 +48,13 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 Codex는 작업 폴더의 `.codex/config.toml`을 전역 설정보다 우선해 읽으므로 거기에 쓴다. 이 파일은 신뢰된 경로에서만 읽힌다(`$CODEX_HOME/config.toml`의 `[projects.'<경로>'] trust_level = "trusted"`. 상위 경로를 신뢰해도 된다).
 
+신뢰 줄을 더해야 하면 전역 설정을 고치는 것이다. 다음을 지킨다.
+
+- 먼저 `config.toml`을 백업한다.
+- 경로는 TOML 리터럴 문자열(작은따옴표)로 쓴다: `[projects.'C:\Users\<사용자>\orca\workspaces\<저장소>']`. 큰따옴표 안의 `\`는 이스케이프로 읽혀 파일 전체를 읽지 못하게 되고, 그러면 모든 Codex 작업자가 뜨지 않는다(첫 시범에서 그랬다).
+- 고친 **바로 뒤** `codex login status`를 돌려 출력에 `Error loading configuration`이 없는지 본다. 종료 코드만 보지 않는다(로그인이 없어도 1이다). 오류면 백업으로 되돌린다.
+- 전역 설정을 바꿨다는 것과 백업 위치를 사용자에게 알린다.
+
 1. worktree가 아직 없으면 먼저 만든다(위 "worktree 만들기"). 저장소에 이미 커밋된 `.codex/config.toml`이 있으면 쓰지 않고 전역 설정대로 띄운 뒤 사용자에게 알린다.
 2. `<worktree>/.codex/config.toml`에 켜면 `service_tier = "fast"`, 끄면 `service_tier = "default"`를 쓴다. 끌 때도 파일을 지우지 않고 적는 것은 전역 설정이 fast일 수 있기 때문이다. 같은 worktree에 다음 Codex 작업자를 띄울 때마다 다시 정해 고친다.
 3. 이 파일이 커밋되지 않게 `git -C <worktree> rev-parse --git-path info/exclude`가 가리키는 파일에 `/.codex/`를 더한다(한 번이면 된다).
@@ -57,9 +64,9 @@ Codex는 작업 폴더의 `.codex/config.toml`을 전역 설정보다 우선해 
 
 ## 제출 확인
 
-`worker-start` 결과에 `dispatchId`, `taskId`, `terminal`이 있고 `state`가 `ready`면 Orca가 명세를 맡겼다. 셋을 `state.md` 시도 표에 적는다(`terminal`이 세션이다).
+`worker-start` 결과에 `dispatchId`, `taskId`, `terminal`이 있고 `state`가 `ready`면 Orca가 명세를 맡겼다. 셋을 `state.md` 시도 표에 적는다(`terminal`이 그 세션의 터미널 핸들이다. 시도 ID의 세션 키와 이 표에서 이어진다).
 
-작업이 실제로 시작됐는지 의심스러우면 `orca orchestration worker-show --dispatch <id>`와 `orca orchestration worker-read --dispatch <id>`로 본다. 터미널에 키를 보내 바로잡지 않는다. 시작되지 않았으면 위 "띄우기"의 실패 처리를 따른다.
+작업이 실제로 시작됐는지 의심스러우면 `orca orchestration worker-show --dispatch <id>`와 `orca orchestration worker-read --dispatch <id>`로 본다. 터미널에 키를 보내 바로잡지 않는다. 시작되지 않았으면 위 "띄우기"의 실패 처리를 따른다. 터미널은 떴지만 에이전트가 명세를 받기 전에 끝났으면(설정 오류 등) `<vstack>/skills/v-mode/contracts/archive.md` "시작 실패"로 그 시도를 `취소`로 정산하고, 원인을 고친 뒤 새 세션 키로 새 시도를 만들어 띄운다. `--retry-of`를 써도 시도 ID는 새로 만든다.
 
 ## 기다리기
 

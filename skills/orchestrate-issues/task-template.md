@@ -29,11 +29,12 @@
 - 지적 수정이면: 고칠 지적 <목록>, 검토 보고서 <경로>
 - 준비·정리: <verify 스킬 절대 경로 또는 명세의 절차>
 - 증거 폴더: `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`(이 폴더에만 증거를 쓰고, 커밋하지 않는다) · scratch: `<worktree>/.vstack/scratch/<시도 ID>/`
+- manifest 값: `task` = `<작업 이름>`, `attempt` = `<시도 ID>`, `role` = `impl`, `executor` = `<opencode/codex/claude>`, `session` = `<세션 키>`, `recipe` = `<id>@<버전>`. 과정 증거는 `process/` 아래에 두고 `files`에만 올린다. 완료 보고를 파일로도 남기면 증거 폴더의 `report.md`에 둔다. manifest와 `report.md`에서 증거 파일을 가리키는 경로는 증거 폴더 기준 상대 경로로 쓴다(`results[].cwd` 같은 실행 위치는 절대 경로 그대로).
 - 권한: worktree 안의 제품 소스·테스트를 고치고 커밋할 수 있다. push, PR, 병합, worktree 밖 쓰기, 다른 시도의 증거 폴더, ignore 파일 수정은 하지 않는다.
 
 ## 먼저 읽을 것 (필수)
 
-- 이슈 내용과 앞선 이슈에서 넘어온 지적(댓글): <GitHub면 `gh issue view <n> --comments`. 다른 저장소면 "아래 '이슈 본문'".>
+- 이슈 내용과 앞선 이슈에서 넘어온 지적(댓글): <GitHub면 `gh issue view <n> --json title,body,comments`. 다른 저장소면 "아래 '이슈 본문'".>
 - 완료 기준: <이슈에 있으면 "이슈 본문의 <위치>". 없으면 관리자가 뽑은 체크리스트를 여기에 그대로 적는다.> 이것이 기준이다.
 - {설정: 스펙과 먼저 읽을 문서}
 
