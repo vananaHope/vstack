@@ -2,7 +2,7 @@
 
 Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 고르고, 레시피는 원칙과 검증 계약을 지키며 일한다. mattpocock 정렬 스킬(무엇을, 왜), pstack 원칙과 검증(어떻게 제대로), agent-orchestra 지휘(누가, 언제)를 하나로 묶는다.
 
-> 만드는 중이다. 지금은 0~5단계(계약, 플러그인 골격·출처 관리, 원칙 24개와 버그 수정 레시피, 옮겨 온 지휘 스킬, Orca 시범 두 번, 최소 v-mode 라우터)까지 있다. 레시피는 버그 수정 하나다. 진행 상태와 설계는 [docs/design.md](docs/design.md)에 있다.
+> 만드는 중이다. 지금은 0~5단계(계약, 플러그인 골격·출처 관리, 원칙 24개와 버그 수정 레시피, 옮겨 온 지휘 스킬, Orca 시범 두 번, 최소 v-mode 라우터)까지 있다. 레시피는 버그 수정, 기능, 리팩토링 셋이다. 진행 상태와 설계는 [docs/design.md](docs/design.md)에 있다.
 
 ## 설치
 
@@ -24,7 +24,7 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 `/vstack:v-mode`로 시작해 하려는 일을 말한다. v-mode가 크기와 작업 유형을 보고 갈래를 고른다.
 
 - 바로: 질문·조사, 자명한 작은 수정
-- 한 세션: 레시피가 있는 한 단위의 일(지금은 버그 수정)을 이 대화에서 레시피대로 한다. 교차 검토·병합 관문은 없다
+- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링)을 이 대화에서 레시피대로 한다. 교차 검토·병합 관문은 없다
 - 지휘: 정렬(`grill-with-docs` → `to-spec` → `to-tickets`, mattpocock 플러그인 명령) → 티켓에 vstack 절 → 작업자 배정·교차 검토·증거 보관·병합 관문(Orca)
 
 ## 구성
@@ -34,7 +34,7 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
   contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
-  recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring. feature·refactoring은 라우터 연결 전)
+  recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring)
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)
