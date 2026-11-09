@@ -15,7 +15,14 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 ## 준비
 
-지휘 세션 전체에 Run 하나를 쓴다. `orca orchestration run-current`로 이 관리자에 묶인 Run을 본다. 없으면 `orca orchestration run-create --objective "<저장소> 이슈 지휘"`로 만든다. 아래의 `<run>`이 그 Run이다. 다른 Run이 함께 있으면 명령마다 `--run <run>`을 붙인다.
+지휘 세션 전체에 Run 하나를 쓴다. `orca orchestration run-current`로 이 관리자에 묶인 Run을 본다. 없으면:
+
+- 끝나지 않은 작업의 `state.md`에 `Run:` 줄이 있으면(관리자를 다시 시작했다) `orca orchestration run-use --id <그 Run>`으로 그 Run에 묶는다. 새 Run을 만들지 않는다. 이전 관리자가 띄운 작업자의 보고와 시도 표의 dispatch가 그 Run에 있다. 결과의 `runId`가 그 값인지 본다.
+- 그 밖에는 `orca orchestration run-create --objective "<저장소> 이슈 지휘"`로 만든다. 새로 만든 Run을 `state.md`의 `Run:` 줄에 적는다.
+
+아래의 `<run>`이 그 Run이다. 다른 Run이 함께 있으면 명령마다 `--run <run>`을 붙인다.
+
+네 번째 시범에서는 관리자가 없던 동안 도착한 보고가 `run-use` 뒤에 다시 전달되지 않았다. 그래서 그런 보고는 다시 전달되기를 기다리지 않고 아래 "기다리기"의 `inbox`로 직접 읽는다([../vstack.md](../vstack.md) "관리자 재시작"). 받은 편지함의 읽음·처리 표시(`read`, `handled`)로 관리자가 처리했는지 판단하지 않는다. 같은 시범에서 관리자가 없었는데도 그 표시가 붙어 있었다.
 
 ## worktree 만들기
 
