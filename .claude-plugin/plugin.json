@@ -1,7 +1,7 @@
 {
   "name": "vstack",
   "description": "v-mode 라우터가 레시피·원칙·검증 계약을 골라 쓰게 하는 스킬 묶음. mattpocock 정렬 스킬, pstack 원칙·검증, agent-orchestra 지휘를 하나로 묶는다",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": {
     "name": "vananaHope",
     "url": "https://github.com/vananaHope"
