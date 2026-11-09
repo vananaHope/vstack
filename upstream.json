@@ -301,7 +301,8 @@
       "mattpocock-skills:grill-with-docs",
       "mattpocock-skills:to-spec",
       "mattpocock-skills:to-tickets",
-      "agent-orchestra:configure"
+      "agent-orchestra:configure",
+      "mattpocock-skills:wait-what"
     ]
   }
 }
