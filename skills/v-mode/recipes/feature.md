@@ -1,6 +1,6 @@
 # 기능
 
-id: feature · version: 1 · contract: vstack-contract@3
+id: feature · version: 2 · contract: vstack-contract@3
 
 흐름은 pstack `playbooks/feature.md`(데이터 모양을 먼저 정하고 → 작은 단위로 만들고 검증하며 커밋 → 맞는 화면에서 확인)를 따른다. 원본의 하위 에이전트 위임, `how`·`architect`·`arena`·`interrogate` 호출, 작업 흐름 점검표, PR 단계는 vstack에서 관리자가 맡거나(지휘·검토) 첫 버전에서 뺐다. 설계 결정은 정렬 단계(사용자와 관리자)에서 하고 티켓에 싣는다.
 
@@ -47,7 +47,7 @@ id: feature · version: 1 · contract: vstack-contract@3
 | 검토 | 검토자 `review` | 아니오 | "검토자 review" | 필수 수용 기준 전부 |
 | 재실행 | 검토자 `rerun-only` | 아니오 | "검토자 rerun-only" | 맡은 수용 기준만 |
 
-지휘 절차(명세 양식, 결과 대상 확인, 복구)의 공통 이름 `새 수정`은 이 레시피의 `새 구현`이다. 이 레시피를 실제로 맡기기 전에 지휘 절차를 이 레시피에 연결해야 한다(명세 양식에 이 레시피의 입력 칸, 복구의 "레시피 1부터"를 "새 구현 1부터"로). 연결 전에는 라우터가 이 작업 유형을 "레시피 없음"으로 둔다.
+지휘 절차(명세 양식, 결과 대상 확인, 복구)의 공통 이름 `새 수정`은 이 레시피의 `새 구현`이다.
 
 ## 구현자: 새 구현
 
