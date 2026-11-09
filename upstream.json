@@ -286,6 +286,14 @@
     {
       "stage": 5,
       "to": "skills/v-mode/SKILL.md"
+    },
+    {
+      "stage": 6,
+      "to": "skills/v-mode/recipes/feature.md"
+    },
+    {
+      "stage": 6,
+      "to": "skills/v-mode/recipes/refactoring.md"
     }
   ],
   "runtime_commands": {

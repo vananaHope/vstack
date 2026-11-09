@@ -34,7 +34,7 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
   contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
-  recipes/               레시피 형식과 레시피(bug-fix)
+  recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring. feature·refactoring은 라우터 연결 전)
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)
