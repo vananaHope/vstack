@@ -5,6 +5,9 @@
   "owner": {
     "name": "vananaHope"
   },
+  "allowCrossMarketplaceDependenciesOn": [
+    "claude-plugins-official"
+  ],
   "plugins": [
     {
       "name": "vstack",

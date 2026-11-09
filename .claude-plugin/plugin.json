@@ -8,6 +8,12 @@
   },
   "repository": "https://github.com/vananaHope/vstack",
   "license": "MIT",
+  "dependencies": [
+    {
+      "name": "mattpocock-skills",
+      "marketplace": "claude-plugins-official"
+    }
+  ],
   "keywords": [
     "v-mode",
     "recipes",

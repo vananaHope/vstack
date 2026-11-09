@@ -6,10 +6,18 @@ Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 �
 
 ## 설치
 
+vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기댄다. 정렬 단계의 `grill-with-docs`·`to-spec`·`to-tickets`와 `wait-what`이 그 플러그인의 명령이다. vstack은 이것을 의존성으로 선언해 두었으므로, 그 마켓플레이스가 추가돼 있으면 vstack을 설치할 때 함께 설치된다. 그 마켓플레이스가 없으면 mattpocock-skills가 설치되지 않고 **vstack도 로드되지 않는다**. 먼저 `/plugin marketplace list`로 `claude-plugins-official`이 등록돼 있는지 확인하고, 없으면 아래처럼 추가한다(빈 설정 폴더에서 명령줄로만 설치했을 때는 등록돼 있지 않았다).
+
 ```
+/plugin marketplace add anthropics/claude-plugins-official   # 이미 있으면 건너뛴다
 /plugin marketplace add vananaHope/vstack
-/plugin install vstack@vstack
+/plugin install vstack@vstack                                # mattpocock-skills도 함께 설치된다
 ```
+
+- 순서를 바꿔 vstack을 먼저 설치했으면, 나중에 `claude-plugins-official`을 추가할 때 mattpocock-skills가 설치된다.
+- mattpocock-skills는 버전을 고정하지 않았다. 그 마켓플레이스의 새 버전을 따라간다.
+- vstack을 지운 뒤 의존성을 정리하려면 `claude plugin prune --dry-run`으로 대상을 먼저 본다. `claude plugin prune`은 그 범위(기본 user)에서 어느 플러그인도 더는 필요로 하지 않는 자동 설치 의존성을 지운다. 다른 플러그인이 쓰거나 직접 설치한 플러그인은 남는다.
+- Windows에서 `claude-plugins-official` 추가가 `Filename too long`으로 실패하면 설정 폴더 경로가 너무 긴 것이다.
 
 ## 쓰기
 
