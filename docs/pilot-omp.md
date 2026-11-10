@@ -56,7 +56,7 @@
 
 ## 어긋난 곳과 원인
 
-1. **omp 전역 설정이 준비 기록 뒤에 바뀌었다(실행 실수 + 환경).** 지휘자가 설정을 기록한 것은 14:05, 설정 파일이 바뀐 것은 14:32:18, 띄운 것은 14:37:25다. 지휘자가 바꾸지 않았다. 바뀐 값: `plan`·`tiny` 역할, `task` 대체 모델, `usageAwareFallback`, `task.eager: preferred` 등. 이번에 쓰인 `default`·`slow` 값은 같아 O3·O4의 모델 대조는 성립한다. `task.eager`가 서브에이전트 사용에 준 영향은 확인하지 못했다. 고칠 것: 설정 기록은 띄우기 직전에 한다(시범 절차). 실제 운용에서는 설정을 기록하지 않는다(모델은 omp가 정한다).
+1. **omp 전역 설정이 준비 기록 뒤에 바뀌었다(기록 시점이 일렀다).** 지휘자가 설정을 기록한 것은 14:05, 설정 파일이 바뀐 것은 14:32:18, 띄운 것은 14:37:25다. 지휘자가 바꾸지 않았다. 사용자가 그 사이에 직접 바꾼 것이다(사용자 확인). 바뀐 값: `plan`·`tiny` 역할, `task` 대체 모델, `usageAwareFallback`, `task.eager: preferred` 등. 이번에 쓰인 `default`·`slow` 값은 같아 O3·O4의 모델 대조는 성립한다. `task.eager`가 서브에이전트 사용에 준 영향은 확인하지 못했다. 고칠 것: 설정 기록은 띄우기 직전에 한다(시범 절차). 실제 운용에서는 설정을 기록하지 않는다(모델은 omp가 정한다).
 2. **후속 Dispatch 뒤 앞선 Dispatch가 `released`가 되지 않는다(Orca 동작, 문서 빠짐).** `worker-release ctx_bc3904d96a63` → `retained`, `reason: ownership_transferred`. 터미널은 후속 Dispatch 쪽에서 `released`됐다. backends/orca.md "정리"의 "모든 dispatch가 `released`"와 맞지 않았다. → backends/orca.md와 delegate-omp.md에 적었다.
 3. **Orca가 omp의 턴 시작을 관측하지 못한다(Orca 동작).** `turnStart: unsupported`, `stage`는 `input_accepted`에 머문다. → delegate-omp.md "제출 확인"에 `worker-show`·`worker-read` 확인을 넣었다.
 4. **`worker_done` 직후 `worker-show`의 `activity`는 `working`이다(Orca 동작).** 메인 턴이 끝난 뒤에도 잠깐 그렇게 보였다. 작업자가 정말 멈췄는지는 이 값으로 알 수 없다. → 확인 전후 HEAD·status 대조로 잡는다(delegate-omp.md 8).
