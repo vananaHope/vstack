@@ -40,7 +40,7 @@ skills:
 `/vstack:v-mode`(omp는 `/skill:v-mode`)로 시작해 하려는 일을 말한다. v-mode가 크기와 작업 유형을 보고 갈래를 고른다.
 
 - 바로: 질문·조사, 자명한 작은 수정
-- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링)을 이 대화에서 레시피대로 한다. 교차 검토·병합 관문은 없다
+- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링)을 레시피대로 한다. 교차 검토·병합 관문은 없다. 이 대화에서 직접 하거나, Claude Code + Orca에서 omp가 설치돼 있으면 omp 작업자에게 새 worktree로 맡긴다(버그 수정의 기본값. omp가 자기 모델 설정대로 구현하고 서브에이전트 검토를 받는다. `skills/v-mode/delegate-omp.md`)
 - 지휘: 정렬(`grill-with-docs` → `to-spec` → `to-tickets`, mattpocock 플러그인 명령) → 티켓에 vstack 절 → 작업자 배정·교차 검토·증거 보관·병합 관문(Orca)
 
 ## 구성
@@ -51,6 +51,7 @@ skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
   contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
   recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring)
+  delegate-omp*.md       한 세션 일을 omp 작업자에게 맡기는 절차와 명세 양식
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)

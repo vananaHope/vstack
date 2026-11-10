@@ -294,6 +294,14 @@
     {
       "stage": 6,
       "to": "skills/v-mode/recipes/refactoring.md"
+    },
+    {
+      "stage": 6,
+      "to": "skills/v-mode/delegate-omp.md"
+    },
+    {
+      "stage": 6,
+      "to": "skills/v-mode/delegate-omp-spec.md"
     }
   ],
   "runtime_commands": {
