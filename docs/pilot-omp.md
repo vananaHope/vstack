@@ -69,16 +69,39 @@
 - orchestrate-issues "새 작업 시작 조건"에 진행 중인 맡기기 없음. backends/orca.md "정리"에 위 2.
 - 반영을 Codex가 검토하며 나온 것(시범에서는 드러나지 않았다): 기록을 `<이름>/state.md`·`spec.md`로 나눔(시범의 `<이름>.md`·`<이름>.spec.md` 배치는 명세 파일이 "진행 중"으로 잡힌다), 맡기기 전에 지휘자 작업 트리의 미커밋 변경과 기준 커밋의 검증 기반 확인, 맡기지 않는 이유에 따라 직접/지휘를 나눔, 명세에 원칙 원문의 참조를 따라가지 않는다는 문장.
 
+## 라우터를 거친 실행(2026-11-11)
+
+위 시범은 지휘자가 계획을 알고 절차 초안을 직접 따랐다. PR #9를 병합하고 플러그인 0.9.0을 설치한 뒤, 사용자가 Orca에서 시범 저장소 `main`에 새 Claude Code 세션을 열어 `/vstack:v-mode`로 버그 하나를 줬다. 그 세션은 이 시범을 모른다. 이 기록을 쓰는 세션은 읽기만 했다.
+
+- 요청: "데이터 파일에 `items`가 없으면(`{}`, `{"version":2}`) `todo list`·`todo add`가 `오류: Cannot read properties of undefined (reading 'map')`로 끝난다. 기대: 빈 목록으로 읽는다."
+- 지휘자: `claude_3ef6708b_c5e1_4a36_b23f_66afe89865b8`. 근거는 그 세션의 대화 기록(`<Claude 설정 폴더>/projects/C--Users-gusdn-orca-projects-vstack-pilot-omp/55f23fb7-cca3-4a8d-9b06-97b180507415.jsonl`), 시범 저장소의 `.local/vstack-delegate/missing-items/state.md`·`spec.md`, omp 세션 기록(`~/.omp/agent/sessions/-orca-workspaces-vstack-pilot-omp-missing-items/`), git 기록이다.
+
+| 시각(UTC) | 일어난 일 |
+| --- | --- |
+| 04:44 | 고르기 0(끝난 기록 `done-invalid-id` 확인), Orca·omp 확인, 버그 재현. 갈래: 한 세션 · `bug-fix` · omp에 맡기기 |
+| 04:45:44 | "맡기기 전에" 7: 사용자 경로를 검증할 verify 시나리오가 `main`에 없다. 선택지 셋(`main`에 시나리오 커밋 후 맡김 / 시나리오 브랜치를 기준으로 / 맡기지 않고 직접)으로 물음 → 사용자가 첫째를 고름 |
+| ~04:52 | verify 시나리오 `missing-items`를 `main`에 로컬 커밋(`dae1c59` = `B`, 지금 코드에서 실패 확인). 예약, Run을 새로 만듦(`run_a888d2921607`), worktree `fix/missing-items`(띄우기 전 HEAD=`B`·clean 확인) |
+| 04:52:30 | `worker-start --agent omp`, 모델 옵션 없음. `worker-show`·`worker-read`로 시작 확인, 기록 `배정됨` |
+| 04:54:44 | `worker_done`(`H`=`88143cb`). 작업자 질문은 없었다(명세가 범위를 정했다) |
+| 04:54:50~04:55:03 | 지휘자 확인: Dispatch 끝남, clean, `H`=실제 HEAD, `B..H` 커밋 2개(실패 테스트 `15e8fee` → 수정 `88143cb`), AC-1·AC-2 재실행, 원래 재현 경로, `15e8fee` 임시 사본에서 새 테스트만 실패, 다른 verify 시나리오 5개. `확인 통과`. 작업자 터미널 해제(`released`) |
+| ~05:00 | 사용자 지시(로컬에서 `main`에 fast-forward 병합, push·PR 없음, worktree 삭제): `git merge --ff-only` → `main`=`88143cb`, `main`에서 AC 재실행, `orca worktree rm --delete-branch` → 기록 `끝`(05:00:59) |
+
+- omp: 메인 `anthropic/claude-opus-5-5`(fallback 아님). `task` 1회, 에이전트 `reviewer`, 자식 `openai-codex/gpt-6-astra`(fallback 아님). 자식 도구는 read 9, bash 4(`git diff`·`log`·`show`), grep 1이고 쓰기가 없다. 메인의 쓰기는 `test/store.test.mjs`와 `src/store.mjs` 한 줄(`(raw.items ?? []).map(normalize)`). Run의 작업자는 하나다.
+- 관찰자 재확인(05:01): `main`=`88143cb`·clean, `node scripts/verify.mjs missing-items` 종료 0, `node --test test/` 13/13, worktree와 브랜치 없음, 기록 `끝`.
+- 명세는 양식(`delegate-omp-spec.md`)의 절을 모두 갖췄다. 기록은 새 배치(`<이름>/state.md`, `spec.md`)다.
+- 문서에 없던 것: 결과 반영 방법으로 지휘자가 로컬 병합을 선택지로 냈고, 병합 뒤 기준 브랜치에서 수용 기준을 다시 돌렸다. → delegate-omp.md 10에 적었다.
+- 이 실행으로 처음 돌려 본 것: 라우터의 맡기기 선택, 새 세션이 delegate-omp.md만 보고 끝까지 감, "맡기기 전에" 7의 질문, 새 기록 배치, 끝내기의 병합과 worktree 지우기. Run은 첫 시범처럼 새로 만들었다(이번에는 그 판단을 새 세션이 delegate-omp.md 3을 보고 했다). 이 실행에는 작업자 질문과 후속 지시가 없었다.
+
 ## 한계와 돌려 보지 않은 것
 
-- 지휘자가 계획을 알고 12절 초안을 직접 따랐다. 라우터(v-mode)가 맡기기를 고르고 delegate-omp.md만 보고 끝까지 가는지는 보지 않았다.
+- 첫 시범은 지휘자가 계획을 알고 12절 초안을 직접 따랐다. 라우터를 거친 실행은 위 한 번이다.
 - 지휘자의 판단(맡기기 거부: 진행 중 작업, 레시피 없음, 위험)은 보지 않았다.
 - 비정상 경로: 지휘자 재시작 뒤 이어받기, 중단, 보고 없이 끝난 작업자, 시작 실패, 닫힌 작업자에게 보내기.
 - `feature`·`refactoring`, 간헐 버그, 준비·정리가 필요한 프로젝트.
-- 한 번 돌린 결과다. omp가 `reviewer`를 고르는 것, 서브에이전트가 쓰지 않는 것이 늘 그런지는 모른다.
+- 두 번 돌린 결과다. 두 번 모두 omp가 `reviewer`를 골랐고 서브에이전트가 쓰지 않았지만, 늘 그런지는 모른다.
 
 ## 시범 저장소 밖에 남은 것
 
-- Orca 등록 `vstack-pilot-omp`(repo `94015eb4-17e6-4ddd-bf4c-1867c151d62c`), worktree와 브랜치 `fix/done-invalid-id`(`763399e`), Run `run_ba1501382a22`. 정리는 사용자 확인 뒤에 한다.
+- Orca 등록 `vstack-pilot-omp`(repo `94015eb4-17e6-4ddd-bf4c-1867c151d62c`), 첫 시범의 worktree와 브랜치 `fix/done-invalid-id`(`763399e`, `main`에 병합하지 않음), Run `run_ba1501382a22`·`run_a888d2921607`. 시범 저장소 `main`은 `88143cb`다. 정리는 사용자 확인 뒤에 한다.
 - omp 전역 설정 `skills.customDirectories`(vstack 스킬 폴더, 이 시범 전에 더함. 백업 `config.yml.bak-vstack-host-neutral`).
 - omp 세션 기록(위 경로)과 사전 점검 기록(`…-scratchpad-omp-probe`).
