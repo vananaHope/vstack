@@ -46,7 +46,7 @@ disable-model-invocation: true
 | | Claude Code | omp |
 | --- | --- | --- |
 | 사용자 명령 형식 | `/<플러그인>:<스킬>` | `/skill:<스킬>` (플러그인 이름을 뗀다) |
-| 검증한 갈래 | 바로, 한 세션(직접. omp에 맡기기는 `bug-fix` 한 번), 지휘 | 바로, 한 세션(직접, `bug-fix` 한 번) |
+| 검증한 갈래 | 바로, 한 세션(직접. omp에 맡기기는 `bug-fix` 두 번), 지휘 | 바로, 한 세션(직접, `bug-fix` 한 번) |
 
 - **omp에서 하는 일**: 바로 갈래와, 한 세션 갈래를 이 대화에서 직접 하는 것만. 지휘(orchestrate-issues), omp에 맡기기([delegate-omp.md](delegate-omp.md)), 지휘 설정(configure), 한도 확인(check-limits)은 Claude Code로만 검증했다. 그래서 omp에서 고르기 0이 진행 중인 지휘 작업이나 맡기기를 찾았을 때, 지휘 갈래가 골라졌을 때, "그 밖의 요청"이 지휘 설정·한도일 때는 갈래와 근거를 알리고 Claude Code에서 v-mode를 다시 실행하라고 안내한 뒤 이 요청을 끝낸다. 그 절차의 파일(`.local/vstack/`, `.local/vstack-delegate/` 등)과 티켓은 그대로 둔다.
 - **omp에서 다른 모델 쓰기**: omp에서 한 세션 일을 직접 할 때 다른 모델의 검토·조사가 필요하면 omp 서브에이전트에게 읽기 전용으로 맡긴다. 코드는 이 대화가 쓴다. Orca 작업자는 띄우지 않는다. 어느 모델을 쓸지는 omp 설정이 정한다.

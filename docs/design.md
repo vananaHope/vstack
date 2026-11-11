@@ -35,7 +35,7 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 | 기존 플러그인 | 시범이 끝날 때까지 제거하지 않는다 | 합의(2판) |
 | 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기 | 3판에서 추가 |
 | 실행 도구 | v-mode는 Claude Code와 omp에서 돈다. 본문은 역할로 쓰고, 도구마다 다른 것(도구 알아보기, 사용자 명령 형식, 검증한 갈래)은 v-mode "실행 도구" 절 한곳에 둔다. 한꺼번에 중립화하지 않고 omp에서 돌려 보며 깨지는 곳만 고친다. 지휘 관리자는 Claude Code로 둔다 | 2026-11-10 추가 |
-| omp에 맡기기 | Claude Code 지휘자가 한 세션 크기 일을 omp 작업자에게 새 worktree로 맡긴다(계약 밖, 모델은 omp 설정, 서브에이전트는 읽기 전용). 한 세션 `bug-fix`의 기본 실행 방식. 정본 `skills/v-mode/delegate-omp.md`, 12절 | `bug-fix` 정상 경로 시범 1회(2026-11-10) |
+| omp에 맡기기 | Claude Code 지휘자가 한 세션 크기 일을 omp 작업자에게 새 worktree로 맡긴다(계약 밖, 모델은 omp 설정, 서브에이전트는 읽기 전용). 한 세션 `bug-fix`의 기본 실행 방식. 정본 `skills/v-mode/delegate-omp.md`, 12절 | `bug-fix` 정상 경로 2회(2026-11-10 직접, 2026-11-11 라우터 경유) |
 
 ### 판정 이력
 
@@ -354,7 +354,7 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 
 ## 12. omp에 맡기기
 
-상태: 정본은 `skills/v-mode/delegate-omp.md`(절차)와 `skills/v-mode/delegate-omp-spec.md`(명세 양식)이고, 이 절은 결정과 근거의 요약이다. 둘이 다르면 스킬 쪽이 우선한다. Orca에서 `bug-fix` 정상 경로를 한 번 돌렸다([pilot-omp.md](pilot-omp.md), 계획 [pilot-omp-plan.md](pilot-omp-plan.md)).
+상태: 정본은 `skills/v-mode/delegate-omp.md`(절차)와 `skills/v-mode/delegate-omp-spec.md`(명세 양식)이고, 이 절은 결정과 근거의 요약이다. 둘이 다르면 스킬 쪽이 우선한다. Orca에서 `bug-fix` 정상 경로를 두 번 돌렸다([pilot-omp.md](pilot-omp.md), 계획 [pilot-omp-plan.md](pilot-omp-plan.md)). 한 번은 지휘자가 절차 초안을 직접 따랐고, 한 번은 라우터를 거쳐 새 세션이 했다.
 
 **문제.** 큰 일이 아니면 세션 하나에서 하고 리뷰용 Codex 세션을 따로 켜 왔다. 세션 사이 맥락을 사용자가 문서로 옮겨야 했다. 목표는 Claude Code 지휘자가 일을 맡기고 맥락 전달도 지휘자가 하는 것이다. 다른 모델 서브에이전트는 omp의 역할별 모델 설정(`modelRoles`)으로 쓴다. Claude Code의 서브에이전트는 Claude 모델만 쓴다. pstack은 서브에이전트 방식이다(`poteto-mode/SKILL.md` "Subagents").
 
@@ -372,7 +372,9 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 
 **시범 결과(2026-11-10).** omp 메인은 `modelRoles.default`(Claude Opus), 검토 서브에이전트는 omp가 고른 `reviewer`로 `modelRoles.slow`(gpt-6-astra)에서 돌았고 파일을 쓰지 않았다. 질문(`ask` → 답 → 이어 감), 완료 보고, 후속 지시(같은 터미널·같은 omp 세션, 새 Dispatch) 모두 Orca 절차대로였다. 띄우기부터 정리까지 약 7분. 반영한 것: omp는 턴 시작을 Orca가 관측하지 못해 `worker-show`·`worker-read`로 시작을 본다, 확인 전후 HEAD·status 대조, 후속 Dispatch 뒤 앞선 Dispatch의 `retained`·`ownership_transferred`.
 
-**돌려 보지 않은 것.** 지휘자 재시작 뒤 이어받기, 중단, 보고 없이 끝난 작업자, 이미 닫힌 작업자에게 보내기, 맡기기 거부 판단(진행 중 작업·레시피 없음), `feature`·`refactoring`, 라우터를 거친 실제 실행(시범은 지휘자가 12절 초안을 직접 따랐다), omp `task.eager` 같은 설정이 서브에이전트 사용에 주는 영향. 11절 7단계의 "omp를 지휘 작업자 종류로 더한다"(계약 안)와는 다른 경로다.
+**라우터를 거친 실행(2026-11-11, 0.9.0).** 사용자가 새 Claude Code 세션에서 `/vstack:v-mode`로 버그를 주자, 그 세션이 한 세션 · `bug-fix` · omp에 맡기기를 골랐다. 검증 시나리오가 기준 브랜치에 없어 맡기기 전에 사용자에게 물었고(기준 브랜치에 먼저 커밋), omp 작업자(메인 Claude Opus, `reviewer` 서브에이전트 gpt-6-astra·읽기 전용)의 결과를 직접 다시 돌려 확인한 뒤, 사용자 지시로 로컬 병합과 worktree 삭제까지 했다. omp가 일한 시간은 약 2분이다.
+
+**돌려 보지 않은 것.** 지휘자 재시작 뒤 이어받기, 중단, 보고 없이 끝난 작업자, 이미 닫힌 작업자에게 보내기, 맡기기 거부 판단(진행 중 작업·레시피 없음), `feature`·`refactoring`, omp `task.eager` 같은 설정이 서브에이전트 사용에 주는 영향. 11절 7단계의 "omp를 지휘 작업자 종류로 더한다"(계약 안)와는 다른 경로다.
 
 **근거.** omp가 쓴 조사 메모 [research-multi-session-vs-subagents.md](research-multi-session-vs-subagents.md)는 출처를 검증하지 않은 참고다. 메모의 멀티 세션은 사람이 조율하는 경우라 AI 관리자가 조율하는 vstack 지휘와 그대로 비교하지 않는다. 쓰는 것은 방향뿐이다: 독립 병렬 작업은 격리된 세션, 순차 작업은 한 세션, 읽기 전용 일은 서브에이전트.
 
@@ -437,3 +439,4 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 - omp 한 세션 시범(2026-11-10, 시범 저장소의 scratch 복제본 두 개, 원격 없음): 버그 "`todo done abc`가 `no todo with id NaN`"을 omp 메인(`anthropic/claude-opus-5-5`)과 Claude Code 메인(`claude -p --plugin-dir`)에 같은 문장으로 줬다. 둘 다 약 150초에 한 세션 + `bug-fix`를 골라 레시피 순서(verify 시나리오 확장, 실패 테스트 커밋, 수정 커밋에 원인·기각한 가설)를 따랐고, 결과 코드도 거의 같다(10진 숫자만·1 이상). 차이: Claude Code 쪽은 `Number.isSafeInteger`까지 봤고, omp 쪽은 그 경계를 빠뜨려 Codex 검토에서 중요 1건(`9007199254740993`이 다른 id를 완료)이 나왔다. 한 번이라 도구 차이로 보지 않는다. 둘 다 "Codex에게 검토"를 Orca 작업자로 띄웠고(orchestration 스킬의 설명이 그렇게 시킨다), 비대화형(`-p`) 세션이라 보고를 받기 전에 끝났다. 자식 세션이 부모의 Orca 관리자 연결을 물려받아 작업자가 부모 세션의 Run·작업 공간에 붙었다. 한 세션에서 다른 계열 검토를 쓸 규칙은 아직 없다. 넣을 때는 부르는 방법을 정해 적는다.
 - 12절 "omp에 맡기기" 초안(제안·미검증, v-mode 미반영): 세 축(계약·실행자·격리)을 나누고, 첫 버전은 계약 밖 + omp 작업자 + 새 worktree(`current`는 쓰지 않음). 작업자 다루기는 `backends/orca.md`를 그대로 쓰고 다른 점만 적음. 고르는 순서(소유 → 위험·검증 → 나누기 → 실행자(레시피 있을 때만) → 격리), 저장소당 지휘자 하나 전제와 지휘·맡기기 상호 배제, 계약과의 경계(impl·rev 아님, 레시피는 한 세션 절차 범위, 관문 대신 못 함), 맡기기 10단계(worktree를 먼저 만들어 띄우기 전에 `B`·clean 확인, `--model` 없음, 모든 서브에이전트 읽기 전용, 보내기로 고치기), 메인 저장소 `.local/vstack-delegate/` 기록과 재시작 이어받기, 시범은 꼭 확인/관측 기록/비정상으로 나눔. Codex 방향 검토 3회 반영(3회째에 새 한살이를 만들지 않고 기존 Orca 절차를 쓰도록 줄임). 조사 메모는 미검증 참고.
 - omp 맡기기 시범과 반영(플러그인 0.9.0, [pilot-omp.md](pilot-omp.md)): 정상 경로 통과(질문 1회·후속 지시 1회 성립, omp 메인=`default` 역할, `reviewer` 서브에이전트=`slow` 역할·읽기 전용). 절차를 12절에서 `skills/v-mode/delegate-omp.md`·`delegate-omp-spec.md`로 옮기고 12절은 요약으로 줄였다. v-mode: 고르기 0에 진행 중인 맡기기, 한 세션에 "직접 할지, omp에 맡길지"(`bug-fix`는 조건이 맞으면 맡기기가 기본), 실행 도구에 omp에서 다른 모델 쓰기(서브에이전트 읽기 전용, Orca 작업자 없음). orchestrate-issues "새 작업 시작 조건"에 진행 중인 맡기기 없음. `backends/orca.md` "정리"에 후속 dispatch 뒤 앞선 dispatch의 `retained`·`ownership_transferred`. 계약은 그대로 `@3`.
+- 라우터를 거친 omp 맡기기 실행(플러그인 0.9.1, [pilot-omp.md](pilot-omp.md) "라우터를 거친 실행"): 0.9.0을 설치한 새 세션이 v-mode로 맡기기를 고르고 delegate-omp.md만 보고 끝까지 갔다("맡기기 전에" 7의 질문, 새 기록 배치, 병합·worktree 지우기 포함). 반영: delegate-omp.md 검증 범위와 10(반영 방법은 사용자가 정함, 병합했으면 기준 브랜치에서 수용 기준 재실행), v-mode 검증한 갈래. 계약은 그대로 `@3`.
