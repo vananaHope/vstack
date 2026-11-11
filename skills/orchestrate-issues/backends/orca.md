@@ -134,6 +134,7 @@ Codex는 작업 폴더의 `.codex/config.toml`을 전역 설정보다 우선해 
    | `release_unknown`(종료 코드 1) | 해제를 증명하지 못했다. 사용자에게 알리고 그 worktree를 지우지 않는다 |
 
 3. 모든 dispatch가 `released`(`worker-release`가 `already_released`로 답한 것 포함)가 되면 정리가 끝난 것이다. 하나라도 아니면 아래 "worktree 지우기"를 하지 않는다.
+   - 위 "보내기"로 같은 터미널을 후속 dispatch에 넘겨준 앞선 dispatch는 `worker-list`에 터미널 상태가 비어 있고, `worker-release`가 `retained`·`reason: ownership_transferred`로 답한다(omp 맡기기 시범, Orca 1.4.255). 그 터미널을 이어받은 마지막 dispatch가 `released`면 앞선 dispatch도 끝난 것으로 본다.
 
 `worker-release`는 Orca가 만든 그 작업자의 터미널만 닫는다. 사용자가 열어 둔 터미널, 원래 있던 터미널, 신원을 증명할 수 없는 터미널은 닫지 않고 `retained`로 답한다. 그런 터미널이 남으면 막힘으로 두고 사용자에게 알린다.
 

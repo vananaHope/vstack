@@ -19,12 +19,28 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 - vstack을 지운 뒤 의존성을 정리하려면 `claude plugin prune --dry-run`으로 대상을 먼저 본다. `claude plugin prune`은 그 범위(기본 user)에서 어느 플러그인도 더는 필요로 하지 않는 자동 설치 의존성을 지운다. 다른 플러그인이 쓰거나 직접 설치한 플러그인은 남는다.
 - Windows에서 `claude-plugins-official` 추가가 `Filename too long`으로 실패하면 설정 폴더 경로가 너무 긴 것이다.
 
+### omp에서 쓰기
+
+omp는 Claude Code 플러그인 가운데 일부만 찾았다(omp 18.18.6: mattpocock-skills는 찾고, 사용자 범위로 설치한 vstack은 못 찾음). Claude Code에 위처럼 설치한 뒤, omp 설정(`~/.omp/agent/config.yml`)에 vstack 마켓플레이스 사본의 `skills` 폴더를 더한다. 이 사본은 마켓플레이스를 갱신하면 함께 바뀌고, 경로에 버전이 들어가지 않는다.
+
+```yaml
+skills:
+  customDirectories:
+    - <Claude Code 설정 폴더>/plugins/marketplaces/vstack/skills
+```
+
+- 기존 파일 끝에 줄바꿈이 없으면 줄바꿈부터 넣는다. 붙어 버리면 YAML이 깨지고, omp가 그 파일을 `config.yml.broken-…`로 옮긴 뒤 빈 설정으로 시작한다. 고치기 전에 백업한다.
+- `<Claude Code 설정 폴더>`는 `CLAUDE_CONFIG_DIR`, 없으면 `~/.claude`다.
+- 확인: `omp -p "/skill:v-mode 이 요청은 어느 갈래야? 요청: README 오타 하나 고치기"`. vstack 스킬은 모두 사용자가 실행하는 스킬이라 모델이 보는 스킬 목록에는 나오지 않는다.
+- mattpocock-skills는 omp가 Claude Code 설치 기록에서 찾았다(`/skill:to-spec`이 실행됨). 찾지 못하면 그 플러그인의 `skills` 폴더도 `customDirectories`에 더한다.
+- omp에서는 바로·한 세션 갈래만 쓴다. 지휘는 Claude Code에서 한다.
+
 ## 쓰기
 
-`/vstack:v-mode`로 시작해 하려는 일을 말한다. v-mode가 크기와 작업 유형을 보고 갈래를 고른다.
+`/vstack:v-mode`(omp는 `/skill:v-mode`)로 시작해 하려는 일을 말한다. v-mode가 크기와 작업 유형을 보고 갈래를 고른다.
 
 - 바로: 질문·조사, 자명한 작은 수정
-- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링)을 이 대화에서 레시피대로 한다. 교차 검토·병합 관문은 없다
+- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링)을 레시피대로 한다. 교차 검토·병합 관문은 없다. 이 대화에서 직접 하거나, Claude Code + Orca에서 omp가 설치돼 있으면 omp 작업자에게 새 worktree로 맡긴다(버그 수정의 기본값. omp가 자기 모델 설정대로 구현하고 서브에이전트 검토를 받는다. `skills/v-mode/delegate-omp.md`)
 - 지휘: 정렬(`grill-with-docs` → `to-spec` → `to-tickets`, mattpocock 플러그인 명령) → 티켓에 vstack 절 → 작업자 배정·교차 검토·증거 보관·병합 관문(Orca)
 
 ## 구성
@@ -35,6 +51,7 @@ skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
   contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
   recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring)
+  delegate-omp*.md       한 세션 일을 omp 작업자에게 맡기는 절차와 명세 양식
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)
