@@ -42,7 +42,7 @@ Step 4 is usually one small script that imports the same library the app ships a
 ## What to hand back
 
 - **What it does.** What changed, including the part that isn't obvious.
-- **The one fact it's safe because of.** State it, say which step you got it to, and show the proof. If you couldn't prove it, write unproven.
+- **The one fact it's safe because of.** State it, say which step you got it to, and show the proof. If you couldn't prove it, write unproven. If running it showed the fact is false, or false under some condition, write disproven, name the condition, and list what breaks under Risks.
 - **Risks.** Each names how it breaks, the `file:line`, how likely and how bad, and how to check. Paste the proof for the ones that matter.
 - **Cleared.** What you checked and why it's fine.
 - **Before you merge.** The cheapest test or repro that catches the real bug, including the script you wrote.
@@ -53,6 +53,6 @@ Write it plainly, cite real code, and strip anything private before it goes anyw
 
 - In a vstack task: scripts, copies and temporary data go in the scratch folder the spec names. The command you ran and its output go in your evidence folder under `process/`. A reviewer does not edit product source or tests and does not commit. The reviewer puts the handback in the review report: each risk becomes a finding with a severity, and an unproven safety fact is a finding or an item for a human to check, never a silent pass. An implementer puts the handback in the completion report.
 - Level 5 (the running app) in a vstack task: start the app only through the verify skill or the setup steps the spec gives. If that opens a real desktop window, do it only under the locked desktop command the spec gives. If the spec gives no way to run the app, or a window is needed and there is no lock command, stop at level 4 and say so.
-- Outside a vstack task: scripts go in a new folder under the OS temp directory. Do not leave them in the working tree. For level 5, follow the project's own instructions for running the app.
+- Outside a vstack task: scripts go in the folder whoever asked names, or else a new folder under the OS temp directory. Do not leave them in the working tree. For level 5, follow the project's own instructions for running the app.
 
 **Reply:** the writeup above, with the one safety fact either proven or marked unproven.
