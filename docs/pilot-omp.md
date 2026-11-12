@@ -92,16 +92,44 @@
 - 문서에 없던 것: 결과 반영 방법으로 지휘자가 로컬 병합을 선택지로 냈고, 병합 뒤 기준 브랜치에서 수용 기준을 다시 돌렸다. → delegate-omp.md 10에 적었다.
 - 이 실행으로 처음 돌려 본 것: 라우터의 맡기기 선택, 새 세션이 delegate-omp.md만 보고 끝까지 감, "맡기기 전에" 7의 질문, 새 기록 배치, 끝내기의 병합과 worktree 지우기. Run은 첫 시범처럼 새로 만들었다(이번에는 그 판단을 새 세션이 delegate-omp.md 3을 보고 했다). 이 실행에는 작업자 질문과 후속 지시가 없었다.
 
+## 기능 레시피 맡기기와 시작 실패 뒤 다시 띄우기(2026-11-12)
+
+플러그인 0.9.2를 설치한 뒤, 사용자가 Orca에서 시범 저장소 `main`에 새 Claude Code 세션을 열어 `/vstack:v-mode`로 기능 하나(`todo undo <id>`: 완료 취소)를 줬다. 이 기록을 쓰는 세션은 읽기만 했다(끝난 뒤 `main`에서 수용 기준을 다시 돌린 것 말고는).
+
+- 지휘자: `claude_82e79011_590f_4789_a262_df7fb0c5c0b4`. 근거는 그 세션의 대화 기록(`<Claude 설정 폴더>/projects/C--Users-gusdn-orca-projects-vstack-pilot-omp/142c76ae-a147-4e88-ba82-d1b29b974bb8.jsonl`), 시범 저장소의 `.local/vstack-delegate/undo/state.md`·`spec.md`, omp 세션 기록(`~/.omp/agent/sessions/-orca-workspaces-vstack-pilot-omp-undo/`), git 기록, Windows CodeIntegrity 이벤트 로그다.
+- 라우터의 고르기: 첫 요청에는 맡기라는 말이 없어 라우터가 문서대로 이 대화에서 직접 구현했다(`feature`는 직접 하는 것이 기본). 사용자가 그 브랜치를 병합 없이 지우게 하고 "omp에 맡겨서 진행해"로 다시 요청했다. 라우터는 돌려 보지 않은 경로라는 것을 기록에 적고 맡겼다. 같은 세션이 그 기능을 한 번 구현해 본 뒤라, 명세(범위 밖, 수용 기준 5개)는 그 경험이 든 상태에서 쓰였다.
+
+| 시각(UTC) | 일어난 일 |
+| --- | --- |
+| ~02:00 | 맡기기 전 조건 확인(`omp --version` 답함), 예약, Run 새로 만듦(`run_c1e524a81b1e`), worktree `feature/undo`(띄우기 전 HEAD=`B` `88143cb`·clean 확인). `B`에서 undo 시나리오 4개가 실패하는 것을 확인 |
+| ~02:06 | `worker-start --agent omp` 실패: `failedStage: agent_readiness`, `lastError: timeout`. 명세는 전달되지 않았다. 같은 명령을 되풀이하지 않았다 |
+| ~02:08 | `worker-read`로 원인을 읽음(아래). 에이전트 종료를 확인하고 `worker-release` → `released`. worktree는 HEAD=`B`·clean 그대로. 기록 `확인 필요`, 사용자에게 알리고 멈춤. 지휘자는 OS 보안 설정과 omp 설치를 바꾸지 않았다 |
+| (사용자) | 사용자가 Smart App Control을 끄고 omp를 18.19.0으로 올린 뒤 "다시 맡겨"라고 함 |
+| 13:38:06 | 다시 띄우기 전 확인(`omp sh -c 'echo natives-ok'` 종료 0, worktree HEAD=`B`·clean). 같은 Task로 `worker-start --task task_2ba1db58cd8c --retry-of ctx_2991d92d3589 --worktree path:<worktree> --agent omp --run <run>` → 새 Dispatch `ctx_34576c9c0ecb`, `state: ready`. 명세는 고치지 않았다. `worker-show`·`worker-read`로 시작 확인, 기록 `배정됨` |
+| 13:41~13:42 | `worker_done`(`H`=`96edf70`). 작업자 질문은 없었다 |
+| 13:42:03~13:42:22 | 지휘자 확인: Dispatch 끝남, clean, `H`=실제 HEAD, `B..H` 커밋 4개, AC-1~4(verify 시나리오 4개) 각각 종료 0, AC-5 `node --test test/` 20/20, 다른 시나리오 6개 종료 0, 건드리지 말 곳 변경 0. `B` 소스에 새 테스트를 얹은 임시 사본에서 새 테스트가 실패하는 것, 틀린 구현의 임시 사본에서 미완료 undo 테스트만 실패하는 것도 확인. `확인 통과` |
+| ~13:50 | 사용자 지시("병합하고 지워줘"): `git merge --ff-only` → `main`=`96edf70`, `main`에서 AC-1~5 재실행, `orca worktree rm --delete-branch`(13:52:10) → 기록 `끝`. 원격이 없어 push·PR은 없다 |
+
+- **시작 실패의 원인**: omp가 시작 직후 `Failed to load pi_natives native addon`으로 죽었다. Windows Smart App Control이 서명 없는 네이티브 모듈(`~/.omp/natives/18.18.6/pi_natives.win32-x64-baseline.node`)을 막았다(CodeIntegrity 이벤트 3077, 레지스트리 `VerifiedAndReputablePolicyState`=1). 이 PC의 설정 문제이고 vstack·Orca의 결함이 아니다. 앞선 두 실행(11-10, 11-11)에서는 같은 omp 18.18.6이 떴다. 그 사이에 무엇이 바뀌었는지는 확인하지 못했다(이벤트 로그가 11-12 08:54 KST부터만 남아 있다).
+- **`omp --version`은 이 실패를 잡지 못했다.** 네이티브 모듈 없이도 버전을 답한다. 같은 상태에서 `omp --help`는 실패했고(관찰자 측정), 막힘이 풀린 뒤에는 종료 코드 0으로 사용법을 냈다. → delegate-omp.md "맡기기 전에" 4를 `omp --help`로 바꿨다.
+- **같은 Task 다시 띄우기**: `--retry-of`로 띄운 새 Dispatch가 같은 Task의 명세를 받았다(`--spec-file`을 다시 주지 않았다). 실패한 Dispatch는 그 전에 `released`였다. → delegate-omp.md에 "시작 실패" 절을 더했다.
+- omp(18.19.0): 메인 `anthropic/claude-opus-5-5`(fallback 아님), assistant 메시지 37개 모두 같은 모델. `task` 1회, 에이전트 `reviewer`(이름 `UndoReview`), 자식 `openai-codex/gpt-6-astra`(fallback 아님). 자식 도구는 read 9, bash 1(`git diff`)이고 쓰기가 없다. 결과는 지적 없음. 메인 세션은 13:38:08~13:43:19.
+- 결과물: `B..96edf70` 커밋 4개(undo 명령 → 미완료 undo 테스트 → 없는 id 오류 → 사용법 줄·README). `bin/todo.mjs`, `src/todo.mjs`, `test/cli.test.mjs`(새 파일 66줄), `test/todo.test.mjs`, `README.md` 1줄. 동작 2(미완료에 undo)의 테스트는 앞선 구현 때문에 처음부터 통과했고, 작업자는 틀린 구현의 임시 사본으로 그 테스트가 실패할 수 있음을 확인했다고 보고했다(명세가 그렇게 시켰다).
+- 관찰자 재확인(11-12 밤): `main`=`96edf70`·clean, verify 시나리오 `undo-persist`·`undo-idempotent`·`undo-missing`·`usage-undo` 각각 종료 0, `node --test test/` 20/20, worktree와 브랜치 `feature/undo` 없음, 기록 `끝`.
+- 이 실행으로 처음 돌려 본 것: `feature` 레시피 맡기기(사용자 지시로), 시작 실패 뒤 `확인 필요`로 멈추기, 같은 Task 다시 띄우기. 작업자 질문과 후속 지시는 없었다.
+- 한계: 맡긴 기능은 데이터 모양이 정해진 작은 것이다(기존 `done` 불리언). 지휘자가 같은 기능을 먼저 직접 구현해 봤다. 라우터가 `feature`를 스스로 맡기는 경우는 보지 않았다(기본값은 직접 하기 그대로다).
+
 ## 한계와 돌려 보지 않은 것
 
-- 첫 시범은 지휘자가 계획을 알고 12절 초안을 직접 따랐다. 라우터를 거친 실행은 위 한 번이다.
+- 첫 시범은 지휘자가 계획을 알고 12절 초안을 직접 따랐다. 라우터를 거친 실행은 위 두 번이다(`bug-fix` 한 번, `feature` 한 번).
 - 지휘자의 판단(맡기기 거부: 진행 중 작업, 레시피 없음, 위험)은 보지 않았다.
-- 비정상 경로: 지휘자 재시작 뒤 이어받기, 중단, 보고 없이 끝난 작업자, 시작 실패, 닫힌 작업자에게 보내기.
-- `feature`·`refactoring`, 간헐 버그, 준비·정리가 필요한 프로젝트.
-- 두 번 돌린 결과다. 두 번 모두 omp가 `reviewer`를 골랐고 서브에이전트가 쓰지 않았지만, 늘 그런지는 모른다.
+- 비정상 경로: 지휘자 재시작 뒤 이어받기, 중단, 보고 없이 끝난 작업자, 닫힌 작업자에게 보내기. 시작 실패는 "다시 띄우기"만 한 번 돌려 봤고, 맡기지 않고 닫는 길과 작업자가 무엇인가 쓴 뒤 죽은 경우는 보지 않았다.
+- `refactoring`, 데이터 모양을 정해야 하는 `feature`, 간헐 버그, 준비·정리가 필요한 프로젝트.
+- 세 번 돌린 결과다. 세 번 모두 omp가 `reviewer`를 골랐고 서브에이전트가 쓰지 않았지만, 늘 그런지는 모른다.
 
 ## 시범 저장소 밖에 남은 것
 
-- Orca 등록 `vstack-pilot-omp`(repo `94015eb4-17e6-4ddd-bf4c-1867c151d62c`), 첫 시범의 worktree와 브랜치 `fix/done-invalid-id`(`763399e`, `main`에 병합하지 않음), Run `run_ba1501382a22`·`run_a888d2921607`. 시범 저장소 `main`은 `88143cb`다. 정리는 사용자 확인 뒤에 한다.
+- Orca 등록 `vstack-pilot-omp`(repo `94015eb4-17e6-4ddd-bf4c-1867c151d62c`), 첫 시범의 worktree와 브랜치 `fix/done-invalid-id`(`763399e`, `main`에 병합하지 않음), Run `run_ba1501382a22`·`run_a888d2921607`·`run_c1e524a81b1e`. 시범 저장소 `main`은 `96edf70`이다. 정리는 사용자 확인 뒤에 한다.
 - omp 전역 설정 `skills.customDirectories`(vstack 스킬 폴더, 이 시범 전에 더함. 백업 `config.yml.bak-vstack-host-neutral`).
 - omp 세션 기록(위 경로)과 사전 점검 기록(`…-scratchpad-omp-probe`).
+- 이 PC의 설정: 사용자가 2026-11-12에 Smart App Control을 껐고 omp를 18.19.0으로 올렸다.
