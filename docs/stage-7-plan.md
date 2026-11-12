@@ -63,7 +63,7 @@
 1. 제거 전 확인: 어느 저장소에도 `.local/orchestration/*/state.md` 가운데 `끝`이 아닌 것이 없다.
 2. `claude plugin uninstall agent-orchestra@agent-orchestra`와 마켓플레이스 제거. **사용자가 "제거해"라고 지시할 때만 한다.** 되돌리려면 다시 설치하면 된다(저장소는 아카이브해도 읽을 수 있다).
 3. vstack 문서에서 "기존 agent-orchestra" 길을 걷어 낸다.
-   - v-mode·`vstack.md`의 "기존 agent-orchestra로 하거나" → "사용자가 정할 것" 2의 답대로.
+   - v-mode·`vstack.md`의 "기존 agent-orchestra로 하거나" → "사용자가 정한 것" 2의 답대로.
    - 옮긴 스킬의 "(vstack 사본)"과 머리말. `disable-model-invocation`은 `check-limits`만 뗀다(읽기 전용 측정이라 모델이 불러도 된다. 지휘와 설정은 지금처럼 사용자가 실행한다).
    - 계약 `state-and-rollback.md`: 소유권 줄과 "되돌리기"를 "새로 시작"(작업을 포기하고 같은 이슈를 새 vstack 작업으로) 하나로 줄인다. 계약 예시 04의 이행 장면도 바꾼다. **계약을 바꾸므로 `vstack-contract@4`가 된다.** 판정식(G1~G5)과 작업자 의무는 그대로다. 진행 중인 작업이 없을 때 한다.
    - `upstream.json`·`UPSTREAM.md`: `user_commands`에서 `agent-orchestra:configure` 제거, 출처는 "아카이브된 원본"으로 표시, closure 검사에서 `moved` 출처를 뺀다.
@@ -77,7 +77,7 @@
 
 1. 원본 README 맨 위에 "vstack으로 옮겼다"는 안내를 넣는다(그 저장소의 마지막 커밋. 사용자 지시로 push).
 2. `gh repo archive vananaHope/agent-orchestra`. **사용자가 저장소 이름을 적어 지시할 때만 한다.** 아카이브는 GitHub 설정에서 풀 수 있다.
-3. 로컬 클론과 `~/.agent-orchestra/`는 "사용자가 정할 것" 3의 답대로.
+3. 로컬 클론과 `~/.agent-orchestra/`는 "사용자가 정한 것" 3의 답대로.
 
 완료 기준: 저장소가 아카이브 상태, vstack `UPSTREAM.md`에 아카이브 날짜.
 
