@@ -40,10 +40,11 @@
 
 1. 설정 위치는 그대로 둔다. `setup.md`와 `desktop.md`에 `.local/orchestration/`과 `~/.agent-orchestra/`가 옛 이름이라는 것만 적는다.
 2. `setup.md`의 `AGENTS.md` 한 줄("shared by the vstack and agent-orchestra plugins")은 그대로 둔다. 제거를 미뤘으므로 아직 맞는 말이다.
-3. 프로젝트 설정 양식에 vstack이 실제로 읽는 것과 읽지 않는 것을 표시한다. 예: `관리자` 검토 항목은 건너뜀, "UI 다듬기"는 범위 밖.
-4. 프로젝트를 vstack으로 옮길 때 할 일을 한 절로 적는다(`README.md` 또는 `setup.md`): 설정은 그대로 읽힌다, `AGENTS.md` 줄, verify 스킬, 티켓의 vstack 절.
+3. agent-orchestra를 쓰던 프로젝트에서 vstack을 쓸 때 알 것을 README의 한 절로 적는다: 설정은 그대로 읽힌다, 옛 이름 경로, vstack 지휘가 다르게 하는 것(`관리자` 검토 항목을 건너뜀, UI 다듬기와 앞부분 선행 병합을 하지 않음), 처음 지휘하기 전에 갖출 것(검증 수단, 티켓의 vstack 절), 두 관리자를 동시에 돌리지 않음.
 
-완료 기준: `node scripts/check-links.mjs`가 기준과 같은 결과, Codex 읽기 전용 검토 `완료`, PR 병합(사용자 지시).
+처음 초안에는 "프로젝트 설정 양식에 vstack이 읽지 않는 항목을 표시한다"와 "`AGENTS.md` 줄 안내"가 있었다. 양식은 두 플러그인이 함께 쓰므로 고치지 않고 위 README 절로 대신했다. `AGENTS.md` 줄은 2대로 그대로라 안내할 것이 없다.
+
+완료 기준: `node scripts/check-links.mjs`에 새 `BROKEN`·`NONSTANDARD`·`SKILL`·`TOOL`·`NOT CARRIED`가 없다(출처 폴더를 주지 않아 나오는 `CLOSURE`는 가져온 스킬 수만큼 는다. `--source`를 준 출처는 통과해야 한다), Codex 읽기 전용 검토 `완료`, PR 병합(사용자 지시).
 
 ### B. 실제 프로젝트에서 한 번(제거 전 확인)
 

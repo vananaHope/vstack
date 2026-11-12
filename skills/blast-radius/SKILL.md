@@ -52,7 +52,7 @@ Write it plainly, cite real code, and strip anything private before it goes anyw
 ## Where the proof lives
 
 - In a vstack task: scripts, copies and temporary data go in the scratch folder the spec names. The command you ran and its output go in your evidence folder under `process/`. A reviewer does not edit product source or tests and does not commit. The reviewer puts the handback in the review report: each risk becomes a finding with a severity, and an unproven safety fact is a finding or an item for a human to check, never a silent pass. An implementer puts the handback in the completion report.
-- Level 5 (the running app) only through the verify skill or the locked desktop command the spec gives. If the spec gives neither, stop at level 4 and say so.
-- Outside a vstack task: scripts go in a new folder under the OS temp directory. Do not leave them in the working tree.
+- Level 5 (the running app) in a vstack task: start the app only through the verify skill or the setup steps the spec gives. If that opens a real desktop window, do it only under the locked desktop command the spec gives. If the spec gives no way to run the app, or a window is needed and there is no lock command, stop at level 4 and say so.
+- Outside a vstack task: scripts go in a new folder under the OS temp directory. Do not leave them in the working tree. For level 5, follow the project's own instructions for running the app.
 
 **Reply:** the writeup above, with the one safety fact either proven or marked unproven.
