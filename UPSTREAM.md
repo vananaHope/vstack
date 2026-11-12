@@ -103,6 +103,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 43 | "If you couldn't prove it, write unproven." 뒤에 "돌려 보니 사실이 거짓이면(일부 조건에서만 거짓이어도) disproven이라고 쓰고 조건을 적고, 깨지는 것을 Risks에 적는다" | 평가에서 검토자가 "증명됨/증명 못 함" 둘뿐이라 반증된 경우의 표기를 스스로 만들었다 |
 | 48 | "Write it through `unslop`" → "Write it plainly" | `unslop`은 vstack에 없다 |
 | 48 뒤 | "Where the proof lives" 절 추가: vstack 작업이면 스크립트는 명세의 scratch, 명령과 출력은 증거 폴더 `process/`, 결과는 검토 보고서의 지적(증명 못 한 사실은 지적이나 사람이 확인할 항목). 5단계(실행 중인 앱)는 명세가 준 verify 스킬이나 준비 절차로만 띄우고, 실창이 뜨면 명세의 잠금 명령 안에서만. 작업 밖에서는 스크립트를 요청한 쪽이 정한 폴더(없으면 OS 임시 폴더)에 두고 앱 실행은 그 프로젝트의 안내를 따름 | 증거 계약과 역할별 권한에 맞춤 |
+| 50 | Reply의 "either proven or marked unproven" → "proven, disproven, or unproven"으로, unproven은 증명도 반증도 못 한 경우라고 적음 | 43줄에 더한 disproven과 맞춤 |
 
 ### agent-orchestra 옮기기(3-1단계, 0.20.0 `c62be33`)
 

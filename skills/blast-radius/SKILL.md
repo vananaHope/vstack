@@ -55,4 +55,4 @@ Write it plainly, cite real code, and strip anything private before it goes anyw
 - Level 5 (the running app) in a vstack task: start the app only through the verify skill or the setup steps the spec gives. If that opens a real desktop window, do it only under the locked desktop command the spec gives. If the spec gives no way to run the app, or a window is needed and there is no lock command, stop at level 4 and say so.
 - Outside a vstack task: scripts go in the folder whoever asked names, or else a new folder under the OS temp directory. Do not leave them in the working tree. For level 5, follow the project's own instructions for running the app.
 
-**Reply:** the writeup above, with the one safety fact either proven or marked unproven.
+**Reply:** the writeup above, with the one safety fact marked proven, disproven, or unproven. Unproven means you could neither prove it nor show it false.
