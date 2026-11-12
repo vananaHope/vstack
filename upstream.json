@@ -212,6 +212,13 @@
       "mode": "adapted"
     },
     {
+      "stage": 7,
+      "source": "pstack",
+      "from": "skills/blast-radius",
+      "to": "skills/blast-radius",
+      "mode": "adapted"
+    },
+    {
       "stage": 2,
       "source": "mattpocock-skills",
       "from": "skills/engineering/diagnosing-bugs",
