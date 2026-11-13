@@ -24,18 +24,20 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 
 ## 1. 결정 상태
 
+되돌리기 어렵고 이유가 궁금해질 결정은 [adr/](adr/)에 번호를 붙여 하나씩 따로 둔다(2026-11-14부터). 이 표는 요약이고, 둘이 다르면 ADR이 우선한다. 용어는 저장소 루트의 [GLOSSARY.md](../GLOSSARY.md)다.
+
 | 항목 | 내용 | 상태 |
 | --- | --- | --- |
-| 형태 | Claude Code 플러그인. `/vstack:v-mode`가 입구 | 합의 |
+| 형태 | Claude Code 플러그인. `/vstack:v-mode`가 입구. mattpocock-skills를 의존성으로 함께 설치([ADR 0003](adr/0003-mattpocock-dependency-with-adapted-copies.md)) | 합의 |
 | 구조 | v-mode가 레시피를 골라 그 단계를 할 일 목록에 그대로 복사. 건너뛰는 단계는 `skip: <이유>` | 합의 |
 | 원칙 | pstack 원칙 24개 전부. 원문 영어 그대로 + 출처 | 합의 |
 | 중심 | 검증과 원칙 | 합의 |
-| 가져오는 범위 | 실행 경로의 의존이 닫힌 집합만(5절) | 합의(2판) |
-| agent-orchestra | **vstack으로 옮겨서 고친다.** 사용자가 기존 저장소를 아카이브하기로 함. 기존 플러그인은 시범이 끝날 때까지 설치된 채로 두어 되돌릴 길로 쓴다 | 3판에서 바뀜 |
+| 가져오는 범위 | 실행 경로의 의존이 닫힌 집합만(5절, [ADR 0002](adr/0002-import-only-closed-execution-paths.md)) | 합의(2판) |
+| agent-orchestra | **vstack으로 옮겨서 고친다.** 사용자가 기존 저장소를 아카이브하기로 함. 기존 플러그인은 시범이 끝날 때까지 설치된 채로 두어 되돌릴 길로 쓴다. 지우는 시점의 기준은 [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md) | 3판에서 바뀜, 2026-11-14 기준 정함 |
 | 기존 플러그인 | 시범이 끝날 때까지 제거하지 않는다 | 합의(2판) |
-| 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기 | 3판에서 추가 |
-| 실행 도구 | v-mode는 Claude Code에서 돈다. omp에서 돌리는 길(v-mode "실행 도구" 절)은 2026-11-10에 넣었다가 2026-11-13에 뺐다(13절) | 2026-11-13 바뀜 |
-| 맡기기 | Claude Code 관리자가 한 세션 크기 일을 작업자에게 맡긴다: Claude 구현 작업자가 새 worktree에서 구현하고, Codex 검토자가 검토하고, 관리자가 마지막에 확인한다(계약 밖). 한 세션 `bug-fix`·`feature`의 기본 실행 방식. 정본 `skills/v-mode/delegate.md`, 13절. omp 작업자에게 맡기던 앞선 구조는 12절 | `bug-fix` 정상 경로 1회(2026-11-13, [pilot-delegate.md](pilot-delegate.md)). omp 구조로는 `bug-fix` 2회·`feature` 1회 |
+| 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기. Orca가 없으면 맡기기와 지휘를 하지 않는다([ADR 0004](adr/0004-orca-only.md)) | 3판에서 추가, 2026-11-13 Orca 필수 |
+| 실행 도구 | v-mode는 Claude Code에서 돈다. omp에서 돌리는 길(v-mode "실행 도구" 절)은 2026-11-10에 넣었다가 2026-11-13에 뺐다(13절, [ADR 0008](adr/0008-no-omp.md)) | 2026-11-13 바뀜 |
+| 맡기기 | Claude Code 관리자가 한 세션 크기 일을 작업자에게 맡긴다: Claude 구현 작업자가 새 worktree에서 구현하고, Codex 검토자가 검토하고, 관리자가 마지막에 확인한다(계약 밖). 한 세션 `bug-fix`·`feature`의 기본 실행 방식. 정본 `skills/v-mode/delegate.md`, 13절. omp 작업자에게 맡기던 앞선 구조는 12절. [ADR 0009](adr/0009-cross-family-review-via-orca-codex.md), [0010](adr/0010-manager-writes-no-product-code.md), [0011](adr/0011-delegation-and-orchestration-boundary.md) | `bug-fix` 정상 경로 1회(2026-11-13, [pilot-delegate.md](pilot-delegate.md)). omp 구조로는 `bug-fix` 2회·`feature` 1회 |
 
 ### 판정 이력
 
@@ -286,6 +288,8 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 - 레시피 변경은 10절 사례로 전후를 비교한다.
 
 ## 9. 남은 결정
+
+첫 버전을 만들 때의 질문이다. 모두 추천대로 정해졌다. 지금도 유효한 것은 ADR로 옮겼다: 2는 [0001](adr/0001-move-agent-orchestra-into-vstack.md), 3은 [0004](adr/0004-orca-only.md), 4는 [0005](adr/0005-no-evidence-reuse-in-orchestration.md).
 
 | # | 질문 | 추천 |
 | --- | --- | --- |
