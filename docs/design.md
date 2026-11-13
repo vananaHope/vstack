@@ -415,7 +415,7 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 
 ## 14. 관리자는 관리만(2026-11-14)
 
-상태: 정본은 `skills/v-mode/SKILL.md`(갈래), `skills/v-mode/delegate.md`(맡기기 절차), 두 명세 양식, `skills/v-mode/recipes/ui-polish.md`(`ui-polish@3`), `agents/explorer.md`(조사 에이전트)다. 이 절은 요약이다. 계획과 검토 이력, 시범 기록은 [manager-only-plan.md](manager-only-plan.md). 결정은 [ADR 0010](adr/0010-manager-writes-no-product-code.md)과 [0011](adr/0011-delegation-and-orchestration-boundary.md).
+상태: 정본은 `skills/v-mode/SKILL.md`(갈래), `skills/v-mode/delegate.md`(맡기기 절차), 두 명세 양식, `skills/v-mode/recipes/ui-polish.md`(`ui-polish@4`(3판에서 작업자용으로 바뀜)), `agents/explorer.md`(조사 에이전트)다. 이 절은 요약이다. 계획과 검토 이력, 시범 기록은 [manager-only-plan.md](manager-only-plan.md). 결정은 [ADR 0010](adr/0010-manager-writes-no-product-code.md)과 [0011](adr/0011-delegation-and-orchestration-boundary.md).
 
 **문제.** 13절의 근거는 "쓴 쪽과 확인하는 쪽이 다르다"였다. 그런데 `refactoring`, `ui-polish`, 레시피 없는 일, Orca가 없는 환경에서는 관리자가 직접 코드를 썼다. 그 근거가 일부 작업에서만 성립했다. 첫 `ui-polish` 실사용에서 어긋난 것 둘(비교 화면이 다른 채로 커밋, 판정 규칙을 결과를 본 뒤에 바꿈)도 코드를 쓴 대화가 자기 결과를 통과시킨 경우였다.
 
