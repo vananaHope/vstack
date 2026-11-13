@@ -1,5 +1,7 @@
 # 맡기기 바꾸기 계획: omp를 빼고 Claude 작업자와 Codex 검토로
 
+> 지난 계획(0.13.0)이다. 2026-11-14에 "관리자는 관리만"으로 바뀌어, 아래의 "이 대화가 직접 한다" 갈래(`ui-polish`, 레시피 없는 일, Orca가 없는 환경)는 없어졌다. 지금 규칙은 [design.md](design.md) 14절과 [manager-only-plan.md](manager-only-plan.md).
+
 한 세션 갈래의 "omp에 맡기기"([design.md](design.md) 12절, 정본 `skills/v-mode/delegate-omp.md`)를 바꾼다. omp를 쓰지 않는다. 한 세션 일은 Claude 작업자가 구현하고, Codex 작업자가 교차 검토하고, Claude 관리자가 마지막에 확인한다. 한 세션에서 서브에이전트를 쓰는 지침도 함께 둔다.
 
 이 문서는 계획이다. 사용자가 2026-11-13에 승인했다. 시범 결과는 [pilot-delegate.md](pilot-delegate.md), 반영된 결정은 [design.md](design.md) 13절에 있다. 계획과 다르게 한 것: `ui-polish@2` 병합을 기다리지 않고 겹치지 않는 새 파일 넷을 먼저 썼고, 병합(PR #17) 뒤에 나머지를 연결했다.

@@ -325,6 +325,14 @@
     {
       "stage": 7,
       "to": "agents/explorer.md"
+    },
+    {
+      "stage": 7,
+      "to": "skills/v-mode/recipes/scripts/image_diff.py"
+    },
+    {
+      "stage": 7,
+      "to": "skills/v-mode/recipes/scripts/test_image_diff.py"
     }
   ],
   "runtime_commands": {

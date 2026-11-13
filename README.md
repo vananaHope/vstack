@@ -76,8 +76,9 @@ scripts/
 ## 검사
 
 ```
-node scripts/check-links.mjs --stage <현재 단계> [--source pstack=<cursor/plugins> --source mattpocock-skills=<mattpocock-skills>]
+node scripts/check-links.mjs --stage <현재 단계> [--source pstack=<cursor/plugins> --source mattpocock-skills=<mattpocock-skills> --source agent-orchestra=<agent-orchestra>]
 node scripts/collect-references.mjs --source pstack=<cursor/plugins> --check
+python -I -m unittest discover -s skills/v-mode/recipes/scripts -p "test_*.py"   # 이미지 비교 스크립트의 테스트
 ```
 
 `check-links`가 잡는 것: 깨진 경로(`BROKEN`), vstack 파일을 표준이 아닌 인라인 경로로 가리킴(`NONSTANDARD`), vstack에 없는 스킬 이름(`SKILL`. 사용자가 직접 실행하는 다른 플러그인 명령은 `upstream.json`의 `user_commands`에 적은 것만 허용), 특정 런타임의 스킬 도구 문장(`TOOL`), `--source`를 주면 원본이 가리키던 파일의 누락(`NOT CARRIED`). 자세한 규칙은 [UPSTREAM.md](UPSTREAM.md)와 [FORMAT.md](skills/v-mode/recipes/FORMAT.md) "실행 경로 표기".

@@ -1,6 +1,6 @@
 # OpenCode Go
 
-OpenCode Go는 빠르고 범위가 분명한 일을 맡는다. 어느 일에 쓰는지는 [tiers.md](tiers.md)의 등급별 목록이 정하고, 이 파일은 OpenCode에만 붙는 조건과 방법을 적는다. 결과는 언제나 다른 계열이 검증한다. 누가 검증할지는 등급의 검토 목록이 정한다([tiers.md](tiers.md) "검토자 고르기").
+OpenCode Go는 빠르고 범위가 분명한 일을 맡는다. 어느 일에 쓰는지는 [tiers.md](tiers.md)의 등급별 목록이 정하고, 이 파일은 OpenCode에만 붙는 조건과 방법을 적는다. 결과는 다른 계열이 검증한다(다른 계열이 한도 때문에 없을 때의 예외는 [tiers.md](tiers.md) "검토자 고르기" 2). 누가 검증할지는 등급의 검토 목록이 정한다([tiers.md](tiers.md) "검토자 고르기").
 
 ## 맡기지 않는 일
 
@@ -56,7 +56,7 @@ OpenCode 대화형 화면은 모델 옵션을 받지 않는다(Orca `worker-star
 
 ## 검증
 
-- 검토자는 등급의 검토 목록에서 고른다([tiers.md](tiers.md) "검토자 고르기"). `관리자`를 고르면 [tiers.md](tiers.md)의 "관리자 확인"을 한다.
+- 검토자는 등급의 검토 목록에서 고른다([tiers.md](tiers.md) "검토자 고르기"). vstack에서는 `관리자`를 검토자로 고르지 않는다([tiers.md](tiers.md) "검토자 고르기"). 관리자 확인은 사소 수정의 지적 해결 기록으로만 쓴다([tiers.md](tiers.md) "관리자 확인").
 - 지적 수정은 [fixes.md](fixes.md)의 재검토 규칙을 따른다.
 
 ## rebase
@@ -65,7 +65,7 @@ SKILL.md 6단계 2의 rebase는 `light`다.
 
 - 명세에 rebase 전 `HEAD`를 적어 둔다.
 - import, 목록 순서, 붙어 있는 줄처럼 양쪽 의도를 모두 살리기 쉬운 충돌은 OpenCode가 해결한다.
-- 같은 함수의 동작이 양쪽에서 바뀐 충돌이면 `git rebase --abort`로 되돌리고 보고하게 한다. 관리자는 그 rebase를 원래 구현 작업자에게 맡긴다.
+- 같은 함수의 동작이 양쪽에서 바뀐 충돌이면 `git rebase --abort`로 되돌리고 보고하게 한다. 관리자는 그 rebase를 원래 구현자에게 맡긴다.
 - 검증: 관리자가 `git range-diff <rebase 전 HEAD>...HEAD`로 충돌 해결분 말고는 변경이 같은지 본다. 그다음 `<vstack>/skills/orchestrate-issues/vstack.md` "대상이 바뀌면"대로 재검증한다(rebase 작업자가 필수 수용 기준 전부, 그다음 rev `review` 시도). range-diff가 같아도 재검증을 건너뛰지 않는다.
 
 ## 빠른 답변·빠른 판단
