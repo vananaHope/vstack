@@ -1,6 +1,6 @@
 # UI 다듬기
 
-> vstack 첫 버전에서는 하지 않는다(관리자가 작업자 역할을 맡지 않고, 레시피가 없다). [vstack.md](vstack.md) "UI 다듬기".
+> vstack 지휘에서는 하지 않는다(관리자가 작업자 역할을 맡지 않는다). [vstack.md](vstack.md) "UI 다듬기". vstack에서 UI 다듬기는 v-mode 한 세션 갈래의 레시피 [ui-polish.md](../v-mode/recipes/ui-polish.md)로 한다. 아래는 agent-orchestra 때의 절차다.
 
 관리자(Claude)가 직접 하는 유일한 구현이다. Claude 절약 모드에서는 하지 않고 한도가 돌아올 때까지 미룬다.
 
