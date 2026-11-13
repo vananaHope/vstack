@@ -45,6 +45,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 2 | mattpocock-skills | `skills/engineering/codebase-design/SKILL.md`의 용어 부분 | `skills/tdd/references/codebase-vocabulary.md` | extracted(`DEEPENING.md`, `DESIGN-IT-TWICE.md`는 dropped) |
 | 3 | agent-orchestra | `skills/orchestrate-issues`, `skills/check-limits`, `skills/configure` | 같음 | moved |
 | 7 | pstack | `skills/blast-radius` | 같음 | adapted |
+| 7 | pstack | `skills/maintain-verification-skill` | 같음 | adapted |
 
 ## 고친 내용
 
@@ -95,9 +96,25 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 9, 25, 36 | `.cursor/skills/` → `.claude/skills/` | Claude Code 경로(pstack `docs/harness/claude-code.md` "Paths") |
 | 13 | "ask the user" → "ask the manager" | 작업자 계약 |
 | 30 | Evidence 끝에 "산출물 폴더를 호출하는 쪽이 정할 수 있게(인자나 환경 변수), 기본값을 명시. vstack 작업자는 명세의 증거 폴더를 넘긴다" | 생성되는 verify 스킬이 vstack 증거 폴더(evidence.md)에 쓸 수 있어야 한다 |
-| 42~44 | "5. Offer the maintenance loop"(`/maintain-verification-skill` 안내) → "5. Report the map's coverage"(지도 범위를 보고, 지도가 낡으면 관리자에게 알림) | maintain-verification-skill은 첫 버전에서 뺐다(하위 에이전트 병렬 실행, PR 생성) |
+| 42~44 | "5. Offer the maintenance loop"(`/maintain-verification-skill` 안내) → "5. Report the map's coverage"(지도 범위를 보고, 지도가 낡으면 관리자에게 알림). 7단계(2026-11-14)에 maintain-verification-skill을 가져오면서 "첫 버전에는 없다" 문장을 그 사본을 가리키는 링크로 바꿨다. 지도를 지나가며 고치지 말고 관리자에게 알리는 문장은 그대로다 | 고치는 일은 따로 맡긴다(`delegate.md` "검증 스킬 점검") |
 
 `references/feature-map-example/`은 원문 그대로.
+
+### `skills/maintain-verification-skill/SKILL.md`(pstack 0.15.36, 7단계)
+
+원본에는 딸린 파일이 없다. 맡기기의 구현자가 경로로 읽는다(`skills/v-mode/delegate.md` "검증 스킬 점검"). 원본의 판정(clean / changed / blocked), 편집 범위, 단계 0~6과 실행 확인의 세 불변식은 그대로 두었다.
+
+| 원본 줄 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| 3 | "at most one PR" → "at most one branch", `/vstack:maintain-verification-skill` 추가 | 작업자는 PR을 만들지 않는다. Claude Code의 플러그인 명령 접두사 |
+| 6 뒤 | "vstack copy of pstack …"과 "the manager"가 누구인지 한 줄 | 다른 adapted 사본과 같다 |
+| 9, 25 | `/create-verification-skill` → vstack 사본 링크 | vstack 안의 실행 경로로 |
+| 15~16 | clean의 "No branch, no PR" → "No commits", changed의 "one PR ships" → 작업 브랜치의 커밋, 반영은 관리자가 정하고 push·PR을 하지 않는다 | 맡기기의 권한(작업 브랜치에서 커밋까지) |
+| 25 | `.cursor/skills/verify-*/` → `.claude/skills/verify-*/`, "ask which one" → "ask the manager which one" | Claude Code 경로, 작업자는 관리자에게 묻는다 |
+| 29 | "launched concurrently" → 한 번에 셋까지, `vstack:explorer`, 없으면 직접 읽음 | `skills/v-mode/subagents.md` |
+| 33 | "The coordinator owns all driving" → "You own all driving" | 이 스킬을 따르는 것은 구현자 한 명이다 |
+| 37 | "one PR of proven corrections" → 작업 브랜치에 커밋. 어느 결과든 다룬 기능, `verified-unreachable` 전제, 확인된 어긋남, 고친 실행 수단, 찾은 제품 고장을 보고 | 맡기기의 권한과 관리자의 수용 기준(`delegate.md` "검증 스킬 점검") |
+| 39 | scratch → 저장소 밖(OS 임시 폴더) | 작업 트리를 깨끗하게 둔다 |
 
 ### `skills/blast-radius/SKILL.md`(pstack 0.15.36, 7단계)
 
@@ -252,6 +269,7 @@ pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적�
 | `skills/v-mode/recipes/ui-polish.md`(pstack `visual-parity`·`hillclimb`를 조합) | `prototype` | 겹치지 않음 | 스킬 38개의 원문에서 화면·스크린샷·다듬기를 다루는 것을 찾았고, 맞닿는 것은 `prototype`의 UI 갈래뿐이다. 그것은 버릴 시안 여러 개로 "어떤 모양이어야 하나"를 정하는 일이다. `ui-polish`는 이미 정해진 모양의 화면을 다듬고, 모양을 새로 정하는 일은 시작하지 않는다. 그 일이 `prototype`의 몫이다. 이 확인도 만든 뒤(2026-11-13)에 했다. `ui-polish@2`부터 v-mode가 그런 요청에 `prototype` 명령을 안내한다(`upstream.json`의 `user_commands`) |
 | `skills/v-mode/recipes/investigation.md`(pstack 조사 플레이북·`how`·`why`) | `research`, `wayfinder`, `codebase-design`, `teach`, `diagnosing-bugs` | 일부 겹침 | `research`는 1차 자료(공식 문서, 소스 코드, 명세, 직접 API)에서 주장마다 출처를 따라가 백그라운드 에이전트가 Markdown 파일 하나로 남긴다. 대화에서 답하지 않는다. 소스 코드도 1차 자료라서 이 저장소의 코드를 출처를 달아 조사하는 일 자체는 겹친다. 다른 점은 셋이다: 조사 레시피는 대화에서 답하고 파일을 남기지 않는다, 어떻게 질문에 정해진 설명 절(개요 … 함정)이 있다, 왜 질문에 이력 조사(코드 기준점, 근거 범주, 신뢰 단계, 경쟁 가설)가 있다. 바깥 자료(라이브러리 문서, 명세)를 모아 남기는 일을 `research` 명령으로 안내하는 것은 vstack이 정한 나눔이다(원본 `research`에 그런 제한은 없다. `upstream.json`의 `user_commands`). `wayfinder`의 `research` 티켓은 작업 폴더 밖의 지식이 필요할 때 같은 스킬을 부른다. `codebase-design`은 모듈의 인터페이스와 seam을 설계하거나 고치는 어휘와 원칙이다. 조사 레시피의 "어디에 둘까"는 지금 구조를 읽어 대안을 비교해 추천하는 데서 멈추고, 새 인터페이스나 seam을 설계하는 일은 하지 않는다(그 일은 변경이라 갈래를 다시 고른다). `teach`는 여러 세션에 걸쳐 주제를 가르치는 작업 폴더를 만든다. 코드 설명과 겹치지 않는다. `diagnosing-bugs`는 결함의 원인을 찾는 진단이라 "쓰지 않을 때"로 보냈다. 코드가 왜 이렇게 됐는지를 이력에서 찾는 스킬과 신뢰 단계는 mattpocock에 없다(2026-11-14, 스킬 38개의 설명과 위 다섯의 원문을 읽음) |
 | `skills/v-mode/recipes/correct.md`(pstack `correct`) | `retro`, `code-review`, `writing-for-agents`, `setup-ts-deep-modules` | 일부 겹침 | `retro`는 한 세션을 돌아보고 에이전트 환경의 개선 후보(길 찾기, 자동 검사, 코딩 규칙, 지침 파일, 도구 비용, 효과 없는 지시, 정보 접근)를 사용자에게 심각도순으로 보인다. 고치지 않는다. 기계적인 위반은 글 규칙보다 검사로 막고, 판단만 `CODING_STANDARDS.md`에 둔다는 생각이 `correct`와 같다. `correct`는 한 세션이 아니라 저장소의 이력에서 두 번 이상 나온 실수를 묶고, 높은 층부터 직접 막고, 과거 실수에서 검사가 실패함을 보인다. 그래서 "찾아서 제안"과 "막고 증명"으로 나뉜다. 사용자가 mattpocock-skills를 쓰면 `retro`로 후보를 찾고 이 레시피로 막을 수 있다. `code-review`는 변경이 코딩 규칙을 지켰는지 판정할 뿐 규칙을 장치로 바꾸지 않는다. `writing-for-agents`는 지침 문서를 쓰는 법이라 문서 층에서만 맞닿는다`setup-ts-deep-modules`(`in-progress` 폴더, 사용자 실행 전용)는 TypeScript 저장소에 dependency-cruiser로 패키지 경계 규칙을 설치하고, 저장소의 검사 명령에 연결하고, 일부러 넣은 잘못된 import에서 실패함을 보인 뒤 지침 파일에 포인터를 남긴다. 이 레시피의 구조·검사 층과 "실패를 보인다"가 겹친다. 다른 점: 그 스킬은 정해진 한 규칙(패키지 경계)을 정해진 도구로 설치하고 예제 위반으로 증명한다. 이 레시피는 저장소 이력에서 되풀이된 실수를 골라 그에 맞는 층을 정하고 실제 과거 실수로 증명한다. 막을 유형이 TypeScript 패키지 경계면 구현자가 그 스킬의 방식을 참고할 수 있지만 레시피가 부르지는 않는다(2026-11-14, 스킬 38개의 설명과 위 넷의 원문을 읽음) |
+| `skills/maintain-verification-skill` | `retro`, `setup-pre-commit`, `diagnosing-bugs` | 겹치지 않음 | 프로젝트의 검증 스킬과 기능 지도를 앱에 맞춰 관리하는 스킬은 mattpocock-skills에 없다(스킬 38개의 원문에서 "feature map", "verification skill", "verify-"를 찾았고 나오지 않음). `retro`는 자동 검사가 연결되지 않았거나 깨진 것을 개선 후보로 보일 뿐이다. `setup-pre-commit`은 Husky·lint-staged 훅을 설치한다. `diagnosing-bugs`의 되먹임 고리는 버그 하나를 위한 것이다(2026-11-14, 위 셋의 원문을 읽음) |
 | `skills/v-mode/subagents.md`(pstack `poteto-mode`의 "Subagents" 절에서 일부) | `code-review`, `codebase-design`(DESIGN-IT-TWICE), `implement-spec`, `ask-matt`(PHASE-BOUNDARIES), `research` | 일부 겹침 | 서브에이전트를 어떻게 쓸지 정하는 같은 역할의 스킬은 없다. 스킬마다 자기 서브에이전트를 따로 정할 뿐이다(두 검토 서브에이전트, 설계안 서브에이전트, 구현 서브에이전트, 혼자 돌릴 수 있는 일의 위임, 조사 맡기기). 같은 생각은 둘 있다: `implement-spec`의 "내용을 복제하지 말고 가리킨다", `code-review` 설명서(`docs/engineering/code-review.md`)의 "서브에이전트의 출력은 가설이지 증거가 아니다". 그래도 따로 두는 이유는, 맡긴 작업자가 레시피를 따르는 동안 지킬 규칙이 어디에도 없기 때문이다. 사용자가 mattpocock 스킬을 실행하면 그 스킬이 정한 서브에이전트를 따른다 |
 
 이 규칙을 두기 전에 pstack에서 가져온 것(원칙 24개, `create-verification-skill`, 레시피 `bug-fix`·`feature`·`refactoring`의 바탕이 된 플레이북)은 이 표에 없다. 다시 손댈 때 확인해 채운다. 이와 따로, `tdd`와 `diagnosing-bugs`는 pstack이 아니라 mattpocock-skills에서 고쳐 가져온 사본이고 레시피가 그 사본을 쓴다.

@@ -275,6 +275,13 @@
       "from": "skills/configure",
       "to": "skills/configure",
       "mode": "moved"
+    },
+    {
+      "stage": 7,
+      "source": "pstack",
+      "from": "skills/maintain-verification-skill",
+      "to": "skills/maintain-verification-skill",
+      "mode": "adapted"
     }
   ],
   "own": [

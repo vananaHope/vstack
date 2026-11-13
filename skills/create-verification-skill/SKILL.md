@@ -43,4 +43,4 @@ Run its own instructions end to end once: launch, doctor, drive ONE mapped featu
 
 ## 5. Report the map's coverage
 
-List in your report which features the map covers and which you saw but left out. Keeping the map current as the app changes is a separate maintenance job that vstack's first version does not ship (pstack calls it maintain-verification-skill). When you notice the map has drifted from the app, tell the manager instead of fixing it in passing.
+List in your report which features the map covers and which you saw but left out. Keeping the map current as the app changes is a separate maintenance job: [maintain-verification-skill](../maintain-verification-skill/SKILL.md). When you notice the map has drifted from the app, tell the manager instead of fixing it in passing.
