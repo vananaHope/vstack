@@ -213,6 +213,37 @@ class CompareTest(Files):
                                                (b"IDAT", b""), (b"tIME", b"\x00" * 7), END))
         self.assertEqual(self.run_main(plain, dressed), (0, "identical: 1x1", ""))
 
+    def test_identical_palette_images_are_identical(self):
+        palette = bytes((9, 9, 9, 200, 0, 0))
+        data = png(2, 1, 3, 8, [bytes((0, 1))], 1, palette=palette)
+        self.assertEqual(self.run_main(self.write("a.png", data), self.write("b.png", data)), (0, "identical: 2x1", ""))
+
+    def test_the_same_data_under_a_different_palette_is_different(self):
+        first = self.write("a.png", png(1, 1, 3, 8, [bytes((0,))], 1, palette=bytes((9, 9, 9))))
+        second = self.write("b.png", png(1, 1, 3, 8, [bytes((0,))], 1, palette=bytes((9, 9, 12))))
+        self.assertEqual(self.run_main(first, second),
+                         (1, "different: 1 of 1 pixels (100.000%), bbox 0,0-0,0, max channel delta 3", ""))
+
+    def test_the_same_data_read_at_a_different_size_is_different(self):
+        data = (b"IDAT", zlib.compress(b"\x00\x11\x22\x00\x33\x44"))  # 2x2로도 5x1로도 맞는 데이터
+        first = self.write("a.png", assemble(header(2, 2, 0, 8), data, END))
+        second = self.write("b.png", assemble(header(5, 1, 0, 8), data, END))
+        self.assertEqual(self.run_main(first, second), (1, "different: size 2x2 vs 5x1", ""))
+
+    def test_the_same_data_read_at_a_different_bit_depth_is_different(self):
+        data = (b"IDAT", zlib.compress(b"\x00\x80"))  # 8비트로는 회색 128, 4비트로는 8(=136)
+        first = self.write("a.png", assemble(header(1, 1, 0, 8), data, END))
+        second = self.write("b.png", assemble(header(1, 1, 0, 4), data, END))
+        self.assertEqual(self.run_main(first, second),
+                         (1, "different: 1 of 1 pixels (100.000%), bbox 0,0-0,0, max channel delta 8", ""))
+
+    def test_the_same_data_read_as_gray_or_as_palette_is_different(self):
+        palette = (b"PLTE", bytes((9, 9, 9)))
+        first = self.write("a.png", assemble(header(1, 1, 0, 8), palette, (b"IDAT", ONE_INDEX), END))
+        second = self.write("b.png", assemble(header(1, 1, 3, 8), palette, (b"IDAT", ONE_INDEX), END))
+        self.assertEqual(self.run_main(first, second),
+                         (1, "different: 1 of 1 pixels (100.000%), bbox 0,0-0,0, max channel delta 9", ""))
+
     def test_there_is_no_tolerance_option(self):
         good = self.write("a.png", rgba_png(gradient(2, 2)))
         with self.assertRaises(SystemExit) as raised, redirect_stderr(io.StringIO()):
@@ -265,6 +296,17 @@ class CannotCompareTest(Files):
             "unfinished-stream.png": assemble(header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL[:-2]), END),
             "zero-size.png": assemble(header(0, 1, 6, 8), (b"IDAT", zlib.compress(b"\x00")), END),
             "short-header.png": assemble((b"IHDR", b"\x00" * 12), (b"IDAT", ONE_PIXEL), END),
+            "trns-before-palette.png": assemble(header(1, 1, 3, 8), (b"tRNS", b"\x10"), (b"PLTE", b"\x01\x02\x03"),
+                                                (b"IDAT", ONE_INDEX), END),
+            "compression-method.png": assemble((b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 6, 1, 0, 0)),
+                                               (b"IDAT", ONE_PIXEL), END),
+            "filter-method.png": assemble((b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 1, 0)),
+                                          (b"IDAT", ONE_PIXEL), END),
+            "big-palette.png": assemble(header(1, 1, 3, 1), (b"PLTE", b"\x01\x02\x03" * 3), (b"IDAT", ONE_INDEX), END),
+            "unknown-filter.png": assemble(header(1, 1, 6, 8), (b"IDAT", zlib.compress(b"\x05\x01\x02\x03\x04")), END),
+            # 픽셀을 풀어야 드러나는 것: 팔레트에 없는 번호
+            "palette-index.png": assemble(header(1, 1, 3, 8), (b"PLTE", b"\x01\x02\x03"),
+                                          (b"IDAT", zlib.compress(b"\x00\x01")), END),
         }
 
     def test_every_unreadable_input_exits_two_with_an_ascii_reason_naming_the_file(self):
@@ -280,6 +322,17 @@ class CannotCompareTest(Files):
                 code, _, err = self.run_main(other, good)
                 self.assertEqual(code, 2)
                 self.assertIn("baseline", err)
+
+    def test_a_broken_file_is_never_identical_to_itself(self):
+        # 머리 정보와 데이터가 같으면 픽셀을 풀지 않는 지름길이, 깨진 파일 한 쌍을 같다고 하면 안 된다
+        for name, data in self.cases().items():
+            if data is None:
+                continue
+            path = self.write(name, data)
+            copy = self.write("copy-" + name, data)
+            with self.subTest(file=name):
+                self.assertEqual(self.run_main(path, path)[:2], (2, ""))
+                self.assertEqual(self.run_main(path, copy)[:2], (2, ""))
 
     def test_sixteen_bit_images_are_refused_rather_than_compared_coarsely(self):
         first = self.write("a.png", png(1, 1, 0, 16, [bytes((0x12, 0x00))], 2))
@@ -308,6 +361,184 @@ class CommandLineTest(Files):
         self.assertEqual(result.returncode, 2)
         self.assertEqual(result.stdout, b"")
         self.assertEqual(result.stderr.strip(), b"cannot compare: baseline file: not a PNG file")
+
+
+class FolderTest(Files):
+    """폴더 두 개를 비교하는 방식. 이름이 같은 PNG끼리 비교하고, 빠진 PNG를 드러낸다."""
+
+    def setUp(self):
+        super().setUp()
+        self.pixels = gradient(3, 3)
+        self.changed = [list(row) for row in self.pixels]
+        self.changed[1][2] = (1, 2, 3, 4)
+        self.base = os.path.join(self.dir.name, "base")
+        self.new = os.path.join(self.dir.name, "new")
+        os.makedirs(self.base)
+        os.makedirs(self.new)
+
+    def put(self, folder, name, pixels=None, data=None):
+        path = os.path.join(folder, *name.split("/"))
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "wb") as handle:
+            handle.write(rgba_png(pixels or self.pixels) if data is None else data)
+
+    def both(self, *names):
+        for name in names:
+            self.put(self.base, name)
+            self.put(self.new, name)
+
+    def listing(self, text, encoding="utf-8"):
+        path = os.path.join(self.dir.name, "list.txt")
+        with open(path, "w", encoding=encoding, newline="") as handle:
+            handle.write(text)
+        return path
+
+    def test_every_png_identical_exits_zero_with_a_line_each_and_a_summary(self):
+        self.both("one.png", "sub/two.png", "sub/deep/THREE.PNG")
+        self.put(self.new, "notes.txt", data=b"not a picture")
+        code, out, err = self.run_main(self.base, self.new)
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual(out.splitlines(), [
+            "one.png: identical: 3x3",
+            "sub/deep/THREE.PNG: identical: 3x3",
+            "sub/two.png: identical: 3x3",
+            "summary: 3 listed, 3 identical, 0 different, 0 missing, 0 cannot compare",
+        ])
+
+    def test_a_changed_png_exits_one_and_names_it(self):
+        self.both("one.png")
+        self.put(self.base, "sub/two.png")
+        self.put(self.new, "sub/two.png", self.changed)
+        code, out, _ = self.run_main(self.base, self.new)
+        self.assertEqual(code, 1)
+        self.assertEqual(out.splitlines()[1:], [
+            "sub/two.png: different: 1 of 9 pixels (11.111%), bbox 2,1-2,1, max channel delta 251",
+            "summary: 2 listed, 1 identical, 1 different, 0 missing, 0 cannot compare",
+        ])
+
+    def test_a_png_in_only_one_folder_is_missing_and_exits_two(self):
+        self.both("one.png")
+        self.put(self.base, "gone.png")
+        self.put(self.new, "extra.png")
+        code, out, err = self.run_main(self.base, self.new)
+        self.assertEqual((code, err), (2, ""))
+        self.assertEqual(out.splitlines(), [
+            "extra.png: missing: not in the baseline folder",
+            "gone.png: missing: not in the candidate folder",
+            "one.png: identical: 3x3",
+            "summary: 3 listed, 1 identical, 0 different, 2 missing, 0 cannot compare",
+        ])
+
+    def test_missing_outranks_different_in_the_exit_code(self):
+        self.put(self.base, "one.png")
+        self.put(self.new, "one.png", self.changed)
+        self.put(self.base, "gone.png")
+        code, out, _ = self.run_main(self.base, self.new)
+        self.assertEqual(code, 2)
+        self.assertEqual(out.splitlines()[-1], "summary: 2 listed, 0 identical, 1 different, 1 missing, 0 cannot compare")
+
+    def test_an_unreadable_png_is_reported_on_its_line_and_exits_two(self):
+        self.both("one.png")
+        self.put(self.base, "bad.png")
+        self.put(self.new, "bad.png", data=b"bad")
+        code, out, err = self.run_main(self.base, self.new)
+        self.assertEqual((code, err), (2, ""))
+        self.assertEqual(out.splitlines(), [
+            "bad.png: cannot compare: candidate file: not a PNG file",
+            "one.png: identical: 3x3",
+            "summary: 2 listed, 1 identical, 0 different, 0 missing, 1 cannot compare",
+        ])
+
+    def test_expect_compares_only_the_listed_names_in_list_order(self):
+        self.both("b.png", "a.png")
+        self.put(self.base, "unlisted.png")
+        self.put(self.new, "unlisted.png", self.changed)
+        code, out, _ = self.run_main(self.base, self.new, "--expect", self.listing("b.png\na.png\n"))
+        self.assertEqual(code, 0)
+        self.assertEqual(out.splitlines(), [
+            "b.png: identical: 3x3",
+            "a.png: identical: 3x3",
+            "summary: 2 listed, 2 identical, 0 different, 0 missing, 0 cannot compare",
+        ])
+
+    def test_expect_reports_a_listed_png_that_neither_folder_has(self):
+        # 기준을 찍을 때도 뒤에 찍을 때도 실패한 화면은 폴더만 봐서는 드러나지 않는다. 목록이 드러낸다
+        self.both("one.png")
+        self.assertEqual(self.run_main(self.base, self.new)[0], 0)
+        code, out, _ = self.run_main(self.base, self.new, "--expect", self.listing("one.png\nnever-shot.png\n"))
+        self.assertEqual(code, 2)
+        self.assertEqual(out.splitlines()[1:], [
+            "never-shot.png: missing: in neither folder",
+            "summary: 2 listed, 1 identical, 0 different, 1 missing, 0 cannot compare",
+        ])
+
+    def test_expect_list_format(self):
+        self.both("one.png", "sub/two.png")
+        text = "﻿# screens\r\n\r\none.png\ttarget, empty state\r\nsub\\two.png\t# note\r\none.png\r\n"
+        code, out, _ = self.run_main(self.base, self.new, "--expect", self.listing(text))
+        self.assertEqual(code, 0)
+        self.assertEqual(out.splitlines(), [
+            "one.png: identical: 3x3",
+            "sub/two.png: identical: 3x3",
+            "summary: 2 listed, 2 identical, 0 different, 0 missing, 0 cannot compare",
+        ])
+
+    def test_expect_refuses_names_that_point_outside_the_folders(self):
+        # 절대 경로를 받으면 같은 파일을 자기 자신과 비교해 "같다"가 나온다
+        self.both("one.png")
+        absolute = os.path.join(self.base, "one.png")
+        for entry in (absolute, "../base/one.png", "sub/../../base/one.png", "/one.png"):
+            with self.subTest(entry=entry):
+                code, out, err = self.run_main(self.base, self.new, "--expect", self.listing("one.png\n%s\n" % entry))
+                self.assertEqual((code, out), (2, ""))
+                self.assertTrue(err.startswith("cannot compare: list entry is not a path inside the folders"), err)
+
+    def test_nothing_to_compare_exits_two(self):
+        self.put(self.base, "notes.txt", data=b"x")
+        code, out, err = self.run_main(self.base, self.new)
+        self.assertEqual((code, out, err), (2, "", "cannot compare: no PNG files to compare"))
+        self.both("one.png")
+        code, out, err = self.run_main(self.base, self.new, "--expect", self.listing("# nothing\n\n"))
+        self.assertEqual((code, out, err), (2, "", "cannot compare: no PNG files to compare"))
+
+    def test_an_unreadable_list_exits_two(self):
+        self.both("one.png")
+        missing = os.path.join(self.dir.name, "no-list.txt")
+        code, out, err = self.run_main(self.base, self.new, "--expect", missing)
+        self.assertEqual((code, out, err), (2, "", "cannot compare: cannot read the list file (FileNotFoundError)"))
+        code, out, err = self.run_main(self.base, self.new, "--expect", self.listing("one.png\n", encoding="utf-16"))
+        self.assertEqual((code, out), (2, ""))
+        self.assertTrue(err.startswith("cannot compare: cannot read the list file"), err)
+
+    def test_a_folder_and_a_file_cannot_be_compared(self):
+        self.both("one.png")
+        file = os.path.join(self.base, "one.png")
+        self.assertEqual(self.run_main(self.base, file),
+                         (2, "", "cannot compare: the candidate path is not a folder (give two PNG files or two folders)"))
+        self.assertEqual(self.run_main(os.path.join(self.dir.name, "not-shot"), self.new),
+                         (2, "", "cannot compare: the baseline path is not a folder (give two PNG files or two folders)"))
+        self.assertEqual(self.run_main(file, file, "--expect", self.listing("one.png\n")),
+                         (2, "", "cannot compare: --expect needs two folders"))
+
+    def test_names_outside_ascii_are_escaped(self):
+        self.both("한글.png")
+        code, out, _ = self.run_main(self.base, self.new)
+        self.assertEqual(code, 0)
+        self.assertEqual(out.splitlines()[0], "\\ud55c\\uae00.png: identical: 3x3")
+        self.assertTrue(out.isascii())
+
+    def test_runs_as_an_isolated_script(self):
+        self.both("one.png")
+        self.put(self.base, "two.png")
+        self.put(self.new, "two.png", self.changed)
+        listing = self.listing("one.png\n")
+        same = subprocess.run([sys.executable, "-I", SCRIPT, self.base, self.new, "--expect", listing],
+                              capture_output=True)
+        self.assertEqual(same.returncode, 0)
+        self.assertEqual(same.stdout.splitlines()[-1],
+                         b"summary: 1 listed, 1 identical, 0 different, 0 missing, 0 cannot compare")
+        diff = subprocess.run([sys.executable, "-I", SCRIPT, self.base, self.new], capture_output=True)
+        self.assertEqual(diff.returncode, 1)
 
 
 if __name__ == "__main__":
