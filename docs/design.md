@@ -452,7 +452,7 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 
 상태: 정본은 `skills/v-mode/contracts/state-and-rollback.md`("새로 시작"), `skills/v-mode/SKILL.md` 고르기 3(레시피가 없는 일), `skills/orchestrate-issues/vstack.md`다. 결정은 [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md)(상태)과 [0007](adr/0007-keep-agent-orchestra-legacy-paths.md).
 
-**까닭.** ADR 0001의 완성 기준 셋이 맞았다. 1·2는 #19·#20이다. 3은 `my-video-manager`의 맡기기 `onscreen-277`(PR #350 병합)과 지휘 #283(기록: my-video-manager `.local/vstack/issue-283/`, 이 저장소 `docs/pilot-6.md`)이다.
+**까닭.** ADR 0001의 완성 기준 셋이 맞았다. 1·2는 #19·#20이다. 3은 `my-video-manager`의 맡기기 `onscreen-277`(PR #350 병합)과 지휘 #283(PR #351 병합, 기록: my-video-manager `.local/vstack/issue-283/`, 이 저장소 [pilot-6.md](pilot-6.md))이다.
 
 **바꾼 것(플러그인 0.20.0, 계약 `vstack-contract@4`).**
 
