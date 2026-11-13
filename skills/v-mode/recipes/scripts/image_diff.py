@@ -15,8 +15,11 @@
 (Windows에서 파이프로 받아도 깨지지 않게).
 
 종료 코드: 0 = 같다, 1 = 다르다, 2 = 비교하지 못했다
-비교하지 못하는 경우: 파일 없음, PNG 아님, 깨졌거나 끊긴 PNG(CRC 불일치, IEND 없음, 데이터 길이 불일치),
-인터레이스 PNG, 16비트 PNG. 지원: 인터레이스 없는 PNG, 색 형식 0·2·3·4·6, 비트 깊이 1·2·4·8
+비교하지 못하는 경우: 파일 없음, PNG 아님, 인터레이스 PNG, 16비트 PNG, 모르는 필수 청크가 있는 PNG,
+깨졌거나 끊긴 PNG. 깨진 것으로 보는 것: CRC 불일치, 청크 순서나 개수가 규격과 다름(IHDR가 맨 앞에 하나,
+IDAT는 서로 붙어 있음, PLTE·tRNS는 IDAT 앞), IEND가 없거나 본문이 있거나 뒤에 바이트가 남음,
+PLTE·tRNS 길이가 색 형식과 맞지 않음, 압축 데이터가 덜 끝났거나 뒤에 남는 바이트가 있음, 데이터 길이 불일치.
+규격의 모든 조항을 검사하는 것은 아니다. 지원: 인터레이스 없는 PNG, 색 형식 0·2·3·4·6, 비트 깊이 1·2·4·8
 (tRNS 투명도 포함). 화면 스크린샷은 보통 8비트 RGB나 RGBA다.
 """
 
@@ -35,29 +38,61 @@ class Unsupported(Exception):
 
 
 def read_chunks(data):
-    """청크를 차례로 내준다. 끊겼거나 CRC가 틀리거나 IEND가 없으면 Unsupported."""
+    """청크를 차례로 내준다. 끊겼거나, CRC가 틀리거나, 구조가 PNG 규격과 다르면 Unsupported.
+
+    보는 것: IHDR가 맨 앞에 하나, IDAT는 서로 붙어 있음, PLTE는 IDAT 앞에 하나, IEND는 본문 없이 파일의 끝,
+    모르는 필수 청크(이름 첫 글자가 대문자) 없음. 부가 청크(tEXt 등)는 건너뛴다.
+    """
     if data[:8] != SIGNATURE:
         raise Unsupported("not a PNG file")
     pos = 8
-    ended = False
+    seen = []
     while pos < len(data):
         if pos + 8 > len(data):
             raise Unsupported("truncated PNG (chunk header)")
         length, kind = struct.unpack(">I4s", data[pos:pos + 8])
+        name = kind.decode("ascii", "replace")
         end = pos + 12 + length
         if end > len(data):
-            raise Unsupported("truncated PNG (chunk %s)" % kind.decode("ascii", "replace"))
+            raise Unsupported("truncated PNG (chunk %s)" % name)
         body = data[pos + 8:pos + 8 + length]
         (crc,) = struct.unpack(">I", data[end - 4:end])
         if crc != zlib.crc32(kind + body) & 0xFFFFFFFF:
-            raise Unsupported("corrupt PNG (bad CRC in chunk %s)" % kind.decode("ascii", "replace"))
+            raise Unsupported("corrupt PNG (bad CRC in chunk %s)" % name)
+        if not seen and kind != b"IHDR":
+            raise Unsupported("corrupt PNG (first chunk is %s, not IHDR)" % name)
+        if kind in (b"IHDR", b"PLTE") and kind in seen:
+            raise Unsupported("corrupt PNG (more than one %s chunk)" % name)
+        if kind == b"IDAT" and b"IDAT" in seen and seen[-1] != b"IDAT":
+            raise Unsupported("corrupt PNG (IDAT chunks are not consecutive)")
+        if kind in (b"PLTE", b"tRNS") and b"IDAT" in seen:
+            raise Unsupported("corrupt PNG (%s after IDAT)" % name)
+        if kind == b"tRNS" and b"tRNS" in seen:
+            raise Unsupported("corrupt PNG (more than one tRNS chunk)")
+        if kind not in (b"IHDR", b"PLTE", b"IDAT", b"IEND") and not kind[:1].islower():
+            raise Unsupported("unsupported PNG (unknown critical chunk %s)" % name)
+        seen.append(kind)
+        if kind == b"IEND":
+            if length != 0:
+                raise Unsupported("corrupt PNG (IEND chunk has a body)")
+            if end != len(data):
+                raise Unsupported("corrupt PNG (data after IEND)")
+            yield kind, body
+            return
         yield kind, body
         pos = end
-        if kind == b"IEND":
-            ended = True
-            break
-    if not ended:
-        raise Unsupported("truncated PNG (no IEND chunk)")
+    raise Unsupported("truncated PNG (no IEND chunk)")
+
+
+def inflate(compressed):
+    """IDAT를 이은 압축 스트림을 푼다. 스트림이 끝나지 않았거나 뒤에 남는 바이트가 있으면 Unsupported."""
+    stream = zlib.decompressobj()
+    raw = stream.decompress(compressed)
+    if not stream.eof:
+        raise Unsupported("corrupt PNG (compressed image data is incomplete)")
+    if stream.unused_data:
+        raise Unsupported("corrupt PNG (extra bytes after the compressed image data)")
+    return raw
 
 
 def unfilter(raw, height, stride, bpp):
@@ -145,7 +180,11 @@ def decode(path):
     bits = channels * depth
     stride = (width * bits + 7) // 8
     bpp = max(1, bits // 8)
-    rows = unfilter(zlib.decompress(b"".join(idat)), height, stride, bpp)
+    if palette is not None and (len(palette) % 3 != 0 or not 3 <= len(palette) <= 768):
+        raise Unsupported("corrupt PNG (PLTE length)")
+    if color == 3 and palette is None:
+        raise Unsupported("corrupt PNG (palette image without PLTE)")
+    rows = unfilter(inflate(b"".join(idat)), height, stride, bpp)
     scale = 255 // ((1 << depth) - 1)
     # tRNS: 색 형식 0은 투명한 회색 값 하나, 2는 투명한 RGB 값 하나(둘 다 16비트로 적힌다), 3은 팔레트 번호별 알파
     key = None
@@ -158,6 +197,11 @@ def decode(path):
             if len(transparency) != 6:
                 raise Unsupported("corrupt PNG (tRNS length)")
             key = struct.unpack(">HHH", transparency)
+        elif color == 3:
+            if len(transparency) > len(palette) // 3:
+                raise Unsupported("corrupt PNG (tRNS longer than the palette)")
+        else:
+            raise Unsupported("corrupt PNG (tRNS in an image that has an alpha channel)")
     out = []
     for row in rows:
         values = samples(row, width * channels, depth)
@@ -166,7 +210,7 @@ def decode(path):
             base = x * channels
             if color == 3:
                 index = values[base]
-                if palette is None or index * 3 + 2 >= len(palette):
+                if index * 3 + 2 >= len(palette):
                     raise Unsupported("corrupt PNG (palette index out of range)")
                 r, g, b = palette[index * 3:index * 3 + 3]
                 a = transparency[index] if transparency and index < len(transparency) else 255

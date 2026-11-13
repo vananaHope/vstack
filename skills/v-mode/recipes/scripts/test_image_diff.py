@@ -63,6 +63,20 @@ def png(width, height, color, depth, rows, bpp, filter_kind=0, palette=None, tra
     return body + (chunk(b"IEND", b"") if end else b"")
 
 
+def assemble(*chunks):
+    """(이름, 본문) 목록으로 PNG를 만든다. 청크 순서와 구조를 마음대로 짤 때 쓴다."""
+    return SIGNATURE + b"".join(chunk(kind, body) for kind, body in chunks)
+
+
+def header(width, height, color, depth):
+    return (b"IHDR", struct.pack(">IIBBBBB", width, height, depth, color, 0, 0, 0))
+
+
+ONE_PIXEL = zlib.compress(b"\x00\x01\x02\x03\x04")  # 필터 0 + RGBA 한 픽셀
+ONE_INDEX = zlib.compress(b"\x00\x00")  # 필터 0 + 팔레트 번호 0(8비트 회색 한 픽셀로도 쓴다)
+END = (b"IEND", b"")
+
+
 def rgba_png(pixels, filter_kind=0):
     """pixels: 줄마다 (r, g, b, a) 목록."""
     rows = [bytes(v for px in row for v in px) for row in pixels]
@@ -168,8 +182,8 @@ class CompareTest(Files):
     def test_bbox_covers_every_changed_pixel(self):
         pixels = [[(0, 0, 0, 255)] * 8 for _ in range(8)]
         changed = [list(row) for row in pixels]
-        changed[1][6] = (0, 0, 40, 255)
-        changed[5][2] = (200, 0, 0, 255)
+        changed[1][6] = (0, 0, 200, 255)  # 큰 차이가 먼저 나온다: 마지막 픽셀의 차이가 아니라 최댓값이어야 한다
+        changed[5][2] = (40, 0, 0, 255)
         code, out, _ = self.run_main(self.write("a.png", rgba_png(pixels)), self.write("b.png", rgba_png(changed)))
         self.assertEqual((code, out), (1, "different: 2 of 64 pixels (3.125%), bbox 2,1-6,5, max channel delta 200"))
 
@@ -191,6 +205,13 @@ class CompareTest(Files):
         first = self.write("a.png", rgba_png(gradient(4, 4)))
         second = self.write("b.png", rgba_png(gradient(4, 5)))
         self.assertEqual(self.run_main(first, second), (1, "different: size 4x4 vs 4x5", ""))
+
+    def test_extra_chunks_and_empty_idat_do_not_change_the_pixels(self):
+        plain = self.write("a.png", assemble(header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL), END))
+        dressed = self.write("b.png", assemble(header(1, 1, 6, 8), (b"tEXt", b"Software\x00x"), (b"pHYs", b"\x00" * 9),
+                                               (b"IDAT", b""), (b"IDAT", ONE_PIXEL[:3]), (b"IDAT", ONE_PIXEL[3:]),
+                                               (b"IDAT", b""), (b"tIME", b"\x00" * 7), END))
+        self.assertEqual(self.run_main(plain, dressed), (0, "identical: 1x1", ""))
 
     def test_there_is_no_tolerance_option(self):
         good = self.write("a.png", rgba_png(gradient(2, 2)))
@@ -216,6 +237,34 @@ class CannotCompareTest(Files):
             "short-rows.png": png(1, 1, 6, 8, two_rows[:1], 4, declared_height=2),
             "extra-rows.png": png(1, 2, 6, 8, two_rows, 4, declared_height=1),
             "sixteen-bit.png": png(1, 1, 0, 16, [bytes((0x12, 0x00))], 2),
+            # 청크 구조가 규격과 다른 것들. 모두 CRC는 맞다
+            "idat-before-header.png": assemble((b"IDAT", ONE_PIXEL), header(1, 1, 6, 8), END),
+            "two-headers.png": assemble(header(1, 1, 6, 8), header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL), END),
+            "split-idat.png": assemble(header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL[:4]), (b"tEXt", b"k\x00v"),
+                                       (b"IDAT", ONE_PIXEL[4:]), END),
+            "iend-with-body.png": assemble(header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL), (b"IEND", b"x")),
+            "data-after-iend.png": assemble(header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL), END) + b"junk",
+            "unknown-critical.png": assemble(header(1, 1, 6, 8), (b"ABCD", b""), (b"IDAT", ONE_PIXEL), END),
+            "palette-length.png": assemble(header(1, 1, 3, 8), (b"PLTE", b"\x01\x02\x03\x04"),
+                                           (b"IDAT", ONE_INDEX), END),
+            "no-palette.png": assemble(header(1, 1, 3, 8), (b"IDAT", ONE_INDEX), END),
+            "two-palettes.png": assemble(header(1, 1, 3, 8), (b"PLTE", b"\x01\x02\x03"), (b"PLTE", b"\x01\x02\x03"),
+                                         (b"IDAT", ONE_INDEX), END),
+            "palette-after-idat.png": assemble(header(1, 1, 3, 8), (b"IDAT", ONE_INDEX), (b"PLTE", b"\x01\x02\x03"),
+                                               END),
+            "long-palette-trns.png": assemble(header(1, 1, 3, 8), (b"PLTE", b"\x01\x02\x03"), (b"tRNS", b"\x10\x20"),
+                                              (b"IDAT", ONE_INDEX), END),
+            "trns-with-alpha.png": assemble(header(1, 1, 6, 8), (b"tRNS", b"\x00\x01"), (b"IDAT", ONE_PIXEL), END),
+            "two-trns.png": assemble(header(1, 1, 3, 8), (b"PLTE", b"\x01\x02\x03"), (b"tRNS", b"\x10"),
+                                     (b"tRNS", b"\x10"), (b"IDAT", ONE_INDEX), END),
+            "trns-after-idat.png": assemble(header(1, 1, 0, 8), (b"IDAT", ONE_INDEX), (b"tRNS", b"\x00\x40"), END),
+            "gray-trns-length.png": assemble(header(1, 1, 0, 8), (b"tRNS", b"\x00"), (b"IDAT", ONE_INDEX), END),
+            "rgb-trns-length.png": assemble(header(1, 1, 2, 8), (b"tRNS", b"\x00\x01"),
+                                            (b"IDAT", zlib.compress(b"\x00\x01\x02\x03")), END),
+            "extra-after-stream.png": assemble(header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL + b"zz"), END),
+            "unfinished-stream.png": assemble(header(1, 1, 6, 8), (b"IDAT", ONE_PIXEL[:-2]), END),
+            "zero-size.png": assemble(header(0, 1, 6, 8), (b"IDAT", zlib.compress(b"\x00")), END),
+            "short-header.png": assemble((b"IHDR", b"\x00" * 12), (b"IDAT", ONE_PIXEL), END),
         }
 
     def test_every_unreadable_input_exits_two_with_an_ascii_reason_naming_the_file(self):
