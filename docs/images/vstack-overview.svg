@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 518" width="1080" height="518" role="img" aria-labelledby="t d">
+<title id="t">vstack이 요청을 처리하는 세 갈래</title>
+<desc id="d">v-mode 라우터가 요청을 진행 중인 일인지, 크기, 작업 유형과 레시피 순으로 보고 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 이 대화가 직접 하거나 omp 작업자에게 맡기고, 수용 기준을 다시 돌려 확인한다. UI 다듬기 레시피는 맡기지 않고 직접 한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.</desc>
+<style>
+  svg { --bg:#FAFBFD; --ink:#18223A; --muted:#566379; --line:#CDD4E0; --line-strong:#9AA6BA; --base-bg:#DDE3EC;
+        --user:#A35F00; --user-bg:#FBEACB; --craft:#0A7A72; --craft-bg:#D3EFEA; --run:#3F4FC2; --run-bg:#DFE3FB; }
+  @media (prefers-color-scheme: dark) {
+    svg { --bg:#182030; --ink:#E4E9F2; --muted:#9BA7BC; --line:#2C374C; --line-strong:#56637C; --base-bg:#232D41;
+          --user:#F2B55A; --user-bg:#3A2B10; --craft:#56D3C7; --craft-bg:#10332F; --run:#A3AEFF; --run-bg:#212A56; }
+  }
+  text { font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; font-size: 12px; fill: var(--ink); }
+  .mono { font-family: ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", monospace; font-size: 10.5px; }
+  .s { font-size: 12px; fill: var(--muted); }
+  .b { font-weight: 600; }
+  .h { font-size: 14px; font-weight: 700; }
+  .inv { fill: var(--bg); }
+  .invs { fill: var(--bg); font-size: 11px; opacity: .82; }
+  .mid { text-anchor: middle; }
+  .ln { stroke: var(--ink); stroke-width: 1.3; fill: none; }
+  .mk { fill: var(--ink); }
+  .bx { stroke-width: 1.3; }
+  .u { fill: var(--user-bg); stroke: var(--user); }
+  .c { fill: var(--craft-bg); stroke: var(--craft); }
+  .r { fill: var(--run-bg); stroke: var(--run); }
+  .d { fill: var(--bg); stroke: var(--ink); stroke-width: 1.6; }
+  .ink { fill: var(--ink); }
+  .base { fill: var(--base-bg); stroke: var(--ink); }
+  .frame { fill: var(--bg); stroke: var(--line); }
+  .sep { stroke: var(--line); stroke-width: 1; }
+</style>
+<defs><marker id="mk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="frame" x="0.5" y="0.5" width="1079" height="517" rx="10"/>
+<rect class="bx d" x="24" y="207" width="86" height="36" rx="4"/>
+<text x="67" y="229" class="mid b">요청</text>
+<path class="ln" d="M110 225H148" marker-end="url(#mk)"/>
+<rect class="ink" x="150" y="120" width="170" height="210" rx="6"/>
+<text x="166" y="148" class="h inv">v-mode</text>
+<text x="166" y="165" class="invs">라우터</text>
+<path d="M166 178H304" stroke="var(--bg)" stroke-opacity=".35"/>
+<text x="166" y="202" class="inv">0  진행 중인 일인가</text>
+<text x="166" y="222" class="inv">1  크기</text>
+<text x="166" y="242" class="inv">2  작업 유형 · 레시피</text>
+<text x="166" y="262" class="inv">3  갈래</text>
+<text x="166" y="300" class="invs">주장마다 근거 표시</text>
+<text x="166" y="316" class="invs">병합은 이름을 적은 승인</text>
+<path class="ln" d="M320 160H336V70H450" marker-end="url(#mk)"/>
+<path class="ln" d="M320 225H336V206H450" marker-end="url(#mk)"/>
+<path class="ln" d="M320 290H336V372H450" marker-end="url(#mk)"/>
+<text x="394" y="62" class="mid b">바로</text>
+<text x="394" y="86" class="mid s">질문 · 자명한 수정</text>
+<text x="394" y="198" class="mid b">한 세션</text>
+<text x="394" y="222" class="mid s">한 단위의 일</text>
+<text x="394" y="364" class="mid b">지휘</text>
+<text x="394" y="388" class="mid s">여러 티켓 · 관문</text>
+<rect class="bx c" x="452" y="44" width="170" height="52" rx="4"/>
+<text x="537" y="66" class="mid">이 대화가</text>
+<text x="537" y="82" class="mid">바로 처리한다</text>
+<text x="638" y="67" class="s">읽기 전용 질문과 조사, 한두 줄의 자명한 수정, 문서 수정.</text>
+<text x="638" y="84" class="s">레시피 없이 후보 원칙만 쓴다.</text>
+<path class="sep" d="M352 124H1056"/>
+<rect class="bx d" x="452" y="170" width="170" height="72" rx="4"/>
+<text x="537" y="194" class="mid b">레시피를 고른다</text>
+<text x="537" y="210" class="mid mono">bug-fix · feature</text>
+<text x="537" y="226" class="mid mono">refactoring · ui-polish</text>
+<path class="ln" d="M622 206H636V173"/>
+<path class="ln" d="M636 173H648" marker-end="url(#mk)"/>
+<path class="ln" d="M636 206V229"/>
+<path class="ln" d="M636 229H648" marker-end="url(#mk)"/>
+<rect class="bx c" x="650" y="154" width="160" height="38" rx="4"/>
+<text x="730" y="177" class="mid">이 대화가 직접 한다</text>
+<rect class="bx c" x="650" y="206" width="160" height="46" rx="4"/>
+<text x="730" y="225" class="mid">omp 작업자에게 맡긴다</text>
+<text x="730" y="241" class="mid s">ui-polish는 맡기지 않는다</text>
+<path class="ln" d="M810 173H824V229H810"/>
+<path class="ln" d="M824 206H838" marker-end="url(#mk)"/>
+<rect class="bx r" x="840" y="180" width="160" height="52" rx="4"/>
+<text x="920" y="202" class="mid">수용 기준을</text>
+<text x="920" y="218" class="mid">다시 돌려 확인한다</text>
+<text x="452" y="276" class="s">계약 밖: 증거 폴더, 교차 검토, 병합 관문이 없다. push와 PR은 사용자가 지시할 때만 한다.</text>
+<path class="sep" d="M352 300H1056"/>
+<rect class="bx u" x="452" y="346" width="100" height="52" rx="4"/>
+<text x="502" y="368" class="mid">정렬 · 티켓</text>
+<text x="502" y="384" class="mid">vstack 절</text>
+<rect class="bx c" x="564" y="346" width="100" height="52" rx="4"/>
+<text x="614" y="368" class="mid">작업자가</text>
+<text x="614" y="384" class="mid">레시피대로 구현</text>
+<rect class="bx c" x="676" y="346" width="100" height="52" rx="4"/>
+<text x="726" y="368" class="mid">다른 계열이</text>
+<text x="726" y="384" class="mid">교차 검토</text>
+<rect class="bx r" x="788" y="346" width="100" height="52" rx="4"/>
+<text x="838" y="368" class="mid">관리자가</text>
+<text x="838" y="384" class="mid">증거 보관</text>
+<rect class="bx base" x="900" y="346" width="100" height="52" rx="4"/>
+<text x="950" y="368" class="mid b">병합 관문</text>
+<text x="950" y="384" class="mid mono">G1 ~ G5</text>
+<path class="ln" d="M552 372H562" marker-end="url(#mk)"/>
+<path class="ln" d="M664 372H674" marker-end="url(#mk)"/>
+<path class="ln" d="M776 372H786" marker-end="url(#mk)"/>
+<path class="ln" d="M888 372H898" marker-end="url(#mk)"/>
+<path class="ln" d="M1000 372H1012" marker-end="url(#mk)"/>
+<rect class="bx d" x="1014" y="354" width="50" height="36" rx="4"/>
+<text x="1039" y="376" class="mid b">병합</text>
+<path class="ln" d="M726 398V414H614V400" marker-end="url(#mk)"/>
+<text x="670" y="430" class="mid s">수정 필요면 다시</text>
+<text x="452" y="452" class="s">계약 안: 관리자는 코드를 쓰지 않는다. 작업자는 Codex · Claude · OpenCode.</text>
+<text x="452" y="469" class="s">증거의 대상과 원격의 대상이 같을 때만 병합한다.</text>
+<rect class="bx u" x="24" y="490" width="14" height="14" rx="3"/>
+<text x="44" y="501" class="s">사용자가 정한다</text>
+<rect class="bx c" x="162" y="490" width="14" height="14" rx="3"/>
+<text x="182" y="501" class="s">구현하고 검토한다</text>
+<rect class="bx r" x="312" y="490" width="14" height="14" rx="3"/>
+<text x="332" y="501" class="s">맡기고 확인한다</text>
+<rect class="bx ink" x="450" y="490" width="14" height="14" rx="3"/>
+<text x="470" y="501" class="s">라우터와 관문</text>
+</svg>

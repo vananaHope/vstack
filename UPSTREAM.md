@@ -22,6 +22,18 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | `extracted` | 원문의 일부만 떼어 새 파일로 만든다. 원본이 가리키던 파일 가운데 가져오지 않는 것은 `dropped`에 적는다 |
 | `moved` | vstack이 이어받는다. 원본 저장소는 아카이브한다 |
 
+**pstack에서 가져오기 전에 mattpocock-skills와 겹치는지 본다.** vstack은 mattpocock-skills를 의존성으로 함께 설치한다. 같은 역할의 스킬이 두 벌 생기면 무엇을 써야 할지 헷갈리고, pstack 사본은 원본이 바뀔 때마다 다시 맞춰야 한다. 그래서 pstack에서 가져오는 것(스킬, 플레이북을 바탕으로 만드는 레시피)마다 먼저 한다.
+
+1. 설치된 mattpocock-skills의 스킬 목록에서 역할이 맞닿는 것을 고른다.
+2. 그 스킬의 원문을 끝까지 읽어 비교한다. 설명 한 줄로 판단하지 않는다.
+3. 아래 "mattpocock-skills와의 겹침" 표에 판정을 적는다.
+
+| 판정 | 뜻 | 하는 일 |
+| --- | --- | --- |
+| 겹치지 않음 | 묻는 것이나 방법이 다르다 | 가져온다 |
+| 겹침 | 같은 일을 한다 | 가져오지 않는다. mattpocock 것을 쓰고, 라우터가 그 명령을 안내한다(`upstream.json`의 `user_commands`) |
+| 일부 겹침 | 맞닿는 부분이 있다 | 무엇이 겹치고 무엇이 다른지, 그래도 가져오는 이유를 적는다. 겹치는 부분은 mattpocock 것을 가리킬 수 있는지 먼저 본다 |
+
 ## 단계별 가져올 것
 
 | 단계 | 출처 | 원본 | vstack | 방식 |
@@ -141,12 +153,26 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 계약 쪽: 시도 ID의 가운데 8자를 dispatch ID에서 관리자가 띄우기 전에 정하는 세션 키로 바꿈(dispatch ID는 띄운 뒤에야 생겨 명세의 증거 폴더에 넣을 수 없었다). evidence.md·archive.md·state-and-rollback.md.
 
+## mattpocock-skills와의 겹침
+
+pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적는다. 비교한 mattpocock-skills는 1.3.1(`49dd158`)이다.
+
+| 가져온 것 | 비교한 mattpocock 스킬 | 판정 | 근거 |
+| --- | --- | --- | --- |
+| `skills/blast-radius` | `code-review` | 겹치지 않음 | `code-review`는 변경이 저장소의 코딩 규칙을 지켰는지와 명세대로 만들었는지를 하위 에이전트 둘이 읽어서 판정한다. 변경이 diff 밖에서 깨뜨리는 것을 찾거나 코드를 돌려 증명하는 단계가 없다. 이 확인은 가져온 뒤(2026-11-13)에 했다 |
+| `skills/v-mode/recipes/ui-polish.md`(pstack `visual-parity`·`hillclimb`를 조합) | `prototype` | 겹치지 않음 | 스킬 38개의 원문에서 화면·스크린샷·다듬기를 다루는 것을 찾았고, 맞닿는 것은 `prototype`의 UI 갈래뿐이다. 그것은 버릴 시안 여러 개로 "어떤 모양이어야 하나"를 정하는 일이다. `ui-polish`는 이미 정해진 모양의 화면을 다듬고, 모양을 새로 정하는 일은 시작하지 않는다. 그 일이 `prototype`의 몫이다. 이 확인도 만든 뒤(2026-11-13)에 했다 |
+
+이 규칙을 두기 전에 pstack에서 가져온 것(원칙 24개, `create-verification-skill`, 레시피 `bug-fix`·`feature`·`refactoring`의 바탕이 된 플레이북)은 이 표에 없다. 다시 손댈 때 확인해 채운다. 이와 따로, `tdd`와 `diagnosing-bugs`는 pstack이 아니라 mattpocock-skills에서 고쳐 가져온 사본이고 레시피가 그 사본을 쓴다.
+
+앞으로 가져올 후보와 먼저 비교할 스킬: 조사 레시피와 pstack `how`·`why` ↔ `research`·`wayfinder`, 프로토타입 ↔ `prototype`.
+
 ## 출처 참조
 
 verbatim 원문 안에서 vstack에 없는 스킬을 가리키는 곳은 [`skills/v-mode/contracts/reference-policy.md`](skills/v-mode/contracts/reference-policy.md)에 있다. 이 파일은 스크립트가 만든다.
 
 ## 갱신 절차
 
+0. pstack에서 새로 가져오는 것이면 "가져오는 방식"의 mattpocock-skills 겹침 확인을 먼저 하고 판정을 적는다.
 1. 출처의 새 버전을 받는다(pstack은 `cursor/plugins` 저장소, 나머지는 플러그인 캐시나 원격 저장소). 처음 가져올 때와 verbatim 갱신은 `node scripts/import.mjs --stage <n> --source …`로 한다. verbatim은 덮어쓰고, adapted는 파일이 없을 때만 원본으로 깔아 둔다(있으면 손대지 않는다). `--check`는 verbatim이 원본과 다른지만 본다.
 2. 받은 체크아웃이 깨끗한지(`git status --short`가 빈 출력) 확인한다.
 3. `upstream.json`의 각 항목을 이전 커밋과 비교한다. 경로는 출처의 `path`와 항목의 `from`을 이은 것이다. 예: pstack은 `git diff <이전 커밋> <새 커밋> -- pstack/skills/principle-prove-it-works`.

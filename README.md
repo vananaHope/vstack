@@ -2,7 +2,7 @@
 
 Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 고르고, 레시피는 원칙과 검증 계약을 지키며 일한다. mattpocock 정렬 스킬(무엇을, 왜), pstack 원칙과 검증(어떻게 제대로), agent-orchestra 지휘(누가, 언제)를 하나로 묶는다.
 
-> 만드는 중이다. 지금은 0~5단계(계약, 플러그인 골격·출처 관리, 원칙 24개와 버그 수정 레시피, 옮겨 온 지휘 스킬, Orca 시범 두 번, 최소 v-mode 라우터)까지 있다. 레시피는 버그 수정, 기능, 리팩토링 셋이다. 진행 상태와 설계는 [docs/design.md](docs/design.md)에 있다.
+> 만드는 중이다. 계약, 원칙 24개, v-mode 라우터, 옮겨 온 지휘 스킬, 레시피 넷(버그 수정, 기능, 리팩토링, UI 다듬기)이 있고, Orca에서 시범을 다섯 번 돌렸다. 다음은 실제 프로젝트에서 쓰며 확인하는 일이다. 진행 상태와 설계는 [docs/design.md](docs/design.md), 지금 하는 단계는 [docs/stage-7-plan.md](docs/stage-7-plan.md)에 있다.
 
 ## 설치
 
@@ -39,8 +39,12 @@ skills:
 
 `/vstack:v-mode`(omp는 `/skill:v-mode`)로 시작해 하려는 일을 말한다. v-mode가 크기와 작업 유형을 보고 갈래를 고른다.
 
+![v-mode 라우터가 요청을 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 이 대화가 직접 하거나 omp 작업자에게 맡기고 수용 기준을 다시 돌려 확인한다. UI 다듬기 레시피는 맡기지 않고 직접 한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 거쳐 병합한다.](docs/images/vstack-overview.svg)
+
+요청이 가는 길이다. 한 세션은 계약 밖이라 교차 검토와 병합 관문이 없고, 지휘는 증거의 대상과 원격의 대상이 같을 때만 병합한다.
+
 - 바로: 질문·조사, 자명한 작은 수정
-- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링, UI 다듬기)을 레시피대로 한다. 교차 검토·병합 관문은 없다. 이 대화에서 직접 하거나, Claude Code + Orca에서 omp가 설치돼 있으면 omp 작업자에게 새 worktree로 맡긴다(버그 수정의 기본값. omp가 자기 모델 설정대로 구현하고 서브에이전트 검토를 받는다. `skills/v-mode/delegate-omp.md`)
+- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링, UI 다듬기)을 레시피대로 한다. 교차 검토·병합 관문은 없다. 이 대화에서 직접 하거나, Claude Code + Orca에서 omp가 설치돼 있으면 omp 작업자에게 새 worktree로 맡긴다(버그 수정의 기본값. UI 다듬기는 맡기지 않는다. omp가 자기 모델 설정대로 구현하고 서브에이전트 검토를 받는다. `skills/v-mode/delegate-omp.md`)
 - 지휘: 정렬(`grill-with-docs` → `to-spec` → `to-tickets`, mattpocock 플러그인 명령) → 티켓에 vstack 절 → 작업자 배정·교차 검토·증거 보관·병합 관문(Orca)
 
 ## agent-orchestra를 쓰던 프로젝트에서
@@ -70,6 +74,7 @@ skills/orchestrate-issues/, skills/check-limits/, skills/configure/
                          agent-orchestra에서 옮겨 온 지휘 스킬(v-mode가 경로로 읽음)
 docs/
   design.md              설계와 변경 이력
+  images/                README의 그림(SVG. 밝은·어두운 테마를 파일 안에서 바꾼다)
   contract-examples/     계약 판정 예시
 upstream.json            가져오는 파일 목록(정본)
 UPSTREAM.md              출처, 고친 내용, 갱신 절차
