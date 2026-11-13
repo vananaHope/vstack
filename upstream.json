@@ -289,6 +289,13 @@
       "from": "skills/benchmark-checklist",
       "to": "skills/benchmark-checklist",
       "mode": "adapted"
+    },
+    {
+      "stage": 7,
+      "source": "pstack",
+      "from": "skills/ketchup",
+      "to": "skills/ketchup",
+      "mode": "adapted"
     }
   ],
   "own": [
