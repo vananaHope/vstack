@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 518" width="1080" height="518" role="img" aria-labelledby="t d">
 <title id="t">vstack이 요청을 처리하는 세 갈래</title>
-<desc id="d">v-mode 라우터가 요청을 진행 중인 일인지, 크기, 작업 유형과 레시피 순으로 보고 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 이 대화가 직접 하거나 omp 작업자에게 맡기고, 수용 기준을 다시 돌려 확인한다. UI 다듬기 레시피는 맡기지 않고 직접 한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.</desc>
+<desc id="d">v-mode 라우터가 요청을 진행 중인 일인지, 크기, 작업 유형과 레시피 순으로 보고 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 작업자에게 맡기거나 이 대화가 직접 하고, 수용 기준을 다시 돌려 확인한다. 맡기면 Claude 작업자가 구현하고 Codex가 검토한다. UI 다듬기 레시피는 맡기지 않고 직접 한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.</desc>
 <style>
   svg { --bg:#FAFBFD; --ink:#18223A; --muted:#566379; --line:#CDD4E0; --line-strong:#9AA6BA; --base-bg:#DDE3EC;
         --user:#A35F00; --user-bg:#FBEACB; --craft:#0A7A72; --craft-bg:#D3EFEA; --run:#3F4FC2; --run-bg:#DFE3FB; }
@@ -69,14 +69,14 @@
 <rect class="bx c" x="650" y="154" width="160" height="38" rx="4"/>
 <text x="730" y="177" class="mid">이 대화가 직접 한다</text>
 <rect class="bx c" x="650" y="206" width="160" height="46" rx="4"/>
-<text x="730" y="225" class="mid">omp 작업자에게 맡긴다</text>
+<text x="730" y="225" class="mid">작업자에게 맡긴다</text>
 <text x="730" y="241" class="mid s">ui-polish는 맡기지 않는다</text>
 <path class="ln" d="M810 173H824V229H810"/>
 <path class="ln" d="M824 206H838" marker-end="url(#mk)"/>
 <rect class="bx r" x="840" y="180" width="160" height="52" rx="4"/>
 <text x="920" y="202" class="mid">수용 기준을</text>
 <text x="920" y="218" class="mid">다시 돌려 확인한다</text>
-<text x="452" y="276" class="s">계약 밖: 증거 폴더, 교차 검토, 병합 관문이 없다. push와 PR은 사용자가 지시할 때만 한다.</text>
+<text x="452" y="276" class="s">계약 밖: 증거 폴더와 병합 관문이 없다. push와 PR은 사용자가 지시할 때만 한다.</text>
 <path class="sep" d="M352 300H1056"/>
 <rect class="bx u" x="452" y="346" width="100" height="52" rx="4"/>
 <text x="502" y="368" class="mid">정렬 · 티켓</text>

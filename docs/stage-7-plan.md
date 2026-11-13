@@ -106,6 +106,8 @@
 
 4의 경과: 처음에는 "7단계 안에서 한다"를 골랐다가, 설명(계열 판정, 증거 계약, 서브에이전트 규칙, 시범이 새로 필요하고 계약이 `@4`가 된다)을 들은 뒤 하지 않기로 했다.
 
+4의 뒤(2026-11-13): omp를 한 세션 맡기기에서도 쓰지 않기로 했다. 맡기기는 Claude 구현 작업자와 Codex 검토자로 바꿨다([delegate-claude-plan.md](delegate-claude-plan.md), [design.md](design.md) 13절). 이 문서의 omp 맡기기 언급은 그 전의 기록이다.
+
 ## 묶음 F. UI 다듬기를 vstack에서(형태: 다, 한 세션에서만)
 
 agent-orchestra의 UI 다듬기([ui-polish.md](../skills/orchestrate-issues/ui-polish.md))는 한 화면 묶음의 구현 이슈가 모두 병합된 뒤 **관리자가 직접** 스크린샷을 보며 고치고, `UI` 검토 목록의 다른 계열 검토를 받아 PR·병합하는 일이다. vstack은 관리자가 코드를 쓰지 않으므로 그대로 옮길 수 없다.
