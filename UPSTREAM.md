@@ -47,6 +47,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 7 | pstack | `skills/blast-radius` | 같음 | adapted |
 | 7 | pstack | `skills/maintain-verification-skill` | 같음 | adapted |
 | 7 | pstack | `skills/benchmark-checklist` | 같음 | adapted |
+| 7 | pstack | `skills/ketchup` | 같음 | adapted |
 
 ## 고친 내용
 
@@ -116,6 +117,18 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 33 | "The coordinator owns all driving" → "You own all driving" | 이 스킬을 따르는 것은 구현자 한 명이다 |
 | 37 | changed의 "one PR of proven corrections" → 작업 브랜치에 커밋. clean의 "no PR" → 커밋 없음. blocked의 "no PR" → 증명한 수정만 커밋하고 증명하지 못한 수정은 되돌려 diff로 보고(작업 트리를 깨끗하게). 어느 결과든 다룬 기능, `verified-unreachable` 전제, 확인된 어긋남, 고친 실행 수단, 찾은 제품 고장을 보고 | 맡기기의 권한과 관리자의 수용 기준(`delegate.md` "검증 스킬 점검"). blocked에서 이미 증명한 수정을 버리지 않으면서 관리자의 확인(깨끗한 작업 트리)과 사용자의 선택(이어 가기, 증명된 것만 받기, 그만두기)으로 이어지게 했다 |
 | 39 | scratch → 저장소 밖(OS 임시 폴더) | 작업 트리를 깨끗하게 둔다 |
+
+### `skills/ketchup/SKILL.md`(pstack 0.15.36, 7단계)
+
+원본에는 딸린 파일이 없다. v-mode "그 밖의 요청"이 경로로 읽고, 바로 갈래에서 관리자가 따른다(읽기 전용). 모으기·답 쓰기·그림 규칙과 낱말 수는 그대로다.
+
+| 원본 줄 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| 3 | `/vstack:ketchup` 추가 | Claude Code의 플러그인 명령 접두사 |
+| 6 뒤 | "vstack copy of pstack …"과 바로 갈래에서 관리자가 따른다는 한 줄 | 다른 adapted 사본과 같다 |
+| 11 | "Use `/bro`'s voice, not its task" → "Use a plain voice"(뒤의 말투 설명은 그대로), 그리고 v-mode "답 쓰기"(맥락 먼저, 용어집, 고정 규칙 2의 표시)를 따른다는 문장 | `bro`는 vstack에 없다. v-mode의 답 규칙과 어긋나지 않게 |
+| 15 | 모으는 곳에 vstack의 맡기기 기록, 지휘 작업 상태, Orca 받은 편지함을 더함 | 관리자가 작업자의 결과와 기록이 기다리는 것을 따라잡게 |
+| 37, 43 | `/visualize` 언급 → "a chart" | `visualize`는 vstack에 없다 |
 
 ### `skills/benchmark-checklist/SKILL.md`(pstack 0.15.36, 7단계)
 
@@ -305,6 +318,7 @@ pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적�
 | `skills/v-mode/recipes/ui-polish.md`(pstack `visual-parity`·`hillclimb`를 조합) | `prototype` | 겹치지 않음 | 스킬 38개의 원문에서 화면·스크린샷·다듬기를 다루는 것을 찾았고, 맞닿는 것은 `prototype`의 UI 갈래뿐이다. 그것은 버릴 시안 여러 개로 "어떤 모양이어야 하나"를 정하는 일이다. `ui-polish`는 이미 정해진 모양의 화면을 다듬고, 모양을 새로 정하는 일은 시작하지 않는다. 그 일이 `prototype`의 몫이다. 이 확인도 만든 뒤(2026-11-13)에 했다. `ui-polish@2`부터 v-mode가 그런 요청에 `prototype` 명령을 안내한다(`upstream.json`의 `user_commands`) |
 | `skills/v-mode/recipes/investigation.md`(pstack 조사 플레이북·`how`·`why`) | `research`, `wayfinder`, `codebase-design`, `teach`, `diagnosing-bugs` | 일부 겹침 | `research`는 1차 자료(공식 문서, 소스 코드, 명세, 직접 API)에서 주장마다 출처를 따라가 백그라운드 에이전트가 Markdown 파일 하나로 남긴다. 대화에서 답하지 않는다. 소스 코드도 1차 자료라서 이 저장소의 코드를 출처를 달아 조사하는 일 자체는 겹친다. 다른 점은 셋이다: 조사 레시피는 대화에서 답하고 파일을 남기지 않는다, 어떻게 질문에 정해진 설명 절(개요 … 함정)이 있다, 왜 질문에 이력 조사(코드 기준점, 근거 범주, 신뢰 단계, 경쟁 가설)가 있다. 바깥 자료(라이브러리 문서, 명세)를 모아 남기는 일을 `research` 명령으로 안내하는 것은 vstack이 정한 나눔이다(원본 `research`에 그런 제한은 없다. `upstream.json`의 `user_commands`). `wayfinder`의 `research` 티켓은 작업 폴더 밖의 지식이 필요할 때 같은 스킬을 부른다. `codebase-design`은 모듈의 인터페이스와 seam을 설계하거나 고치는 어휘와 원칙이다. 조사 레시피의 "어디에 둘까"는 지금 구조를 읽어 대안을 비교해 추천하는 데서 멈추고, 새 인터페이스나 seam을 설계하는 일은 하지 않는다(그 일은 변경이라 갈래를 다시 고른다). `teach`는 여러 세션에 걸쳐 주제를 가르치는 작업 폴더를 만든다. 코드 설명과 겹치지 않는다. `diagnosing-bugs`는 결함의 원인을 찾는 진단이라 "쓰지 않을 때"로 보냈다. 코드가 왜 이렇게 됐는지를 이력에서 찾는 스킬과 신뢰 단계는 mattpocock에 없다(2026-11-14, 스킬 38개의 설명과 위 다섯의 원문을 읽음) |
 | `skills/v-mode/recipes/correct.md`(pstack `correct`) | `retro`, `code-review`, `writing-for-agents`, `setup-ts-deep-modules` | 일부 겹침 | `retro`는 한 세션을 돌아보고 에이전트 환경의 개선 후보(길 찾기, 자동 검사, 코딩 규칙, 지침 파일, 도구 비용, 효과 없는 지시, 정보 접근)를 사용자에게 심각도순으로 보인다. 고치지 않는다. 기계적인 위반은 글 규칙보다 검사로 막고, 판단만 `CODING_STANDARDS.md`에 둔다는 생각이 `correct`와 같다. `correct`는 한 세션이 아니라 저장소의 이력에서 두 번 이상 나온 실수를 묶고, 높은 층부터 직접 막고, 과거 실수에서 검사가 실패함을 보인다. 그래서 "찾아서 제안"과 "막고 증명"으로 나뉜다. 사용자가 mattpocock-skills를 쓰면 `retro`로 후보를 찾고 이 레시피로 막을 수 있다. `code-review`는 변경이 코딩 규칙을 지켰는지 판정할 뿐 규칙을 장치로 바꾸지 않는다. `writing-for-agents`는 지침 문서를 쓰는 법이라 문서 층에서만 맞닿는다`setup-ts-deep-modules`(`in-progress` 폴더, 사용자 실행 전용)는 TypeScript 저장소에 dependency-cruiser로 패키지 경계 규칙을 설치하고, 저장소의 검사 명령에 연결하고, 일부러 넣은 잘못된 import에서 실패함을 보인 뒤 지침 파일에 포인터를 남긴다. 이 레시피의 구조·검사 층과 "실패를 보인다"가 겹친다. 다른 점: 그 스킬은 정해진 한 규칙(패키지 경계)을 정해진 도구로 설치하고 예제 위반으로 증명한다. 이 레시피는 저장소 이력에서 되풀이된 실수를 골라 그에 맞는 층을 정하고 실제 과거 실수로 증명한다. 막을 유형이 TypeScript 패키지 경계면 구현자가 그 스킬의 방식을 참고할 수 있지만 레시피가 부르지는 않는다(2026-11-14, 스킬 38개의 설명과 위 넷의 원문을 읽음) |
+| `skills/ketchup` | `handoff`, `wait-what`, `chief-of-staff` | 겹치지 않음 | `handoff`는 다음 에이전트가 이어 받을 문서를 OS 임시 폴더에 쓴다. `wait-what`은 직전 메시지 하나를 맥락과 쉬운 말로 다시 쓴다(v-mode가 "다시 설명 요청"으로 안내한다). `chief-of-staff`는 하위 에이전트로 오래 가는 목표를 쫓는 운영 방식이다. 사용자의 마지막 메시지 뒤로 바뀐 것과 사용자만 정할 것(그 결정에 필요한 근거, 위험, 추천)을 한 답에 모으는 스킬은 mattpocock에 없다(2026-11-14, 위 셋의 원문을 읽음) |
 | `skills/v-mode/recipes/perf.md`, `skills/benchmark-checklist` | `diagnosing-bugs` | 일부 겹침 | mattpocock `diagnosing-bugs`는 성능 회귀도 다룬다("Perf branch": 기준 측정 뒤 이분 탐색, 측정 먼저). vstack은 그 사본을 레시피가 경로로 읽고, 그 위에 측정 검증(benchmark-checklist의 질문 일곱, 교차 반복, 결론 넷)과 성능 주문 목록을 얹었다. 측정이 믿을 만한지 따지는 스킬과 회귀가 아닌 느림을 줄이는 절차는 mattpocock에 없다(스킬 38개의 원문에서 "benchmark", "profil"을 찾았고 `diagnosing-bugs`만 나옴, 2026-11-14) |
 | `skills/maintain-verification-skill` | `retro`, `setup-pre-commit`, `diagnosing-bugs` | 겹치지 않음 | 프로젝트의 검증 스킬과 기능 지도를 앱에 맞춰 관리하는 스킬은 mattpocock-skills에 없다(스킬 38개의 원문에서 "feature map", "verification skill", "verify-"를 찾았고 나오지 않음). `retro`는 자동 검사가 연결되지 않았거나 깨진 것을 개선 후보로 보일 뿐이다. `setup-pre-commit`은 Husky·lint-staged 훅을 설치한다. `diagnosing-bugs`의 되먹임 고리는 버그 하나를 위한 것이다(2026-11-14, 위 셋의 원문을 읽음) |
 | `skills/v-mode/subagents.md`(pstack `poteto-mode`의 "Subagents" 절에서 일부) | `code-review`, `codebase-design`(DESIGN-IT-TWICE), `implement-spec`, `ask-matt`(PHASE-BOUNDARIES), `research` | 일부 겹침 | 서브에이전트를 어떻게 쓸지 정하는 같은 역할의 스킬은 없다. 스킬마다 자기 서브에이전트를 따로 정할 뿐이다(두 검토 서브에이전트, 설계안 서브에이전트, 구현 서브에이전트, 혼자 돌릴 수 있는 일의 위임, 조사 맡기기). 같은 생각은 둘 있다: `implement-spec`의 "내용을 복제하지 말고 가리킨다", `code-review` 설명서(`docs/engineering/code-review.md`)의 "서브에이전트의 출력은 가설이지 증거가 아니다". 그래도 따로 두는 이유는, 맡긴 작업자가 레시피를 따르는 동안 지킬 규칙이 어디에도 없기 때문이다. 사용자가 mattpocock 스킬을 실행하면 그 스킬이 정한 서브에이전트를 따른다 |

@@ -54,6 +54,7 @@ agents/explorer.md       읽기 전용 조사 에이전트 vstack:explorer(Sonne
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)
+skills/ketchup/          마지막 메시지 뒤로 바뀐 것과 사용자가 정할 것을 정리하는 스킬(pstack에서 고쳐 쓴 사본. v-mode가 경로로 읽음)
 skills/benchmark-checklist/
                          성능 측정이 믿을 만한지 따지는 점검표(pstack에서 고쳐 쓴 사본. perf 레시피가 경로로 읽음)
 skills/maintain-verification-skill/
