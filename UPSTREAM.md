@@ -32,6 +32,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 2 | mattpocock-skills | `skills/engineering/tdd` | `skills/tdd` | adapted(`agents/openai.yaml` 제외) |
 | 2 | mattpocock-skills | `skills/engineering/codebase-design/SKILL.md`의 용어 부분 | `skills/tdd/references/codebase-vocabulary.md` | extracted(`DEEPENING.md`, `DESIGN-IT-TWICE.md`는 dropped) |
 | 3 | agent-orchestra | `skills/orchestrate-issues`, `skills/check-limits`, `skills/configure` | 같음 | moved |
+| 7 | pstack | `skills/blast-radius` | 같음 | adapted |
 
 ## 고친 내용
 
@@ -85,6 +86,24 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 42~44 | "5. Offer the maintenance loop"(`/maintain-verification-skill` 안내) → "5. Report the map's coverage"(지도 범위를 보고, 지도가 낡으면 관리자에게 알림) | maintain-verification-skill은 첫 버전에서 뺐다(하위 에이전트 병렬 실행, PR 생성) |
 
 `references/feature-map-example/`은 원문 그대로.
+
+### `skills/blast-radius/SKILL.md`(pstack 0.15.36, 7단계)
+
+원본에는 딸린 파일이 없다. 원본이 이름으로 가리키던 스킬(`how`, `why`, `arena`, `unslop`)은 vstack에 없어서, 그 문장을 지우거나 같은 뜻의 문장으로 바꿨다.
+
+| 원본 줄 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| 3 | description에 `/vstack:blast-radius` 추가 | Claude Code의 플러그인 명령 접두사 |
+| 6 뒤 | "vstack copy of pstack …" 한 줄 | 다른 adapted 사본과 같다 |
+| 11 | "Companion to `how` and `why` …" → 두 스킬의 이름 없이 "코드가 무엇을 하는지, 왜 그런 모양인지와는 다른 질문이다" | `how`·`why`는 vstack에 없다 |
+| 33 | "Use `why` step 2 to pull the PR and commits." → 그 단계의 명령(`git log`, `gh pr view`)을 직접 적고, vstack 작업이면 대상이 `git diff <B>...<H>`라고 적음 | `why`는 vstack에 없다 |
+| 36 | "Same rules as `why`." 삭제(뒤의 규칙 문장은 그대로) | 같음 |
+| 37 | 끝에 "스크립트는 아래 'Where the proof lives'가 말한 곳에 두고 제품 트리에 두지 않는다" | 검토자는 제품 소스·테스트를 고치지 않는다(작업자 계약) |
+| 38 | "run it as an `arena`. Ask more than one model …" → "한 번 읽은 것으로는 부족하다고 보고하고 가장 자신 없는 부분을 적는다. 다른 계열의 두 번째 읽기는 관리자가 정한다. 스스로 다른 에이전트를 띄우지 않는다" | `arena`는 vstack에 없고, 작업자는 다른 작업자를 띄우지 않는다 |
+| 43 | "If you couldn't prove it, write unproven." 뒤에 "돌려 보니 사실이 거짓이면(일부 조건에서만 거짓이어도) disproven이라고 쓰고 조건을 적고, 깨지는 것을 Risks에 적는다" | 평가에서 검토자가 "증명됨/증명 못 함" 둘뿐이라 반증된 경우의 표기를 스스로 만들었다 |
+| 48 | "Write it through `unslop`" → "Write it plainly" | `unslop`은 vstack에 없다 |
+| 48 뒤 | "Where the proof lives" 절 추가: vstack 작업이면 스크립트는 명세의 scratch, 명령과 출력은 증거 폴더 `process/`, 결과는 검토 보고서의 지적(증명 못 한 사실은 지적이나 사람이 확인할 항목). 5단계(실행 중인 앱)는 명세가 준 verify 스킬이나 준비 절차로만 띄우고, 실창이 뜨면 명세의 잠금 명령 안에서만. 작업 밖에서는 스크립트를 요청한 쪽이 정한 폴더(없으면 OS 임시 폴더)에 두고 앱 실행은 그 프로젝트의 안내를 따름 | 증거 계약과 역할별 권한에 맞춤 |
+| 50 | Reply의 "either proven or marked unproven" → "proven, disproven, or unproven"으로, unproven은 증명도 반증도 못 한 경우라고 적음 | 43줄에 더한 disproven과 맞춤 |
 
 ### agent-orchestra 옮기기(3-1단계, 0.20.0 `c62be33`)
 

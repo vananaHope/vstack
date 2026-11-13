@@ -156,6 +156,7 @@ disable-model-invocation: true
 | --- | --- |
 | 한도·사용량 | [../check-limits/SKILL.md](../check-limits/SKILL.md)를 읽고 따른다 |
 | 지휘 설정(등급 배치, 병합 방식 등) | [../configure/SKILL.md](../configure/SKILL.md)를 읽고 따른다 |
+| 어떤 변경이 다른 곳에서 무엇을 깨뜨릴 수 있는지(영향 범위) | 고르기 0에 들지 않는 변경(이미 병합된 커밋, 지휘 밖의 브랜치, 이 대화에서 직접 한 한 세션 일)이면 [../blast-radius/SKILL.md](../blast-radius/SKILL.md)를 읽고 이 대화에서 따른다. 제품 파일은 고치지 않고, 증명용 스크립트는 OS 임시 폴더에 둔다. 진행 중인 지휘 작업이나 omp 맡기기의 변경이면 여기서 하지 않고 위 "0"으로 간다. 지휘 작업은 관리자가 그 작업의 다음 검토 명세에 이 점검을 넣는다([../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "교차 검토 배정") |
 | 직전 답을 다시 설명해 달라는 요청 | 위 "답 쓰기"의 다시 설명 요청 |
 | 이 대화에서 직접 하던 한 세션 일의 이어받기, 자율 실행, UI 다듬기 | 첫 버전에 없다. 그렇게 알린다. 진행 중인 지휘 작업과 omp 맡기기의 이어 가기와 중단은 위 "0"이다 |
 

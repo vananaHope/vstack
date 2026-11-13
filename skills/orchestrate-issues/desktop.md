@@ -10,6 +10,7 @@
   - 다른 작업자가 쓰는 중이면 자동으로 기다린다. 15분이 지난 잠금은 넘겨받는다.
   - 잠금 파일은 `~/.agent-orchestra/desktop.lock` 하나다. 프로젝트와 플러그인 버전에 관계없이 같다. 상태는 `desktop_lock.py status`로 본다.
   - 잠금 밖에서 실창을 띄우지 않는다.
+  - `~/.agent-orchestra/`는 agent-orchestra 때의 폴더 이름이다. 프로젝트 문서들이 이 경로를 가리키므로 그대로 쓴다.
 
 ## 고정 경로
 

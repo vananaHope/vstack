@@ -43,6 +43,14 @@ skills:
 - 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링)을 레시피대로 한다. 교차 검토·병합 관문은 없다. 이 대화에서 직접 하거나, Claude Code + Orca에서 omp가 설치돼 있으면 omp 작업자에게 새 worktree로 맡긴다(버그 수정의 기본값. omp가 자기 모델 설정대로 구현하고 서브에이전트 검토를 받는다. `skills/v-mode/delegate-omp.md`)
 - 지휘: 정렬(`grill-with-docs` → `to-spec` → `to-tickets`, mattpocock 플러그인 명령) → 티켓에 vstack 절 → 작업자 배정·교차 검토·증거 보관·병합 관문(Orca)
 
+## agent-orchestra를 쓰던 프로젝트에서
+
+- 프로젝트 설정(`docs/agents/orchestration.md` 또는 `.local/orchestration/settings.md`)과 `common-findings.md`는 그대로 읽는다. 두 플러그인이 같은 파일을 쓴다.
+- `.local/orchestration/`(개인용 설정 위치)과 `~/.agent-orchestra/`(실창 잠금)는 agent-orchestra 때의 이름이다. 경로는 바꾸지 않았다. vstack의 작업 파일은 `.local/vstack/`에 따로 둔다.
+- vstack 지휘가 다르게 하는 것: 레시피가 있는 작업(버그 수정, 기능, 리팩토링)만 맡는다. 검토 목록의 `관리자` 항목은 건너뛴다. UI 다듬기와 앞부분 선행 병합은 하지 않는다(`skills/orchestrate-issues/vstack.md` "첫 버전에서 하지 않는 것").
+- 처음 지휘하기 전에 갖출 것: 요구 동작을 검증할 수단(없으면 v-mode가 검증 스킬 만들기부터 한다)과 티켓의 vstack 절(v-mode가 초안을 쓰고 승인을 받는다).
+- 한 저장소에서 두 플러그인의 관리자를 동시에 돌리지 않는다. agent-orchestra가 진행 중인 작업(`.local/orchestration/*/state.md`)은 vstack이 이어받지 않는다.
+
 ## 구성
 
 ```
@@ -55,6 +63,8 @@ skills/v-mode/
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)
+skills/blast-radius/     변경이 다른 곳에서 깨뜨릴 것을 찾아 실행으로 증명하는 스킬
+                         (pstack에서 고쳐 쓴 사본. 검토 명세와 v-mode가 경로로 읽음)
 skills/orchestrate-issues/, skills/check-limits/, skills/configure/
                          agent-orchestra에서 옮겨 온 지휘 스킬(v-mode가 경로로 읽음)
 docs/
