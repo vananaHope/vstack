@@ -1,6 +1,6 @@
 # 조사
 
-id: investigation · version: 2 · contract: vstack-contract@3
+id: investigation · version: 3 · contract: vstack-contract@4
 
 pstack의 `playbooks/investigation.md`(조사는 읽기 전용이고, 고치지 않고 근거가 붙은 설명이나 추천을 낸다)를 따른다. 설명의 형식과 복잡도 나누기는 pstack `how`에서, 동기를 찾는 순서(코드 기준점 → 근거 범주 → 신뢰 단계)는 pstack `why`에서 가져왔다. 원본의 모델 지정, MCP마다 조사 에이전트를 하나씩 띄우는 구조, 종합 에이전트, Cursor 전용 설정은 뺐다. 가져온 것과 뺀 것은 저장소의 `UPSTREAM.md`에 있다.
 

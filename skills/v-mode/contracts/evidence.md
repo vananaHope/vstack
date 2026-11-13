@@ -16,7 +16,7 @@
 
 ```json
 {
-  "contract": "vstack-contract@3",
+  "contract": "vstack-contract@4",
   "task": "issue-42",
   "attempt": "rev-3ecbf1e7-1",
   "role": "rev",

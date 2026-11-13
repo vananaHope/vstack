@@ -24,7 +24,7 @@
 
 ```json
 {
-  "contract": "vstack-contract@3", "task": "issue-42",
+  "contract": "vstack-contract@4", "task": "issue-42",
   "attempt": "impl-5a5a5a5a-1", "role": "impl", "executor": "opencode", "session": "5a5a5a5a",
   "recipe": "bug-fix@4",
   "target": { "head": "2222bbb…", "base": "bbbb002…", "base_ref": "main" },
@@ -49,7 +49,7 @@
 
 ```json
 {
-  "contract": "vstack-contract@3", "task": "issue-42",
+  "contract": "vstack-contract@4", "task": "issue-42",
   "attempt": "rev-3ecbf1e7-2", "role": "rev", "scope": "review", "executor": "claude", "session": "3ecbf1e7",
   "recipe": "bug-fix@4",
   "target": { "head": "2222bbb…", "base": "bbbb002…", "base_ref": "main" },
