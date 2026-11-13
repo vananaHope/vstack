@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 518" width="1080" height="518" role="img" aria-labelledby="t d">
 <title id="t">vstack이 요청을 처리하는 세 갈래</title>
-<desc id="d">v-mode 라우터가 요청을 진행 중인 일인지, 크기, 작업 유형과 레시피 순으로 보고 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 작업자에게 맡기거나 이 대화가 직접 하고, 수용 기준을 다시 돌려 확인한다. 맡기면 Claude 작업자가 구현하고 Codex가 검토한다. UI 다듬기 레시피는 맡기지 않고 직접 한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.</desc>
+<desc id="d">v-mode 라우터가 요청을 진행 중인 일인지, 크기, 작업 유형과 레시피 순으로 보고 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 읽기 전용 질문과 조사, 제품에 닿지 않는 수정만이다. 맡기기 갈래는 레시피를 고르거나 레시피 없이 수용 기준만 정해 작업자에게 맡긴다. Claude 구현자가 새 worktree에서 구현하고, Codex 검토자가 같은 곳에서 검토하고, 관리자가 수용 기준을 다시 돌려 확인한다. 이 대화는 제품 코드를 쓰지 않는다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.</desc>
 <style>
   svg { --bg:#FAFBFD; --ink:#18223A; --muted:#566379; --line:#CDD4E0; --line-strong:#9AA6BA; --base-bg:#DDE3EC;
         --user:#A35F00; --user-bg:#FBEACB; --craft:#0A7A72; --craft-bg:#D3EFEA; --run:#3F4FC2; --run-bg:#DFE3FB; }
@@ -47,36 +47,36 @@
 <path class="ln" d="M320 225H336V206H450" marker-end="url(#mk)"/>
 <path class="ln" d="M320 290H336V372H450" marker-end="url(#mk)"/>
 <text x="394" y="62" class="mid b">바로</text>
-<text x="394" y="86" class="mid s">질문 · 자명한 수정</text>
-<text x="394" y="198" class="mid b">한 세션</text>
+<text x="394" y="86" class="mid s">질문 · 제품 밖 수정</text>
+<text x="394" y="198" class="mid b">맡기기</text>
 <text x="394" y="222" class="mid s">한 단위의 일</text>
 <text x="394" y="364" class="mid b">지휘</text>
 <text x="394" y="388" class="mid s">여러 티켓 · 관문</text>
 <rect class="bx c" x="452" y="44" width="170" height="52" rx="4"/>
 <text x="537" y="66" class="mid">이 대화가</text>
 <text x="537" y="82" class="mid">바로 처리한다</text>
-<text x="638" y="67" class="s">읽기 전용 질문과 조사, 한두 줄의 자명한 수정, 문서 수정.</text>
-<text x="638" y="84" class="s">레시피 없이 후보 원칙만 쓴다.</text>
+<text x="638" y="67" class="s">읽기 전용 질문과 조사, 문서·주석 오타처럼 제품에 닿지 않는 수정.</text>
+<text x="638" y="84" class="s">동작, 화면 문구, 검증에 닿으면 한 줄이어도 맡긴다.</text>
 <path class="sep" d="M352 124H1056"/>
-<rect class="bx d" x="452" y="170" width="170" height="72" rx="4"/>
-<text x="537" y="194" class="mid b">레시피를 고른다</text>
-<text x="537" y="210" class="mid mono">bug-fix · feature</text>
-<text x="537" y="226" class="mid mono">refactoring · ui-polish</text>
-<path class="ln" d="M622 206H636V173"/>
-<path class="ln" d="M636 173H648" marker-end="url(#mk)"/>
-<path class="ln" d="M636 206V229"/>
-<path class="ln" d="M636 229H648" marker-end="url(#mk)"/>
-<rect class="bx c" x="650" y="154" width="160" height="38" rx="4"/>
-<text x="730" y="177" class="mid">이 대화가 직접 한다</text>
-<rect class="bx c" x="650" y="206" width="160" height="46" rx="4"/>
-<text x="730" y="225" class="mid">작업자에게 맡긴다</text>
-<text x="730" y="241" class="mid s">ui-polish는 맡기지 않는다</text>
-<path class="ln" d="M810 173H824V229H810"/>
-<path class="ln" d="M824 206H838" marker-end="url(#mk)"/>
-<rect class="bx r" x="840" y="180" width="160" height="52" rx="4"/>
-<text x="920" y="202" class="mid">수용 기준을</text>
-<text x="920" y="218" class="mid">다시 돌려 확인한다</text>
-<text x="452" y="276" class="s">계약 밖: 증거 폴더와 병합 관문이 없다. push와 PR은 사용자가 지시할 때만 한다.</text>
+<rect class="bx d" x="452" y="170" width="150" height="72" rx="4"/>
+<text x="527" y="194" class="mid b">레시피를 고른다</text>
+<text x="527" y="210" class="mid s">넷 가운데 하나,</text>
+<text x="527" y="226" class="mid s">없으면 수용 기준만</text>
+<path class="ln" d="M602 206H614" marker-end="url(#mk)"/>
+<rect class="bx c" x="616" y="180" width="130" height="52" rx="4"/>
+<text x="681" y="202" class="mid">Claude 구현자가</text>
+<text x="681" y="218" class="mid">새 worktree에서 구현</text>
+<path class="ln" d="M746 206H758" marker-end="url(#mk)"/>
+<rect class="bx c" x="760" y="180" width="130" height="52" rx="4"/>
+<text x="825" y="202" class="mid">Codex 검토자가</text>
+<text x="825" y="218" class="mid">같은 곳에서 검토</text>
+<path class="ln" d="M890 206H902" marker-end="url(#mk)"/>
+<rect class="bx r" x="904" y="180" width="140" height="52" rx="4"/>
+<text x="974" y="202" class="mid">관리자가 수용 기준을</text>
+<text x="974" y="218" class="mid">다시 돌려 확인한다</text>
+<path class="ln" d="M825 232V248H681V234" marker-end="url(#mk)"/>
+<text x="753" y="262" class="mid s">수정 필요면 다시</text>
+<text x="452" y="284" class="s">계약 밖: 증거 폴더와 병합 관문이 없다. 반영 방법은 사용자가 정한다. Orca가 없으면 맡기지 않는다.</text>
 <path class="sep" d="M352 300H1056"/>
 <rect class="bx u" x="452" y="346" width="100" height="52" rx="4"/>
 <text x="502" y="368" class="mid">정렬 · 티켓</text>

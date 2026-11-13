@@ -164,14 +164,37 @@ vstack이 새로 쓴 파일이고, 아래 문장의 뜻을 pstack에서 가져�
 | 19 | 요청문마다 사용자의 목표를 다시 적는다 | 가져옴("Subagents" 절 밖의 줄이다) |
 | 102 | 새 일은 새 서브에이전트에게 범위를 모아서 준다. 옮기기 비싼 상태가 있을 때만 이어 쓴다 | 앞 문장만 가져옴. 이어 쓰기 예외는 가져오지 않음(읽기 전용 조사에는 그런 상태가 없다) |
 | 94 | 정해진 스킬(`how`, `why` 등)이 자기 서브에이전트 종류를 정하면 그것을 따른다 | 넓혀서 가져옴: 사용자가 실행한 스킬이 서브에이전트를 정하면 그 스킬을 따른다. 맡긴 작업자가 이것으로 제한을 풀지는 않는다 |
-| 94 | 종류 `poteto-agent` | 가져오지 않음. Claude Code의 `Explore`를 쓴다 |
+| 94 | 종류 `poteto-agent` | 가져오지 않음. vstack의 조사 에이전트 `vstack:explorer`를 쓴다(아래 `agents/explorer.md`) |
 | 96, 98 | 역할별 모델과 `/setup-pstack`, 일에 맞춘 모델 강도 조절, 다른 계열 모델 | 가져오지 않음. Claude Code의 서브에이전트는 Claude 모델만 쓴다. 모델은 `sonnet` 하나이고, 다른 계열은 맡기기의 Codex 검토자로 얻는다 |
 | 94 | 서브에이전트가 코드를 쓴다(code-writing delegates) | 가져오지 않음. 같은 worktree를 나눠 쓰므로 읽기 전용 조사만 맡긴다 |
 | 96 | 백그라운드로 띄운다 | 가져오지 않음. Claude Code의 기본 동작이다 |
 
-vstack이 더한 것: 누구에게 적용하는가(한 세션 갈래의 Claude. 계약 작업자와 Codex 검토자는 아님), 쓰는 때와 쓰지 않는 때, 맡기지 않는 일, 한 번에 셋까지, Orca 작업자를 띄우지 않는다.
+vstack이 더한 것: 누구에게 적용하는가(바로와 맡기기 갈래의 Claude. 2026-11-14 전에는 "한 세션 갈래"라고 불렀다. 계약 작업자와 Codex 검토자는 아님), 쓰는 때와 쓰지 않는 때, 맡기지 않는 일, 한 번에 셋까지, Orca 작업자를 띄우지 않는다.
 
 분류: `upstream.json`에서는 레시피와 같은 `own`이다. 원문의 문장을 복사하지 않고 뜻만 가져와 한국어로 새로 썼기 때문이다(`extracted`는 원문의 일부를 떼어 파일로 만드는 방식이다). 계획(`docs/delegate-claude-plan.md`)은 `extracted`라고 적었는데 실행하면서 이렇게 바꿨다. 그래서 이 파일은 closure 검사와 import 갱신의 대상이 아니다. pstack 버전을 올릴 때는 `poteto-mode/SKILL.md`의 "Subagents" 절과 19줄이 바뀌었는지 위 표의 줄 번호로 손으로 비교한다.
+
+### vstack 자체 레시피의 변경(`own`, 7단계)
+
+레시피는 vstack이 쓴 것(`own`)이라 출처와 대조하지 않는다. 버전을 올린 변경만 적는다.
+
+- `bug-fix@5`(2026-11-14): "쓰지 않을 때"의 "원인과 수정 위치가 이미 정해진 한 줄 수정: v-mode가 바로 처리한다"를 지웠다. 동작이 바뀌는 수정은 한 줄이어도 맡긴다(ADR 0010).
+- `ui-polish@3`(2026-11-14): 한 세션에서 이 대화가 직접 하던 레시피를 맡기기 갈래에서 작업자에게 맡기게 바꿨다. 묻는 것과 알리는 것, 항목 확정("새 다듬기" 0), 기준 인계, 사진 폴더(기록 폴더의 `shots/`). 바탕이 된 pstack `visual-parity`·`hillclimb`의 규칙(기준을 고치지 않음, 허용 오차 없음, 하나 바꾸고 전·후를 봄)은 그대로다.
+
+### `agents/explorer.md`(vstack이 새로 씀, 방식만 pstack 0.15.36 `agents/poteto-agent.md`에서, 7단계)
+
+플러그인의 조사 에이전트 정의다. Claude Code에서 `vstack:explorer`로 부른다. 모델 기본값 `sonnet`, 도구는 `Read`·`Grep`·`Glob`만 준다(허용 목록이라 셸과 MCP 도구가 빠진다). 본문 규칙은 `skills/v-mode/subagents.md`의 "요청문"과 "답을 다루는 법"에서 에이전트 쪽 의무만 옮겼다. 부르는 쪽의 의무(원본을 직접 다시 읽기, 요청문에 목표와 볼 곳)는 `subagents.md`에 남겼다.
+
+원문은 고정 커밋의 `pstack/agents/poteto-agent.md`(3줄 설명, 9줄 본문)를 읽었다.
+
+| 원본 | vstack에서 |
+| --- | --- |
+| 설명에 쓸 때와 쓰지 않을 때를 적는다("Use for delegates, not as the runner") | 가져옴. 쓸 때(넓게 훑기, 독립 조사 여러 개, 긴 출력 요약)와 쓰지 않을 때(볼 곳을 앎, 몇 번이면 끝남, 코드 쓰기·검토·판단)를 설명에 적었다 |
+| 새 일마다 새로 띄운다("Spawn a fresh ... for each new task") | 가져옴. 이어 쓰기 예외는 가져오지 않음(`subagents.md`와 같은 이유) |
+| 코드를 쓰는 위임(code-writing and helper tasks) | 가져오지 않음. 읽기 전용 조사만 한다(ADR 0009) |
+| 일하기 전에 `poteto-mode` `SKILL.md`를 끝까지 읽는다, 플러그인 폴더에서 그 파일을 찾는 절차 | 가져오지 않음. 조사 에이전트는 vstack의 절차를 따르지 않고, 지킬 규칙을 정의 본문에 둔다 |
+| `is_background: true` | 가져오지 않음. Cursor의 필드다. Claude Code에서는 부르는 쪽이 정한다 |
+
+mattpocock-skills 1.3.1에는 에이전트 정의가 없다(설치본에서 확인). 겹치지 않는다. 분류는 `own`이다(원문 문장을 복사하지 않았다).
 
 ## mattpocock-skills와의 겹침
 

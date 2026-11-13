@@ -1,6 +1,6 @@
 # 버그 수정
 
-id: bug-fix · version: 4 · contract: vstack-contract@3
+id: bug-fix · version: 5 · contract: vstack-contract@3
 
 흐름은 pstack `playbooks/bug-fix.md`(재현 → 원인 좁히기 → 수정 → 같은 화면에서 재확인 → 실패 테스트를 수정보다 먼저 커밋)를 따른다. 원본의 하위 에이전트 위임, `how`·`why`·`architect` 호출, Cursor의 loop 명령, PR 단계는 vstack에서 관리자가 맡거나 첫 버전에서 뺐다.
 
@@ -11,7 +11,6 @@ id: bug-fix · version: 4 · contract: vstack-contract@3
 쓰지 않을 때:
 
 - 측정된 느림을 고치는 일: 성능 레시피(첫 버전 미포함, 관리자에게 알린다).
-- 원인과 수정 위치가 이미 정해진 한 줄 수정: v-mode가 바로 처리한다.
 - 고치지 않고 원인만 찾는 일: 조사 레시피(첫 버전 미포함).
 - 회귀 테스트를 둘 seam이 없는 버그: 첫 버전 레시피 밖이다. 관리자가 사용자와 처리 방법을 정한다.
 

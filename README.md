@@ -2,7 +2,7 @@
 
 Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 고르고, 레시피는 원칙과 검증 계약을 지키며 일한다. mattpocock 정렬 스킬(무엇을, 왜), pstack 원칙과 검증(어떻게 제대로), agent-orchestra 지휘(누가, 언제)를 하나로 묶는다.
 
-> 만드는 중이다. 계약, 원칙 24개, v-mode 라우터, 옮겨 온 지휘 스킬, 레시피 넷(버그 수정, 기능, 리팩토링, UI 다듬기)이 있고, Orca에서 시범을 다섯 번 돌렸다. 다음은 실제 프로젝트에서 쓰며 확인하는 일이다. 진행 상태와 설계는 [docs/design.md](docs/design.md), 지금 하는 단계는 [docs/stage-7-plan.md](docs/stage-7-plan.md)에 있다.
+> 만드는 중이다. 계약, 원칙 24개, v-mode 라우터, 옮겨 온 지휘 스킬, 레시피 넷(버그 수정, 기능, 리팩토링, UI 다듬기), 조사 에이전트가 있고, Orca에서 지휘 시범 다섯 번과 맡기기 시범을 돌렸다. 다음은 실제 프로젝트에서 쓰며 확인하는 일이다. 진행 상태와 설계는 [docs/design.md](docs/design.md), 되돌리기 어려운 결정은 [docs/adr/](docs/adr/), 용어는 [GLOSSARY.md](GLOSSARY.md)에 있다.
 
 ## 설치
 
@@ -23,19 +23,19 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 
 `/vstack:v-mode`로 시작해 하려는 일을 말한다. v-mode가 크기와 작업 유형을 보고 갈래를 고른다.
 
-![v-mode 라우터가 요청을 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 작업자에게 맡기거나 이 대화가 직접 하고, 수용 기준을 다시 돌려 확인한다. 맡기면 Claude 작업자가 구현하고 Codex가 검토한다. UI 다듬기 레시피는 맡기지 않고 직접 한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 거쳐 병합한다.](docs/images/vstack-overview.svg)
+![v-mode 라우터가 요청을 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 읽기 전용 질문과 조사, 제품에 닿지 않는 수정만이다. 맡기기 갈래는 레시피를 고르거나 레시피 없이 수용 기준만 정해 작업자에게 맡긴다. Claude 구현자가 새 worktree에서 구현하고, Codex 검토자가 같은 곳에서 검토하고, 관리자가 수용 기준을 다시 돌려 확인한다. 이 대화는 제품 코드를 쓰지 않는다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.](docs/images/vstack-overview.svg)
 
-요청이 가는 길이다. 한 세션은 계약 밖이라 증거 보관과 병합 관문이 없고, 지휘는 증거의 대상과 원격의 대상이 같을 때만 병합한다.
+요청이 가는 길이다. 이 대화(관리자)는 바로 갈래 말고는 제품 코드를 쓰지 않는다. 맡기기는 계약 밖이라 증거 보관과 병합 관문이 없고, 지휘는 증거의 대상과 원격의 대상이 같을 때만 병합한다.
 
-- 바로: 질문·조사, 자명한 작은 수정
-- 한 세션: 레시피가 있는 한 단위의 일(버그 수정, 기능, 리팩토링, UI 다듬기)을 레시피대로 한다. 증거 보관·병합 관문은 없다. Claude Code + Orca에서는 작업자에게 맡긴다(버그 수정과 기능의 기본값): Claude 작업자가 새 worktree에서 구현하고, Codex 작업자가 검토하고, 이 대화가 수용 기준을 다시 돌려 마지막에 확인한다. 리팩토링은 직접 하는 것이 기본이고, UI 다듬기와 Orca가 없는 환경에서는 이 대화가 직접 한다. `skills/v-mode/delegate.md`
+- 바로: 읽기 전용 질문·조사, 그리고 제품이 실행하거나 화면에 보이거나 검증이 읽는 파일을 고치지 않는 수정(문서, 주석 오타). 동작이 바뀌는 수정은 한 줄이어도, 화면 문구는 한 글자라도 맡긴다.
+- 맡기기: 티켓으로 나누지 않는 한 단위의 일. 레시피(버그 수정, 기능, 리팩토링, UI 다듬기)가 있든 없든 작업자에게 맡긴다: Claude 구현자가 새 worktree에서 구현하고, Codex 검토자가 같은 worktree에서 검토하고, 이 대화가 수용 기준을 다시 돌려 마지막에 확인한다. 검증 수단이 없으면 그것부터 따로 맡긴다. 서로 독립인 맡기기는 셋까지 함께 진행하고, 반영은 한 번에 하나다. Orca가 있어야 한다. `skills/v-mode/delegate.md`
 - 지휘: 정렬(`grill-with-docs` → `to-spec` → `to-tickets`, mattpocock 플러그인 명령) → 티켓에 vstack 절 → 작업자 배정·교차 검토·증거 보관·병합 관문(Orca)
 
 ## agent-orchestra를 쓰던 프로젝트에서
 
 - 프로젝트 설정(`docs/agents/orchestration.md` 또는 `.local/orchestration/settings.md`)과 `common-findings.md`는 그대로 읽는다. 두 플러그인이 같은 파일을 쓴다.
 - `.local/orchestration/`(개인용 설정 위치)과 `~/.agent-orchestra/`(실창 잠금)는 agent-orchestra 때의 이름이다. 경로는 바꾸지 않았다. vstack의 작업 파일은 `.local/vstack/`에 따로 둔다.
-- vstack 지휘가 다르게 하는 것: 레시피가 있는 작업(버그 수정, 기능, 리팩토링)만 맡는다. 검토 목록의 `관리자` 항목은 건너뛴다. UI 다듬기는 지휘에서 하지 않고 한 세션 갈래의 `ui-polish` 레시피로 한다. 앞부분 선행 병합은 하지 않는다(`skills/orchestrate-issues/vstack.md` "첫 버전에서 하지 않는 것").
+- vstack 지휘가 다르게 하는 것: 레시피가 있는 작업(버그 수정, 기능, 리팩토링)만 맡는다. 검토 목록의 `관리자` 항목은 건너뛴다. UI 다듬기는 지휘에서 하지 않고 맡기기 갈래의 `ui-polish` 레시피로 한다. 앞부분 선행 병합은 하지 않는다(`skills/orchestrate-issues/vstack.md` "첫 버전에서 하지 않는 것").
 - 처음 지휘하기 전에 갖출 것: 요구 동작을 검증할 수단(없으면 v-mode가 검증 스킬 만들기부터 한다)과 티켓의 vstack 절(v-mode가 초안을 쓰고 승인을 받는다).
 - 한 저장소에서 두 플러그인의 관리자를 동시에 돌리지 않는다. agent-orchestra가 진행 중인 작업(`.local/orchestration/*/state.md`)은 vstack이 이어받지 않는다.
 
@@ -47,9 +47,10 @@ skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
   contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
   recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring, ui-polish)
-                         ui-polish는 한 세션 갈래에서만 쓴다. scripts/image_diff.py는 PNG 비교
-  delegate*.md           한 세션 일을 작업자에게 맡기는 절차와 명세 양식(구현, 검토)
-  subagents.md           한 세션에서 서브에이전트를 쓰는 규칙
+                         ui-polish는 맡기기 갈래에서만 쓴다. scripts/image_diff.py는 PNG 비교
+  delegate*.md           한 단위의 일을 작업자에게 맡기는 절차와 명세 양식(구현, 검토)
+  subagents.md           바로·맡기기 갈래에서 서브에이전트를 쓰는 규칙
+agents/explorer.md       읽기 전용 조사 에이전트 vstack:explorer(Sonnet, 읽기·검색 도구만)
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)
@@ -57,8 +58,10 @@ skills/blast-radius/     변경이 다른 곳에서 깨뜨릴 것을 찾아 실�
                          (pstack에서 고쳐 쓴 사본. 검토 명세와 v-mode가 경로로 읽음)
 skills/orchestrate-issues/, skills/check-limits/, skills/configure/
                          agent-orchestra에서 옮겨 온 지휘 스킬(v-mode가 경로로 읽음)
+GLOSSARY.md              용어집
 docs/
   design.md              설계와 변경 이력
+  adr/                   되돌리기 어려운 결정 기록
   images/                README의 그림(SVG. 밝은·어두운 테마를 파일 안에서 바꾼다)
   contract-examples/     계약 판정 예시
 upstream.json            가져오는 파일 목록(정본)

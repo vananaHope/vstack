@@ -26,8 +26,6 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 
 되돌리기 어렵고 이유가 궁금해질 결정은 [adr/](adr/)에 번호를 붙여 하나씩 따로 둔다(2026-11-14부터). 이 표는 요약이고, 둘이 다르면 ADR이 우선한다. ADR은 계약의 실행 규칙(`skills/v-mode/contracts/`)을 덮어쓰지 않는다. ADR과 계약이 다르면 ADR을 계약에 맞춰 고친다. 용어는 저장소 루트의 [GLOSSARY.md](../GLOSSARY.md)다.
 
-[ADR 0010](adr/0010-manager-writes-no-product-code.md)·[0011](adr/0011-delegation-and-orchestration-boundary.md)과 용어집의 "바로"는 2026-11-14에 정한 것이고 스킬 문서에는 아직 들어가지 않았다([#19](https://github.com/vananaHope/vstack/issues/19)). 그때까지 v-mode는 지금 스킬 문서대로 돈다.
-
 | 항목 | 내용 | 상태 |
 | --- | --- | --- |
 | 형태 | Claude Code 플러그인. `/vstack:v-mode`가 입구. mattpocock-skills를 의존성으로 함께 설치([ADR 0003](adr/0003-mattpocock-dependency-with-adapted-copies.md)) | 합의 |
@@ -39,7 +37,7 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 | 기존 플러그인 | 시범이 끝날 때까지 제거하지 않는다 | 합의(2판) |
 | 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기. Orca가 없으면 맡기기를 하지 않는다. 지휘의 herdr를 뺄지는 전체 검수에서 정한다([ADR 0004](adr/0004-orca-only.md)) | 3판에서 추가, 2026-11-13 Orca 필수 |
 | 실행 도구 | v-mode는 Claude Code에서 돈다. omp에서 돌리는 길(v-mode "실행 도구" 절)은 2026-11-10에 넣었다가 2026-11-13에 뺐다(13절, [ADR 0008](adr/0008-no-omp.md)) | 2026-11-13 바뀜 |
-| 맡기기 | Claude Code 관리자가 한 세션 크기 일을 작업자에게 맡긴다: Claude 구현 작업자가 새 worktree에서 구현하고, Codex 검토자가 검토하고, 관리자가 마지막에 확인한다(계약 밖). 한 세션 `bug-fix`·`feature`의 기본 실행 방식. 정본 `skills/v-mode/delegate.md`, 13절. omp 작업자에게 맡기던 앞선 구조는 12절. [ADR 0009](adr/0009-cross-family-review-via-orca-codex.md), [0010](adr/0010-manager-writes-no-product-code.md), [0011](adr/0011-delegation-and-orchestration-boundary.md) | `bug-fix` 정상 경로 1회(2026-11-13, [pilot-delegate.md](pilot-delegate.md)). omp 구조로는 `bug-fix` 2회·`feature` 1회 |
+| 맡기기 | Claude Code 관리자가 티켓으로 나누지 않는 한 단위의 일을 작업자에게 맡긴다: Claude 구현자가 새 worktree에서 구현하고, Codex 검토자가 검토하고, 관리자가 마지막에 확인한다(계약 밖). 레시피가 있든 없든 맡기고, 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 정본 `skills/v-mode/delegate.md`, 13·14절. omp 작업자에게 맡기던 앞선 구조는 12절. [ADR 0009](adr/0009-cross-family-review-via-orca-codex.md), [0010](adr/0010-manager-writes-no-product-code.md), [0011](adr/0011-delegation-and-orchestration-boundary.md) | `bug-fix` 정상 경로 1회(2026-11-13, [pilot-delegate.md](pilot-delegate.md)). omp 구조로는 `bug-fix` 2회·`feature` 1회 |
 
 ### 판정 이력
 
@@ -388,7 +386,7 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 
 **근거.** omp가 쓴 조사 메모 [research-multi-session-vs-subagents.md](research-multi-session-vs-subagents.md)는 출처를 검증하지 않은 참고다. 메모의 멀티 세션은 사람이 조율하는 경우라 AI 관리자가 조율하는 vstack 지휘와 그대로 비교하지 않는다. 쓰는 것은 방향뿐이다: 독립 병렬 작업은 격리된 세션, 순차 작업은 한 세션, 읽기 전용 일은 서브에이전트.
 
-## 13. 맡기기: Claude 구현 작업자와 Codex 검토자
+## 13. 맡기기: Claude 구현자와 Codex 검토자
 
 상태: 정본은 `skills/v-mode/delegate.md`(절차), `delegate-spec.md`(구현 명세 양식), `delegate-review-spec.md`(검토 명세 양식), `subagents.md`(서브에이전트 규칙)이고, 이 절은 결정과 근거의 요약이다. 둘이 다르면 스킬 쪽이 우선한다. 계획과 Codex 검토 이력은 [delegate-claude-plan.md](delegate-claude-plan.md), 시범은 [pilot-delegate.md](pilot-delegate.md).
 
@@ -398,11 +396,11 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 
 - **omp를 쓰지 않는다.** 작업자로도, v-mode를 돌리는 도구로도 쓰지 않는다. v-mode의 "실행 도구" 절과 README의 "omp에서 쓰기"를 뺐다.
 - **한 세션 일은 관리자가 직접 하지 않고 맡긴다.** Claude 구현 작업자(`--agent claude --model opus`)가 새 worktree에서 구현한다. 관리자는 수용 기준을 다시 돌려 확인한 뒤 같은 worktree에 Codex 검토자를 Orca 작업자로 띄운다. 관리자가 검토 보고서를 직접 읽고 지적마다 고칠지 정한다. 마지막 HEAD에서 관리자가 다시 확인한다. `확인 통과`는 마지막 확인에서만 쓴다.
-- **기본값**: `bug-fix`와 `feature`는 조건이 맞으면 맡긴다. `refactoring`은 한 번 맡겨 본 뒤에 올린다. `ui-polish`, 레시피 없는 일, Orca가 없는 환경에서는 이 대화가 직접 한다.
+- **기본값**: `bug-fix`와 `feature`는 조건이 맞으면 맡긴다. `refactoring`은 한 번 맡겨 본 뒤에 올린다. `ui-polish`, 레시피 없는 일, Orca가 없는 환경에서는 이 대화가 직접 한다. (2026-11-14에 14절로 바뀌었다: 모두 맡기고, 맡길 수 없으면 멈춘다.)
 - **계약 밖 그대로다.** Codex 검토는 계약의 교차 검토가 아니다. 지휘와의 경계는 작업자 수가 아니라 계약(증거 폴더, manifest, 병합 관문)이다.
 - **한 worktree에서 한 번에 한 작업자만 일한다.** 한 역할을 깨우기 전에 다른 역할의 마지막 Dispatch가 끝났는지 본다. 검토자의 읽기 전용은 명세의 지시와 검토 전후 HEAD·status 대조로 지킨다(Orca에 읽기 전용으로 띄우는 옵션이 없다).
 - **재검토**는 같은 검토자에게 "보내기"로 맡기고 두 번까지다. 사소한 검토 지적만 고쳤으면 관리자가 수정 diff를 읽는다. Codex를 쓸 수 없으면 검토 없이 통과시키지 않고 사용자에게 묻는다.
-- **서브에이전트**: 한 세션 갈래의 Claude는 읽기 전용 조사에만 서브에이전트를 쓴다(`Explore`, `sonnet`). 코드 쓰기, 수용 기준 실행, 판단, 코드 검토는 맡기지 않는다. 출처는 pstack `poteto-mode`의 "Subagents" 절이다(`UPSTREAM.md`). 지휘의 계약 작업자와 레시피에는 넣지 않았다.
+- **서브에이전트**: 한 세션 갈래의 Claude는 읽기 전용 조사에만 서브에이전트를 쓴다(조사 에이전트 `vstack:explorer`, 정의에서 `sonnet`과 읽기·검색 도구만. 2026-11-14 전에는 내장 `Explore`를 직접 지정했다). 코드 쓰기, 수용 기준 실행, 판단, 코드 검토는 맡기지 않는다. 출처는 pstack `poteto-mode`의 "Subagents" 절이다(`UPSTREAM.md`). 지휘의 계약 작업자와 레시피에는 넣지 않았다.
 - **이름**: 12절의 "지휘자"를 지휘 문서와 같은 "관리자"로 맞췄다.
 
 **잃는 것.** omp 설정(`modelRoles`, fallback)으로 모델을 고르고 한도가 떨어지면 넘어가는 것. 관리자와 구현 작업자가 모두 Claude라서 Claude 한도를 더 쓴다.
@@ -410,6 +408,27 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 **시범 결과(2026-11-13).** 시범 저장소에서 `bug-fix` 하나를 관리자가 초안을 직접 따라 끝까지 돌렸다. 구현 작업자는 Opus로 돌았고 Orca가 턴 시작을 관측했다(`turnStart: observed`). 작업자 질문 한 번, 첫 검토 통과, 범위를 넓히는 후속 요구, 같은 검토자의 재검토, 마지막 확인까지 약 10분이었다. 검토자는 worktree를 바꾸지 않았고 범위 밖의 기존 결함을 지적과 나눠 적었다. 관리자의 실행 실수가 있었다: 검증 스킬이 관리자에게 맡긴 환경 파일을 worktree에 두지 않아 명세가 필수로 요구한 검증 시나리오 하나가 돌지 않았는데, 수용 기준 표에 없다는 이유로 빼고 `확인 통과`를 냈다(뒤에 사본에서 돌려 통과를 확인했다). 반영한 것: Git이 무시하는 파일(`.env.local` 등)도 새 worktree로 넘어가지 않는다는 확인과 띄우기 전에 관리자가 두는 길, 필수 검증은 모두 수용 기준 표에 넣기, 환경 때문에 못 돌린 필수 검증은 통과로 치지 않기, 검토 보고서의 "범위 밖에서 본 것"과 "사람이 직접 확인해야 할 것"을 사용자에게 그대로 전하기.
 
 **돌려 보지 않은 것.** 검토 지적을 고친 뒤의 재검토, 확인 실패, 재검토 상한, Codex를 쓸 수 없을 때, 서브에이전트를 부르는 경우, 시작 실패(omp 구조에서만), 관리자 재시작, 중단, 보고 없이 끝난 작업자, `feature`와 `refactoring`, 라우터를 거친 실행.
+
+## 14. 관리자는 관리만(2026-11-14)
+
+상태: 정본은 `skills/v-mode/SKILL.md`(갈래), `skills/v-mode/delegate.md`(맡기기 절차), 두 명세 양식, `skills/v-mode/recipes/ui-polish.md`(`ui-polish@3`), `agents/explorer.md`(조사 에이전트)다. 이 절은 요약이다. 계획과 검토 이력, 시범 기록은 [manager-only-plan.md](manager-only-plan.md). 결정은 [ADR 0010](adr/0010-manager-writes-no-product-code.md)과 [0011](adr/0011-delegation-and-orchestration-boundary.md).
+
+**문제.** 13절의 근거는 "쓴 쪽과 확인하는 쪽이 다르다"였다. 그런데 `refactoring`, `ui-polish`, 레시피 없는 일, Orca가 없는 환경에서는 관리자가 직접 코드를 썼다. 그 근거가 일부 작업에서만 성립했다. 첫 `ui-polish` 실사용에서 어긋난 것 둘(비교 화면이 다른 채로 커밋, 판정 규칙을 결과를 본 뒤에 바꿈)도 코드를 쓴 대화가 자기 결과를 통과시킨 경우였다.
+
+**결정(사용자, 2026-11-13·14).**
+
+- **갈래 이름을 바로 / 맡기기 / 지휘로 바꾼다.** "한 세션"은 "이 대화가 끝낸다"는 뜻이라 쓰지 않는다. 용어는 [GLOSSARY.md](../GLOSSARY.md).
+- **바로 갈래를 좁힌다.** 읽기 전용 질문·조사와, 제품이 실행하거나 화면에 보이거나 검증이 읽는 파일을 고치지 않는 수정뿐이다. 동작이 바뀌면 한 줄이어도, 화면 문구는 한 글자라도, 동작을 보존하는 리팩토링·UI 다듬기·검증 수단 만들기도 맡긴다.
+- **맡기기 갈래의 일은 모두 맡긴다.** 레시피가 없어도 수용 기준만으로 맡긴다. 검증 수단이 없으면 그것부터 따로 맡긴다. 맡길 수 없으면 관리자가 대신 하지 않고 까닭별 선택지를 알리고 멈춘다. Orca가 필수다. "레시피 직접 따르기" 절을 지웠다.
+- **여러 맡기기**: 서로 독립인 것(예정 쓰기 영역과 검증 자원이 겹치지 않음)은 셋까지 함께 진행한다. Run은 관리자 세션에 하나다. 반영은 한 번에 하나이고, 기준이 움직였으면 `git merge-tree`로 충돌을 미리 보고, 충돌은 구현자가 레시피의 rebase로 푼다. 확인과 검토 범위는 현재 확인 기준 `C`부터다.
+- **`ui-polish@3`**: 구현자는 작업자다. 묻는 것(`ask`)과 알리는 것(`send --type status`)을 나눈다. 항목이 정해지지 않으면 관찰용 촬영으로 초안을 보낸다. 기준을 확정하면 관리자에게 넘기고, 관리자가 기준 사진의 해시를 기록한다. 사진은 기록 폴더의 `shots/`에 둔다. 기준이 움직이면 rebase하지 않고 사용자에게 묻는다.
+- **조사 에이전트 `vstack:explorer`**: 플러그인 정의(Sonnet, 읽기·검색 도구만). 서브에이전트 지침과 구현 명세가 이것을 부른다.
+- `bug-fix@5`: "한 줄 수정은 바로" 문장을 지웠다.
+- 지휘(계약, 관문, 작업자 종류, 지휘와 맡기기의 상호 배제)는 바꾸지 않았다.
+
+**잃는 것.** 한 줄 수정에도 작업자를 띄우고 검토를 받는 몇 분. 관리자와 구현자가 모두 Claude라 Claude 한도를 더 쓴다.
+
+**확인한 것.** 조사 에이전트를 브랜치 사본으로 띄워 목록, 모델, 도구를 봤다. 새 세션 넷에 경계에 걸친 요청을 줘 갈래 줄을 봤다(화면 문구 요청은 갈래 줄이 둘째 메시지에 나왔다). 시범 A(시범 저장소에서 `refactoring`과 레시피 없는 일을 함께 맡김)와 시범 B(`my-video-manager`의 `ui-polish@3`)는 계획 문서의 "진행 기록"에 결과를 적는다.
 
 ## 변경 이력
 
