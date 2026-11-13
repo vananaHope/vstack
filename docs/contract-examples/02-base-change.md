@@ -26,7 +26,7 @@
 {
   "contract": "vstack-contract@4", "task": "issue-42",
   "attempt": "impl-5a5a5a5a-1", "role": "impl", "executor": "opencode", "session": "5a5a5a5a",
-  "recipe": "bug-fix@4",
+  "recipe": "bug-fix@7",
   "target": { "head": "2222bbb…", "base": "bbbb002…", "base_ref": "main" },
   "tree_before": "",
   "env": { "build_from_head": "rebase 뒤 H2에서 npm run build, 서버 새로 시작(포트 5174)" },
@@ -51,7 +51,7 @@
 {
   "contract": "vstack-contract@4", "task": "issue-42",
   "attempt": "rev-3ecbf1e7-2", "role": "rev", "scope": "review", "executor": "claude", "session": "3ecbf1e7",
-  "recipe": "bug-fix@4",
+  "recipe": "bug-fix@7",
   "target": { "head": "2222bbb…", "base": "bbbb002…", "base_ref": "main" },
   "tree_before": "",
   "env": { "build_from_head": "Doctor로 5174 서버가 내 것이 아님을 확인, 내려간 뒤 H2에서 새로 빌드·시작(포트 5175)" },

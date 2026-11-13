@@ -13,7 +13,7 @@ vstack 작업의 파일은 메인 저장소의 `.local/vstack/<작업 이름>/`�
 ```
 <단계>                      ← 첫 줄. orchestra 단계 이름 + `병합 대기`
 등급: standard · 작업자: codex@high
-workflow: vstack · contract: vstack-contract@4 · recipe: bug-fix@4 · 소유: vstack
+workflow: vstack · contract: vstack-contract@4 · recipe: bug-fix@7 · 소유: vstack
 막힘: <풀릴 조건>            ← 막혔을 때만
 
 ## 수용 기준
@@ -48,4 +48,13 @@ workflow: vstack · contract: vstack-contract@4 · recipe: bug-fix@4 · 소유: 
 4. **worktree는 지우지 않고 보존한다.** orchestra의 worktree 지우기 규칙은 병합된 worktree만 허용하므로 미병합 worktree에는 쓸 수 없다. 대신 그 worktree의 브랜치를 `vstack-abandoned/<작업 이름>-<날짜>`로 이름을 바꿔, 다시 맡길 때 새로 만들 `<작업 이름>-<slug>` 브랜치와 겹치지 않게 한다. 보존한 경로와 브랜치를 사용자에게 알린다.
 5. 보존한 worktree를 지우는 것은 미병합 변경의 삭제이므로 안전 멈춤([priority.md](priority.md))에 든다. 사용자가 폐기를 명시적으로 고르고, 작업자 정지가 확인되고, 시도가 정산됐을 때만 지운다. 지우기 전에 브랜치를 원격에 백업할지 사용자에게 묻는다.
 6. `state.md` 첫 줄을 `끝`, 소유를 `소유: 포기(<날짜>, 새로 시작)`로 바꾼다.
-7. 열린 PR이 없으면 그 이슈를 새 작업으로 다시 맡길 수 있다.
+7. 열린 PR이 없으면 그 이슈를 새 작업으로 다시 맡길 수 있다. 아래 "다시 맡길 때의 작업 이름"을 따른다.
+
+### 다시 맡길 때의 작업 이름
+
+포기한 작업(`소유: 포기(…)`)의 이슈를 다시 맡기면 새 작업은 **새 작업 이름** `<원래 작업 이름>-r<k>`를 쓴다(`k`는 2부터, 그 이슈에서 이미 쓴 이름과 겹치지 않는 가장 작은 수. 예: `issue-42-r2`). 그래서 작업 파일 폴더(`.local/vstack/<작업 이름>/`), 증거 폴더, worktree, 브랜치(`issue-42-r2-<slug>`)가 모두 새로 생긴다.
+
+- 포기한 작업의 폴더는 이름을 바꾸거나 옮기지 않는다. 그 `state.md`의 보관 경로와 manifest 포인터가 그 폴더를 가리키기 때문이다. 기록으로 그대로 남는다.
+- 새 작업의 `state.md`는 새로 쓴다(시도 표, 관문, 게시 절은 비어 있다). 넷째 줄 아래에 `이전 작업: <포기한 작업 이름>(포기 <날짜>)`를 적는다. 포기한 작업의 시도와 증거는 새 작업의 판정 입력이 아니다(새 작업의 대상은 새 시작 커밋이다).
+- 이슈 표시(명세 제목, PR 제목, 보고)는 그대로 `#<n>`이다. 진행 중 판정(orchestra `SKILL.md` 1단계)의 브랜치 접두사 `<원래 작업 이름>-`도 새 브랜치에 맞는다.
+- orchestrate-issues의 "그만둘 때"로 포기한 작업을 다시 맡길 때도 같다.

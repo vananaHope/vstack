@@ -23,7 +23,7 @@
   "scope": "review",
   "executor": "claude",
   "session": "3ecbf1e7",
-  "recipe": "bug-fix@4",
+  "recipe": "bug-fix@7",
   "target": { "head": "<40자 SHA>", "base": "<40자 SHA>", "base_ref": "main" },
   "tree_before": "",
   "env": {
