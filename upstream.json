@@ -282,6 +282,13 @@
       "from": "skills/maintain-verification-skill",
       "to": "skills/maintain-verification-skill",
       "mode": "adapted"
+    },
+    {
+      "stage": 7,
+      "source": "pstack",
+      "from": "skills/benchmark-checklist",
+      "to": "skills/benchmark-checklist",
+      "mode": "adapted"
     }
   ],
   "own": [
@@ -348,6 +355,10 @@
     {
       "stage": 7,
       "to": "skills/v-mode/recipes/correct.md"
+    },
+    {
+      "stage": 7,
+      "to": "skills/v-mode/recipes/perf.md"
     }
   ],
   "runtime_commands": {

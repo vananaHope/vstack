@@ -46,6 +46,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 3 | agent-orchestra | `skills/orchestrate-issues`, `skills/check-limits`, `skills/configure` | 같음 | moved |
 | 7 | pstack | `skills/blast-radius` | 같음 | adapted |
 | 7 | pstack | `skills/maintain-verification-skill` | 같음 | adapted |
+| 7 | pstack | `skills/benchmark-checklist` | 같음 | adapted |
 
 ## 고친 내용
 
@@ -115,6 +116,37 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 33 | "The coordinator owns all driving" → "You own all driving" | 이 스킬을 따르는 것은 구현자 한 명이다 |
 | 37 | changed의 "one PR of proven corrections" → 작업 브랜치에 커밋. clean의 "no PR" → 커밋 없음. blocked의 "no PR" → 증명한 수정만 커밋하고 증명하지 못한 수정은 되돌려 diff로 보고(작업 트리를 깨끗하게). 어느 결과든 다룬 기능, `verified-unreachable` 전제, 확인된 어긋남, 고친 실행 수단, 찾은 제품 고장을 보고 | 맡기기의 권한과 관리자의 수용 기준(`delegate.md` "검증 스킬 점검"). blocked에서 이미 증명한 수정을 버리지 않으면서 관리자의 확인(깨끗한 작업 트리)과 사용자의 선택(이어 가기, 증명된 것만 받기, 그만두기)으로 이어지게 했다 |
 | 39 | scratch → 저장소 밖(OS 임시 폴더) | 작업 트리를 깨끗하게 둔다 |
+
+### `skills/benchmark-checklist/SKILL.md`(pstack 0.15.36, 7단계)
+
+원본에는 딸린 파일이 없다. 성능 레시피(`skills/v-mode/recipes/perf.md`)와 그 검토 명세가 경로로 읽는다. 질문 1~7과 "Report"는 그대로다.
+
+| 원본 줄 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| 3 | description 끝에 "vstack recipes (perf) read this file by path" | 다른 adapted 사본과 같다 |
+| 6 뒤 | "vstack copy of pstack …"과 "the manager"가 누구인지 한 줄 | 같다 |
+| 17 | `uptime`·`nproc`에 Windows에서 쓸 명령을 괄호로 더함 | 사용자의 환경이 Windows다 |
+| 34 | "Keep a PR body to one primary number, per the **Opening a PR** playbook" → 머리 숫자는 하나, 실행 기록과 범위와 한계 요인은 작업이 정한 곳(맡기기면 완료 보고) | vstack에 그 플레이북이 없고, 작업자는 PR을 쓰지 않는다 |
+| 38~39 | Perf issue·Hillclimb 플레이북 언급 → vstack 성능 레시피 링크 하나 | Hillclimb는 가져오지 않았다 |
+
+### `skills/v-mode/recipes/perf.md`(vstack이 씀, pstack 0.15.36 `poteto-mode/playbooks/perf-issue.md`에서, 7단계)
+
+성능 개선 레시피다. 맡기기 갈래에서만 쓴다. 원문 `playbooks/perf-issue.md`(26줄)를 읽었다. 전체 검수(#20)의 확정대로 vstack의 `diagnosing-bugs` 사본(Phase 4 "Perf branch")과 `benchmark-checklist` 위에 성능 주문 목록을 얹었다.
+
+| 원본 | vstack에서 |
+| --- | --- |
+| 고치는 일마다 측정을 붙이고 소스 읽기로 측정을 대신하지 않는다 | 가져옴. 머리말과 단계 2 |
+| 기준 추적을 control skill로 잡고 benchmark-checklist로 검증한다 | 가져옴. 단계 1. 측정 명령은 맡기기 전에 정하고, 없으면 고정 규칙 7(검증 수단 먼저) |
+| `how`로 가설을 세우고, 돌려 보기 전에 한계를 주장하지 않는다 | 일부 가져옴. 한계 요인은 프로파일로 찾는다(단계 2). `how`는 vstack에서 조사 레시피라 작업자가 부르지 않는다 |
+| 성능 주문 일곱(하지 않는다 … 싸게 한다), 앞의 것이 목표를 채우면 멈춘다 | 가져옴. 단계 3 |
+| 함수 경계를 넘으면 `architect` 먼저, 구현을 하위 에이전트에게 위임, 모델 지정, diff 검토 | 가져오지 않음. 구현은 맡기기의 구현자가 하고 검토는 Codex 검토자가 한다. 공용 인터페이스나 예정 쓰기 영역 밖에 닿으면 묻는다 |
+| `sequence-verifiable-units`로 시도마다 검증 | 가져옴. 단계 4와 후보 원칙 |
+| 산출물을 파싱해 비교하고, "판단 못 함"이나 엉뚱한 경로는 통과가 아니다 | 가져옴. 단계 5(결론 넷, 목표를 못 채우면 그대로 보고) |
+| PR에 측정을 인용, Opening a PR | 가져오지 않음. 측정은 완료 보고에 싣고 반영은 관리자가 사용자에게 묻는다 |
+| 지속 개선은 Hillclimb | 가져오지 않음. "쓰지 않을 때"에 여러 번에 걸친 지표 올리기를 적었다 |
+| Reply: 기준, 수정 뒤 숫자, 차이, 산출물 경로 | 가져옴. "완료 보고" |
+
+분류는 `own`이다(원문 문장을 복사하지 않았다).
 
 ### `skills/blast-radius/SKILL.md`(pstack 0.15.36, 7단계)
 
@@ -194,6 +226,8 @@ vstack이 더한 것: 누구에게 적용하는가(바로와 맡기기 갈래의
 
 레시피는 vstack이 쓴 것(`own`)이라 출처와 대조하지 않는다. 버전을 올린 변경만 적는다.
 
+- `bug-fix@6`(2026-11-14, #21): "쓰지 않을 때"의 "성능 레시피(첫 버전 미포함)"를 `perf` 레시피로 바꿨다.
+- `investigation@2`(2026-11-14, #21): "쓰지 않을 때"의 "성능은 레시피가 없다"를 `perf` 레시피로 바꿨다.
 - `bug-fix@5`(2026-11-14): "쓰지 않을 때"의 "원인과 수정 위치가 이미 정해진 한 줄 수정: v-mode가 바로 처리한다"를 지웠다. 동작이 바뀌는 수정은 한 줄이어도 맡긴다(ADR 0010).
 - `ui-polish@4`(2026-11-14, 전체 검수): 문구만 고쳤다(가져온 곳의 수, "새 다듬기" 6에서 7의 끝 이름을 가리키는 말).
 - `ui-polish@3`(2026-11-14): 한 세션에서 이 대화가 직접 하던 레시피를 맡기기 갈래에서 작업자에게 맡기게 바꿨다. 묻는 것과 알리는 것, 항목 확정("새 다듬기" 0), 기준 인계, 사진 폴더(기록 폴더의 `shots/`). 바탕이 된 pstack `visual-parity`·`hillclimb`의 규칙(기준을 고치지 않음, 허용 오차 없음, 하나 바꾸고 전·후를 봄)은 그대로다.
@@ -269,6 +303,7 @@ pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적�
 | `skills/v-mode/recipes/ui-polish.md`(pstack `visual-parity`·`hillclimb`를 조합) | `prototype` | 겹치지 않음 | 스킬 38개의 원문에서 화면·스크린샷·다듬기를 다루는 것을 찾았고, 맞닿는 것은 `prototype`의 UI 갈래뿐이다. 그것은 버릴 시안 여러 개로 "어떤 모양이어야 하나"를 정하는 일이다. `ui-polish`는 이미 정해진 모양의 화면을 다듬고, 모양을 새로 정하는 일은 시작하지 않는다. 그 일이 `prototype`의 몫이다. 이 확인도 만든 뒤(2026-11-13)에 했다. `ui-polish@2`부터 v-mode가 그런 요청에 `prototype` 명령을 안내한다(`upstream.json`의 `user_commands`) |
 | `skills/v-mode/recipes/investigation.md`(pstack 조사 플레이북·`how`·`why`) | `research`, `wayfinder`, `codebase-design`, `teach`, `diagnosing-bugs` | 일부 겹침 | `research`는 1차 자료(공식 문서, 소스 코드, 명세, 직접 API)에서 주장마다 출처를 따라가 백그라운드 에이전트가 Markdown 파일 하나로 남긴다. 대화에서 답하지 않는다. 소스 코드도 1차 자료라서 이 저장소의 코드를 출처를 달아 조사하는 일 자체는 겹친다. 다른 점은 셋이다: 조사 레시피는 대화에서 답하고 파일을 남기지 않는다, 어떻게 질문에 정해진 설명 절(개요 … 함정)이 있다, 왜 질문에 이력 조사(코드 기준점, 근거 범주, 신뢰 단계, 경쟁 가설)가 있다. 바깥 자료(라이브러리 문서, 명세)를 모아 남기는 일을 `research` 명령으로 안내하는 것은 vstack이 정한 나눔이다(원본 `research`에 그런 제한은 없다. `upstream.json`의 `user_commands`). `wayfinder`의 `research` 티켓은 작업 폴더 밖의 지식이 필요할 때 같은 스킬을 부른다. `codebase-design`은 모듈의 인터페이스와 seam을 설계하거나 고치는 어휘와 원칙이다. 조사 레시피의 "어디에 둘까"는 지금 구조를 읽어 대안을 비교해 추천하는 데서 멈추고, 새 인터페이스나 seam을 설계하는 일은 하지 않는다(그 일은 변경이라 갈래를 다시 고른다). `teach`는 여러 세션에 걸쳐 주제를 가르치는 작업 폴더를 만든다. 코드 설명과 겹치지 않는다. `diagnosing-bugs`는 결함의 원인을 찾는 진단이라 "쓰지 않을 때"로 보냈다. 코드가 왜 이렇게 됐는지를 이력에서 찾는 스킬과 신뢰 단계는 mattpocock에 없다(2026-11-14, 스킬 38개의 설명과 위 다섯의 원문을 읽음) |
 | `skills/v-mode/recipes/correct.md`(pstack `correct`) | `retro`, `code-review`, `writing-for-agents`, `setup-ts-deep-modules` | 일부 겹침 | `retro`는 한 세션을 돌아보고 에이전트 환경의 개선 후보(길 찾기, 자동 검사, 코딩 규칙, 지침 파일, 도구 비용, 효과 없는 지시, 정보 접근)를 사용자에게 심각도순으로 보인다. 고치지 않는다. 기계적인 위반은 글 규칙보다 검사로 막고, 판단만 `CODING_STANDARDS.md`에 둔다는 생각이 `correct`와 같다. `correct`는 한 세션이 아니라 저장소의 이력에서 두 번 이상 나온 실수를 묶고, 높은 층부터 직접 막고, 과거 실수에서 검사가 실패함을 보인다. 그래서 "찾아서 제안"과 "막고 증명"으로 나뉜다. 사용자가 mattpocock-skills를 쓰면 `retro`로 후보를 찾고 이 레시피로 막을 수 있다. `code-review`는 변경이 코딩 규칙을 지켰는지 판정할 뿐 규칙을 장치로 바꾸지 않는다. `writing-for-agents`는 지침 문서를 쓰는 법이라 문서 층에서만 맞닿는다`setup-ts-deep-modules`(`in-progress` 폴더, 사용자 실행 전용)는 TypeScript 저장소에 dependency-cruiser로 패키지 경계 규칙을 설치하고, 저장소의 검사 명령에 연결하고, 일부러 넣은 잘못된 import에서 실패함을 보인 뒤 지침 파일에 포인터를 남긴다. 이 레시피의 구조·검사 층과 "실패를 보인다"가 겹친다. 다른 점: 그 스킬은 정해진 한 규칙(패키지 경계)을 정해진 도구로 설치하고 예제 위반으로 증명한다. 이 레시피는 저장소 이력에서 되풀이된 실수를 골라 그에 맞는 층을 정하고 실제 과거 실수로 증명한다. 막을 유형이 TypeScript 패키지 경계면 구현자가 그 스킬의 방식을 참고할 수 있지만 레시피가 부르지는 않는다(2026-11-14, 스킬 38개의 설명과 위 넷의 원문을 읽음) |
+| `skills/v-mode/recipes/perf.md`, `skills/benchmark-checklist` | `diagnosing-bugs` | 일부 겹침 | mattpocock `diagnosing-bugs`는 성능 회귀도 다룬다("Perf branch": 기준 측정 뒤 이분 탐색, 측정 먼저). vstack은 그 사본을 레시피가 경로로 읽고, 그 위에 측정 검증(benchmark-checklist의 질문 일곱, 교차 반복, 결론 넷)과 성능 주문 목록을 얹었다. 측정이 믿을 만한지 따지는 스킬과 회귀가 아닌 느림을 줄이는 절차는 mattpocock에 없다(스킬 38개의 원문에서 "benchmark", "profil"을 찾았고 `diagnosing-bugs`만 나옴, 2026-11-14) |
 | `skills/maintain-verification-skill` | `retro`, `setup-pre-commit`, `diagnosing-bugs` | 겹치지 않음 | 프로젝트의 검증 스킬과 기능 지도를 앱에 맞춰 관리하는 스킬은 mattpocock-skills에 없다(스킬 38개의 원문에서 "feature map", "verification skill", "verify-"를 찾았고 나오지 않음). `retro`는 자동 검사가 연결되지 않았거나 깨진 것을 개선 후보로 보일 뿐이다. `setup-pre-commit`은 Husky·lint-staged 훅을 설치한다. `diagnosing-bugs`의 되먹임 고리는 버그 하나를 위한 것이다(2026-11-14, 위 셋의 원문을 읽음) |
 | `skills/v-mode/subagents.md`(pstack `poteto-mode`의 "Subagents" 절에서 일부) | `code-review`, `codebase-design`(DESIGN-IT-TWICE), `implement-spec`, `ask-matt`(PHASE-BOUNDARIES), `research` | 일부 겹침 | 서브에이전트를 어떻게 쓸지 정하는 같은 역할의 스킬은 없다. 스킬마다 자기 서브에이전트를 따로 정할 뿐이다(두 검토 서브에이전트, 설계안 서브에이전트, 구현 서브에이전트, 혼자 돌릴 수 있는 일의 위임, 조사 맡기기). 같은 생각은 둘 있다: `implement-spec`의 "내용을 복제하지 말고 가리킨다", `code-review` 설명서(`docs/engineering/code-review.md`)의 "서브에이전트의 출력은 가설이지 증거가 아니다". 그래도 따로 두는 이유는, 맡긴 작업자가 레시피를 따르는 동안 지킬 규칙이 어디에도 없기 때문이다. 사용자가 mattpocock 스킬을 실행하면 그 스킬이 정한 서브에이전트를 따른다 |
 

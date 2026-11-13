@@ -75,7 +75,8 @@ disable-model-invocation: true
 | UI 다듬기(이미 동작하는 화면의 겉모습을 다듬음. 동작과 데이터는 그대로) | [recipes/ui-polish.md](recipes/ui-polish.md). **맡기기 갈래에서만 쓴다**(지휘에는 연결하지 않았다) |
 | 반복 실수 막기(에이전트가 되풀이하는 실수를 구조·타입·검사·테스트로 못 하게 함) | [recipes/correct.md](recipes/correct.md). **맡기기 갈래에서만 쓴다**(지휘에는 연결하지 않았다). 실수 유형은 관리자가 맡기기 전에 읽기 전용으로 모은다 |
 | 조사(코드가 어떻게 도는지, 왜 이렇게 됐는지, 어디에 둘지를 묻는 읽기 전용 질문) | [recipes/investigation.md](recipes/investigation.md). **바로 갈래에서 관리자가 따른다** |
-| 성능, 프로토타입 | 없음 |
+| 성능 개선(측정된 느림을 측정과 함께 줄임. 동작은 그대로) | [recipes/perf.md](recipes/perf.md). **맡기기 갈래에서만 쓴다**(지휘에는 연결하지 않았다) |
+| 프로토타입 | 없음 |
 
 작업 유형이 둘 이상에 걸치면(예: 리팩토링하다 버그를 고침) 하나만 고르고, 나머지는 따로 나눈다(별도 티켓, 또는 이 일이 끝난 뒤 다음 요청).
 
@@ -87,7 +88,7 @@ disable-model-invocation: true
 | 맡기기 | 아래 "맡기기" | 아래 "맡기기". 레시피 없이 수용 기준만으로 맡긴다 |
 | 지휘 | 아래 "지휘" | 지휘하지 않는다. "레시피 없음: 기존 agent-orchestra로 하거나 레시피를 먼저 만든다"를 알린다 |
 
-`ui-polish`와 `correct`는 지휘에서 레시피가 없는 것으로 본다. UI 다듬기가 지휘 크기로 오면(여러 화면 묶음, 교차 검토가 필요함) "지휘에는 연결하지 않았다"를 알리고, 화면 묶음 하나씩 맡기기로 하는 것을 권한다.
+`ui-polish`, `correct`, `perf`는 지휘에서 레시피가 없는 것으로 본다. UI 다듬기가 지휘 크기로 오면(여러 화면 묶음, 교차 검토가 필요함) "지휘에는 연결하지 않았다"를 알리고, 화면 묶음 하나씩 맡기기로 하는 것을 권한다.
 
 갈래를 고른 근거(진행 중 작업 여부, 크기, 작업 유형, 레시피)를 첫 메시지에 한 줄로 적는다. 첫 메시지는 조사를 마친 뒤가 아니라 갈래가 정해진 때에 보낸다. 입력을 정하려고 오래 걸리는 조사(화면 찍기, 값 재기, 재현)를 해야 하면 그 전에 이해한 목표, 갈래, 무엇을 조사할지를 먼저 알린다. 갈래를 정하는 데부터 그런 조사가 필요하면 이해한 목표와 조사할 것을 먼저 알리고, 갈래는 정해지는 대로 알린다. 조사가 길어지면 찾은 것과 다음에 볼 것을 짧게 전한다.
 
@@ -147,7 +148,6 @@ disable-model-invocation: true
 
 | 경우 | 후보 원칙 |
 | --- | --- |
-| 성능 | `explain-the-number`, `fix-root-causes`, `prove-it-works` |
 | 지휘·이어받기 | `guard-the-context-window`, `make-operations-idempotent`, `separate-before-serializing-shared-state` |
 | 정렬 | `foundational-thinking`(데이터 구조·기반 결정을 할 때), `experience-first`, `model-the-domain` |
 

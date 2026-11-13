@@ -1,6 +1,6 @@
 # 조사
 
-id: investigation · version: 1 · contract: vstack-contract@3
+id: investigation · version: 2 · contract: vstack-contract@3
 
 pstack의 `playbooks/investigation.md`(조사는 읽기 전용이고, 고치지 않고 근거가 붙은 설명이나 추천을 낸다)를 따른다. 설명의 형식과 복잡도 나누기는 pstack `how`에서, 동기를 찾는 순서(코드 기준점 → 근거 범주 → 신뢰 단계)는 pstack `why`에서 가져왔다. 원본의 모델 지정, MCP마다 조사 에이전트를 하나씩 띄우는 구조, 종합 에이전트, Cursor 전용 설정은 뺐다. 가져온 것과 뺀 것은 저장소의 `UPSTREAM.md`에 있다.
 
@@ -18,7 +18,7 @@ pstack의 `playbooks/investigation.md`(조사는 읽기 전용이고, 고치지 
 
 - 고칠 결함이 이미 정해졌다: 버그 수정(`bug-fix`). 원인을 찾는 진단은 그 레시피가 `diagnosing-bugs`로 한다.
 - 바깥의 1차 자료(라이브러리 공식 문서, API 명세)를 모아 문서로 남기는 일: 사용자가 mattpocock-skills를 쓰면 `/mattpocock-skills:research`를 안내한다. 이 레시피는 이 저장소의 코드와 기록을 본다(두 스킬의 겹침은 `UPSTREAM.md`).
-- 성능 수치를 재는 일: 성능은 레시피가 없다. 맡기기로 간다.
+- 느린 것을 재고 고치는 일: 성능 개선 레시피(`perf`)로 맡긴다.
 - 조사하다가 고쳐야 할 것이 정해지면 고치지 않는다. 결론에 적고, 고칠 일은 갈래를 다시 고른다(맡기기 또는 지휘).
 
 ## 입력
