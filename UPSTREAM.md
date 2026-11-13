@@ -153,6 +153,24 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 계약 쪽: 시도 ID의 가운데 8자를 dispatch ID에서 관리자가 띄우기 전에 정하는 세션 키로 바꿈(dispatch ID는 띄운 뒤에야 생겨 명세의 증거 폴더에 넣을 수 없었다). evidence.md·archive.md·state-and-rollback.md.
 
+### `skills/v-mode/subagents.md`(pstack 0.15.36 `skills/poteto-mode/SKILL.md`의 "Subagents" 절에서 일부, 7단계)
+
+vstack이 새로 쓴 파일이고, 아래 문장의 뜻을 pstack에서 가져왔다. 원문은 고정 커밋의 `https://raw.githubusercontent.com/cursor/plugins/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/poteto-mode/SKILL.md`에서 2026-11-13에 받아 읽었다.
+
+| 원본 줄 | 원본의 문장 | vstack에서 |
+| --- | --- | --- |
+| 100 | 서브에이전트의 일은 부른 쪽이 책임진다. diff를 직접 보고 자기 요약을 쓴다 | 가져옴. 읽기 전용 조사에 맞춰 "해당 파일과 줄을 직접 다시 읽는다"로 바꿈 |
+| 96 | 내용을 붙여넣지 않고 파일 경로를 준다 | 가져옴 |
+| 19 | 요청문마다 사용자의 목표를 다시 적는다 | 가져옴("Subagents" 절 밖의 줄이다) |
+| 102 | 새 일은 새 서브에이전트에게 범위를 모아서 준다. 옮기기 비싼 상태가 있을 때만 이어 쓴다 | 앞 문장만 가져옴. 이어 쓰기 예외는 가져오지 않음(읽기 전용 조사에는 그런 상태가 없다) |
+| 94 | 정해진 스킬(`how`, `why` 등)이 자기 서브에이전트 종류를 정하면 그것을 따른다 | 넓혀서 가져옴: 사용자가 실행한 스킬이 서브에이전트를 정하면 그 스킬을 따른다. 맡긴 작업자가 이것으로 제한을 풀지는 않는다 |
+| 94 | 종류 `poteto-agent` | 가져오지 않음. Claude Code의 `Explore`를 쓴다 |
+| 96, 98 | 역할별 모델과 `/setup-pstack`, 일에 맞춘 모델 강도 조절, 다른 계열 모델 | 가져오지 않음. Claude Code의 서브에이전트는 Claude 모델만 쓴다. 모델은 `sonnet` 하나이고, 다른 계열은 맡기기의 Codex 검토자로 얻는다 |
+| 94 | 서브에이전트가 코드를 쓴다(code-writing delegates) | 가져오지 않음. 같은 worktree를 나눠 쓰므로 읽기 전용 조사만 맡긴다 |
+| 96 | 백그라운드로 띄운다 | 가져오지 않음. Claude Code의 기본 동작이다 |
+
+vstack이 더한 것: 누구에게 적용하는가(한 세션 갈래의 Claude. 계약 작업자와 Codex 검토자는 아님), 쓰는 때와 쓰지 않는 때, 맡기지 않는 일, 한 번에 셋까지, Orca 작업자를 띄우지 않는다.
+
 ## mattpocock-skills와의 겹침
 
 pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적는다. 비교한 mattpocock-skills는 1.3.1(`49dd158`)이다.
@@ -161,6 +179,7 @@ pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적�
 | --- | --- | --- | --- |
 | `skills/blast-radius` | `code-review` | 겹치지 않음 | `code-review`는 변경이 저장소의 코딩 규칙을 지켰는지와 명세대로 만들었는지를 하위 에이전트 둘이 읽어서 판정한다. 변경이 diff 밖에서 깨뜨리는 것을 찾거나 코드를 돌려 증명하는 단계가 없다. 이 확인은 가져온 뒤(2026-11-13)에 했다 |
 | `skills/v-mode/recipes/ui-polish.md`(pstack `visual-parity`·`hillclimb`를 조합) | `prototype` | 겹치지 않음 | 스킬 38개의 원문에서 화면·스크린샷·다듬기를 다루는 것을 찾았고, 맞닿는 것은 `prototype`의 UI 갈래뿐이다. 그것은 버릴 시안 여러 개로 "어떤 모양이어야 하나"를 정하는 일이다. `ui-polish`는 이미 정해진 모양의 화면을 다듬고, 모양을 새로 정하는 일은 시작하지 않는다. 그 일이 `prototype`의 몫이다. 이 확인도 만든 뒤(2026-11-13)에 했다. `ui-polish@2`부터 v-mode가 그런 요청에 `prototype` 명령을 안내한다(`upstream.json`의 `user_commands`) |
+| `skills/v-mode/subagents.md`(pstack `poteto-mode`의 "Subagents" 절에서 일부) | `code-review`, `codebase-design`(DESIGN-IT-TWICE), `implement-spec`, `ask-matt`(PHASE-BOUNDARIES), `research` | 일부 겹침 | 서브에이전트를 어떻게 쓸지 정하는 같은 역할의 스킬은 없다. 스킬마다 자기 서브에이전트를 따로 정할 뿐이다(두 검토 서브에이전트, 설계안 서브에이전트, 구현 서브에이전트, 혼자 돌릴 수 있는 일의 위임, 조사 맡기기). 같은 생각은 둘 있다: `implement-spec`의 "내용을 복제하지 말고 가리킨다", `code-review` 설명서(`docs/engineering/code-review.md`)의 "서브에이전트의 출력은 가설이지 증거가 아니다". 그래도 따로 두는 이유는, 맡긴 작업자가 레시피를 따르는 동안 지킬 규칙이 어디에도 없기 때문이다. 사용자가 mattpocock 스킬을 실행하면 그 스킬이 정한 서브에이전트를 따른다 |
 
 이 규칙을 두기 전에 pstack에서 가져온 것(원칙 24개, `create-verification-skill`, 레시피 `bug-fix`·`feature`·`refactoring`의 바탕이 된 플레이북)은 이 표에 없다. 다시 손댈 때 확인해 채운다. 이와 따로, `tdd`와 `diagnosing-bugs`는 pstack이 아니라 mattpocock-skills에서 고쳐 가져온 사본이고 레시피가 그 사본을 쓴다.
 

@@ -308,11 +308,19 @@
     },
     {
       "stage": 6,
-      "to": "skills/v-mode/delegate-omp.md"
+      "to": "skills/v-mode/delegate.md"
     },
     {
       "stage": 6,
-      "to": "skills/v-mode/delegate-omp-spec.md"
+      "to": "skills/v-mode/delegate-spec.md"
+    },
+    {
+      "stage": 7,
+      "to": "skills/v-mode/delegate-review-spec.md"
+    },
+    {
+      "stage": 7,
+      "to": "skills/v-mode/subagents.md"
     }
   ],
   "runtime_commands": {
