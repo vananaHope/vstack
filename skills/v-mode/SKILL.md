@@ -65,7 +65,7 @@ disable-model-invocation: true
 
 ### 2. 작업 유형과 레시피
 
-한 작업 단위(맡기기의 요청 하나, 지휘의 티켓 하나)에 작업 유형 레시피는 최대 하나다. 지휘에서 여러 티켓을 한 요청으로 받으면 티켓마다 하나씩 고른다.
+한 작업 단위(바로의 질문 하나, 맡기기의 요청 하나, 지휘의 티켓 하나)에 작업 유형 레시피는 최대 하나다. 지휘에서 여러 티켓을 한 요청으로 받으면 티켓마다 하나씩 고른다.
 
 | 작업 유형 | 레시피 |
 | --- | --- |
@@ -73,7 +73,8 @@ disable-model-invocation: true
 | 기능(새 동작을 더하거나 기존 동작을 바꿈) | [recipes/feature.md](recipes/feature.md) |
 | 리팩토링(동작은 그대로, 구조만 바꿈) | [recipes/refactoring.md](recipes/refactoring.md) |
 | UI 다듬기(이미 동작하는 화면의 겉모습을 다듬음. 동작과 데이터는 그대로) | [recipes/ui-polish.md](recipes/ui-polish.md). **맡기기 갈래에서만 쓴다**(지휘에는 연결하지 않았다) |
-| 성능, 프로토타입, 조사 | 없음 |
+| 조사(코드가 어떻게 도는지, 왜 이렇게 됐는지, 어디에 둘지를 묻는 읽기 전용 질문) | [recipes/investigation.md](recipes/investigation.md). **바로 갈래에서 관리자가 따른다** |
+| 성능, 프로토타입 | 없음 |
 
 작업 유형이 둘 이상에 걸치면(예: 리팩토링하다 버그를 고침) 하나만 고르고, 나머지는 따로 나눈다(별도 티켓, 또는 이 일이 끝난 뒤 다음 요청).
 
@@ -81,7 +82,7 @@ disable-model-invocation: true
 
 | 크기 | 레시피 있음 | 레시피 없음 |
 | --- | --- | --- |
-| 바로 | 아래 "바로". 후보 원칙만 쓴다 | 같다 |
+| 바로 | 아래 "바로". 레시피(지금은 `investigation`)를 관리자가 따른다 | 아래 "바로". 후보 원칙만 쓴다 |
 | 맡기기 | 아래 "맡기기" | 아래 "맡기기". 레시피 없이 수용 기준만으로 맡긴다 |
 | 지휘 | 아래 "지휘" | 지휘하지 않는다. "레시피 없음: 기존 agent-orchestra로 하거나 레시피를 먼저 만든다"를 알린다 |
 
@@ -145,7 +146,6 @@ disable-model-invocation: true
 | 경우 | 후보 원칙 |
 | --- | --- |
 | 성능 | `explain-the-number`, `fix-root-causes`, `prove-it-works` |
-| 조사 | `prove-it-works`, `explain-the-number`(수치 주장이 있을 때) |
 | 지휘·이어받기 | `guard-the-context-window`, `make-operations-idempotent`, `separate-before-serializing-shared-state` |
 | 정렬 | `foundational-thinking`(데이터 구조·기반 결정을 할 때), `experience-first`, `model-the-domain` |
 
