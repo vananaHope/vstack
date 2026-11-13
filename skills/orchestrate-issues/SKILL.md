@@ -1,10 +1,10 @@
 ---
 name: orchestrate-issues
-description: (vstack 사본, 사용자가 /vstack:orchestrate-issues로 실행) 이슈(GitHub·로컬 md·아티팩트)를 Orca·herdr app 위에서 "등급별 작업자(OpenCode·Codex·Claude) 구현 → 다른 계열 교차 검토 → PR·병합" 흐름으로 지휘한다. 이슈 구현·다음 이슈 진행·다음 묶음(wave) 진행, 지시 대기 작업의 PR 올리기·병합·리뷰 반영을 요청받았을 때 사용.
+description: (사용자가 /vstack:orchestrate-issues로 실행) 이슈(GitHub·로컬 md·아티팩트)를 Orca·herdr app 위에서 "등급별 작업자(OpenCode·Codex·Claude) 구현 → 다른 계열 교차 검토 → PR·병합" 흐름으로 지휘한다. 이슈 구현·다음 이슈 진행·다음 묶음(wave) 진행, 지시 대기 작업의 PR 올리기·병합·리뷰 반영을 요청받았을 때 사용.
 disable-model-invocation: true
 ---
 
-> vstack이 agent-orchestra 0.20.0에서 옮겨 온 사본이다. 바꾼 내용은 vstack의 UPSTREAM.md에 있다. 계약은 `<vstack>/skills/v-mode/contracts/`가 정한다.
+> 계약은 `<vstack>/skills/v-mode/contracts/`가 정한다.
 
 # 이슈 지휘
 
@@ -95,7 +95,7 @@ disable-model-invocation: true
 
 **맡길 이슈**이고, 선행 이슈가 모두 끝났고, 지금 진행 중이 아닌 이슈가 프런티어다. 무엇이 맡길 이슈이고 선행 관계를 어디서 읽는지는 [trackers.md](trackers.md)를 따른다.
 
-**진행 중**은 셋 중 하나라도 맞는 것이다: 그 작업의 작업자가 떠 있다, `state.md`가 있고 `끝`이 아니다, 그 이슈를 가리키는 열린 PR이 있다(`gh pr list --state open --search "<이슈 표시>"`, 또는 브랜치가 `<작업 이름>-`로 시작). 지휘를 처음 시작할 때는 `.local/vstack/*/state.md`를 먼저 훑어 이어 갈 작업을 사용자에게 알린다. 이어 갈 작업이 있으면 [vstack.md](vstack.md) "관리자 재시작"대로 이어 간다. 기존 agent-orchestra의 `.local/orchestration/*/state.md`에 끝나지 않은 작업이 있으면 이어받지 않고 사용자에게 알린다(소유권은 `<vstack>/skills/v-mode/contracts/state-and-rollback.md`).
+**진행 중**은 셋 중 하나라도 맞는 것이다: 그 작업의 작업자가 떠 있다, `state.md`가 있고 `끝`이 아니다, 그 이슈를 가리키는 열린 PR이 있다(`gh pr list --state open --search "<이슈 표시>"`, 또는 브랜치가 `<작업 이름>-`로 시작). 지휘를 처음 시작할 때는 `.local/vstack/*/state.md`를 먼저 훑어 이어 갈 작업을 사용자에게 알린다. 이어 갈 작업이 있으면 [vstack.md](vstack.md) "관리자 재시작"대로 이어 간다. agent-orchestra 때의 작업 파일(`.local/orchestration/*/state.md`)에 끝나지 않은 작업이 있으면 이어받지 않고 사용자에게 알린다(소유권은 `<vstack>/skills/v-mode/contracts/state-and-rollback.md`).
 
 시작 조건을 만족하는 동안 **임계 경로**에 있는 것부터 하나씩 고른다. 뒤에 이어지는 이슈 사슬이 가장 긴 이슈가 먼저이고, 같으면 번호(작업 이름)가 앞선 것이 먼저다.
 

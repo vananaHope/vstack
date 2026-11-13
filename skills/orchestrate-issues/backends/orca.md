@@ -6,7 +6,7 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 ## 하지 않는 것
 
-지금 Orca는 아래를 하지 말라고 안내한다. 예전 agent-orchestra의 방법이라 남아 있을 수 있으니 쓰지 않는다.
+지금 Orca는 아래를 하지 말라고 안내한다. 옮겨 오기 전 agent-orchestra(아카이브됨)의 방법이라 다른 문서에 남아 있을 수 있으니 쓰지 않는다.
 
 - `check --wait`를 백그라운드로 돌리거나 받은 편지함을 훑는 스크립트를 돌리지 않는다. Orca가 관리자를 깨운다.
 - 작업자 터미널에 직접 키를 보내지 않는다(`orca terminal send`). 작업자에게 말할 때는 `send`를 쓴다.
@@ -154,4 +154,4 @@ Codex는 작업 폴더의 `.codex/config.toml`을 전역 설정보다 우선해 
 
 ## herdr
 
-[herdr.md](herdr.md)는 agent-orchestra에서 그대로 옮겼고 vstack 첫 버전에서 검증하지 않았다.
+[herdr.md](herdr.md)는 agent-orchestra(아카이브됨)에서 그대로 옮겼고 vstack 첫 버전에서 검증하지 않았다.

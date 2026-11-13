@@ -172,7 +172,7 @@
 ```markdown
 ### Issue orchestration
 
-Settings for the `orchestrate-issues` skill (shared by the vstack and agent-orchestra plugins). See `docs/agents/orchestration.md` and `docs/agents/common-findings.md`.
+Settings for the `orchestrate-issues` skill of the vstack plugin. See `docs/agents/orchestration.md` and `docs/agents/common-findings.md`.
 ```
 
 ## 5. 전제 확인

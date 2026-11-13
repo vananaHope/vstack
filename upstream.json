@@ -1,5 +1,5 @@
 {
-  "contract": "vstack-contract@3",
+  "contract": "vstack-contract@4",
   "sources": {
     "pstack": {
       "repo": "https://github.com/cursor/plugins",
@@ -26,14 +26,17 @@
       "commit": "c62be33381a546fb7127088795a83378cfe35371",
       "license": "MIT",
       "copyright": "Copyright (c) 2026 vananaHope",
-      "license_file": "licenses/agent-orchestra-LICENSE"
+      "license_file": "licenses/agent-orchestra-LICENSE",
+      "status": "archived",
+      "archived": "2026-11-14",
+      "note": "아카이브된 원본. vstack이 옮겨 온 파일(moved)을 소유하므로 원본과 대조하지 않는다."
     }
   },
   "modes": {
     "verbatim": "원문 그대로. 고치지 않는다. 안의 다른 스킬 언급은 출처 참조이며 실행하지 않는다.",
     "adapted": "복사한 뒤 고친다. 고친 내용은 UPSTREAM.md에 적는다. 실행 경로이므로 링크·표기·closure 검사 대상이다.",
     "extracted": "원문의 일부만 떼어 새 파일로 만든다. 원문이 가리키는 파일 가운데 가져오지 않는 것은 dropped에 이유와 함께 적는다.",
-    "moved": "vstack이 이어받는다. 원본 저장소는 아카이브한다."
+    "moved": "vstack이 이어받아 소유한다. 원본 저장소는 아카이브한다. 원본과 대조하지 않으므로 closure 검사 대상이 아니다."
   },
   "imports": [
     {
@@ -376,12 +379,11 @@
     ]
   },
   "user_commands": {
-    "note": "사용자가 직접 실행하는 다른 플러그인의 명령(모델이 부르지 않는다). vstack에 싣지 않으므로 check-links의 SKILL 검사에서 뺀다. v-mode의 정렬 단계가 안내하는 mattpocock 명령, UI 다듬기 입력에서 시안이 필요할 때 안내하는 prototype, 조사 레시피가 바깥 자료 조사로 안내하는 research, 옮기기 전 기존 agent-orchestra 명령(이전 기록에서 언급).",
+    "note": "사용자가 직접 실행하는 다른 플러그인의 명령(모델이 부르지 않는다). vstack에 싣지 않으므로 check-links의 SKILL 검사에서 뺀다. v-mode의 정렬 단계가 안내하는 mattpocock 명령, UI 다듬기 입력에서 시안이 필요할 때 안내하는 prototype, 조사 레시피가 바깥 자료 조사로 안내하는 research.",
     "names": [
       "mattpocock-skills:grill-with-docs",
       "mattpocock-skills:to-spec",
       "mattpocock-skills:to-tickets",
-      "agent-orchestra:configure",
       "mattpocock-skills:wait-what",
       "mattpocock-skills:prototype",
       "mattpocock-skills:research"

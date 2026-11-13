@@ -1,10 +1,7 @@
 ---
 name: check-limits
-description: (vstack 사본) Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화 시각)로 재서 ok/warning/exhausted/unknown으로 판정한다. 한도·사용량·남은 양을 물을 때, 작업을 맡기기 전에 한도를 판단해야 할 때 사용.
-disable-model-invocation: true
+description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화 시각)로 재서 ok/warning/exhausted/unknown으로 판정한다. 한도·사용량·남은 양을 물을 때, 작업을 맡기기 전에 한도를 판단해야 할 때 사용.
 ---
-
-> vstack이 agent-orchestra 0.20.0에서 옮겨 온 사본이다. 바꾼 내용은 vstack의 UPSTREAM.md에 있다.
 
 # 한도 확인
 

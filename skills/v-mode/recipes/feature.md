@@ -1,6 +1,6 @@
 # 기능
 
-id: feature · version: 2 · contract: vstack-contract@3
+id: feature · version: 3 · contract: vstack-contract@4
 
 흐름은 pstack `playbooks/feature.md`(데이터 모양을 먼저 정하고 → 작은 단위로 만들고 검증하며 커밋 → 맞는 화면에서 확인)를 따른다. 원본의 하위 에이전트 위임, `how`·`architect`·`arena`·`interrogate` 호출, 작업 흐름 점검표, PR 단계는 vstack에서 관리자가 맡거나(지휘·검토) 첫 버전에서 뺐다. 설계 결정은 정렬 단계(사용자와 관리자)에서 하고 티켓에 싣는다.
 
