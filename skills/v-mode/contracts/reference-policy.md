@@ -12,7 +12,6 @@ verbatim 원문 안의 참조는 가리키는 곳이 vstack 안이든 밖이든 
 
 | 파일 | 줄 | 참조 | 형태 | vstack에서 대신 따르는 것 |
 | --- | --- | --- | --- | --- |
-| `skills/principle-explain-the-number/SKILL.md` | 14 | `benchmark-checklist` | link | 수치 주장은 원칙 `explain-the-number` 본문의 절차만 따른다 |
 | `skills/principle-prove-it-works/SKILL.md` | 22 | `show-me-your-work` | bold | 결정 기록이 필요하면 관리자에게 알린다. 증거는 [evidence.md](evidence.md) |
 | `skills/principle-type-system-discipline/SKILL.md` | 9 | `typescript-best-practices` | code | 원칙 `type-system-discipline` 본문만 따른다 |
 
@@ -29,6 +28,7 @@ vstack에 있는(또는 들어올) 파일을 가리키지만, 이것도 출처 �
 | `skills/principle-build-the-lever/SKILL.md` | 21 | `principle-laziness-protocol` | link |
 | `skills/principle-build-the-lever/SKILL.md` | 23 | `principle-encode-lessons-in-structure` | link |
 | `skills/principle-build-the-lever/SKILL.md` | 23 | `principle-prove-it-works` | link |
+| `skills/principle-explain-the-number/SKILL.md` | 14 | `benchmark-checklist` | link |
 | `skills/principle-explain-the-number/SKILL.md` | 18 | `principle-prove-it-works` | link |
 | `skills/principle-minimize-reader-load/SKILL.md` | 9 | `principle-guard-the-context-window` | link |
 | `skills/principle-sequence-verifiable-units/SKILL.md` | 17 | `principle-build-the-lever` | bold |

@@ -2,7 +2,7 @@
 
 Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 고르고, 레시피는 원칙과 검증 계약을 지키며 일한다. mattpocock 정렬 스킬(무엇을, 왜), pstack 원칙과 검증(어떻게 제대로), agent-orchestra 지휘(누가, 언제)를 하나로 묶는다.
 
-> 만드는 중이다. 계약, 원칙 24개, v-mode 라우터, 옮겨 온 지휘 스킬, 레시피 여섯(버그 수정, 기능, 리팩토링, UI 다듬기, 조사, 반복 실수 막기), 조사 에이전트가 있고, Orca에서 지휘 시범 다섯 번과 맡기기 시범을 돌렸다. 다음은 실제 프로젝트에서 쓰며 확인하는 일이다. 진행 상태와 설계는 [docs/design.md](docs/design.md), 되돌리기 어려운 결정은 [docs/adr/](docs/adr/), 용어는 [GLOSSARY.md](GLOSSARY.md)에 있다.
+> 만드는 중이다. 계약, 원칙 24개, v-mode 라우터, 옮겨 온 지휘 스킬, 레시피 일곱(버그 수정, 기능, 리팩토링, UI 다듬기, 조사, 반복 실수 막기, 성능 개선), 조사 에이전트가 있고, Orca에서 지휘 시범 다섯 번과 맡기기 시범을 돌렸다. 다음은 실제 프로젝트에서 쓰며 확인하는 일이다. 진행 상태와 설계는 [docs/design.md](docs/design.md), 되돌리기 어려운 결정은 [docs/adr/](docs/adr/), 용어는 [GLOSSARY.md](GLOSSARY.md)에 있다.
 
 ## 설치
 
@@ -46,7 +46,7 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
   contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
-  recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring, ui-polish, investigation, correct)
+  recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring, ui-polish, investigation, correct, perf)
                          ui-polish는 맡기기 갈래에서만 쓴다. scripts/image_diff.py는 PNG 비교
   delegate*.md           한 단위의 일을 작업자에게 맡기는 절차와 명세 양식(구현, 검토)
   subagents.md           바로·맡기기 갈래에서 서브에이전트를 쓰는 규칙
@@ -54,6 +54,8 @@ agents/explorer.md       읽기 전용 조사 에이전트 vstack:explorer(Sonne
 skills/principle-*/      pstack 원칙 24개(원문 그대로)
 skills/diagnosing-bugs/, skills/tdd/, skills/create-verification-skill/
                          레시피가 경로로 읽는 스킬(고쳐 쓴 사본, UPSTREAM.md 참고)
+skills/benchmark-checklist/
+                         성능 측정이 믿을 만한지 따지는 점검표(pstack에서 고쳐 쓴 사본. perf 레시피가 경로로 읽음)
 skills/maintain-verification-skill/
                          검증 스킬과 기능 지도가 앱과 맞는지 점검하는 스킬(pstack에서 고쳐 쓴 사본. 맡기기의 구현자가 경로로 읽음)
 skills/blast-radius/     변경이 다른 곳에서 깨뜨릴 것을 찾아 실행으로 증명하는 스킬
