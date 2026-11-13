@@ -556,16 +556,59 @@ class FolderTest(Files):
         code, out, _ = self.run_main(self.base, self.new, "--expect", self.listing("alias/shot.png\n"))
         self.assertEqual((code, out.splitlines()[0]), (0, "alias/shot.png: identical: 3x3"))
 
-    @unittest.skipUnless(os.name == "nt", "names differ only in case on a case-insensitive file system")
-    def test_names_that_differ_only_in_case_are_one_file_on_windows(self):
-        self.put(self.base, "Case.PNG")
-        self.put(self.new, "case.png")
-        code, out, _ = self.run_main(self.base, self.new)
-        self.assertEqual(code, 0)
-        self.assertEqual(out.splitlines()[-1], "summary: 1 listed, 1 identical, 0 different, 0 missing, 0 cannot compare")
-        listing = self.listing("case.png\nCASE.png\n")
-        code, out, _ = self.run_main(self.base, self.new, "--expect", listing)
-        self.assertEqual(out.splitlines()[-1], "summary: 1 listed, 1 identical, 0 different, 0 missing, 0 cannot compare")
+    def case_sensitive_folder(self):
+        """이름의 대소문자를 가리는 폴더를 만든다. 만들 수 없는 곳에서는 테스트를 건너뛴다.
+
+        Windows에서는 폴더마다 켤 수 있다(`fsutil`). 켜면 그 아래 새로 만드는 폴더도 물려받는다.
+        """
+        folder = os.path.join(self.dir.name, "case-sensitive")
+        os.makedirs(folder)
+        if os.name == "nt":
+            subprocess.run(["fsutil", "file", "setCaseSensitiveInfo", folder, "enable"], capture_output=True)
+        for name in ("probe", "PROBE"):
+            with open(os.path.join(folder, name), "w") as handle:
+                handle.write(name)
+        if len(os.listdir(folder)) != 2:
+            self.skipTest("cannot make a case-sensitive folder here")
+        return folder
+
+    def test_names_that_differ_only_in_case_are_different_pngs_in_a_case_sensitive_folder(self):
+        # 이름을 소문자로 맞춰 하나로 합치면, 달라진 a.png를 건너뛰고 "모두 같다"가 나온다
+        folder = self.case_sensitive_folder()
+        base, new = os.path.join(folder, "base"), os.path.join(folder, "new")
+        self.put(base, "A.png")
+        self.put(new, "A.png")
+        self.put(base, "a.png")
+        self.put(new, "a.png", self.changed)
+        expected = [
+            "A.png: identical: 3x3",
+            "a.png: different: 1 of 9 pixels (11.111%), bbox 2,1-2,1, max channel delta 251",
+            "summary: 2 listed, 1 identical, 1 different, 0 missing, 0 cannot compare",
+        ]
+        code, out, _ = self.run_main(base, new)
+        self.assertEqual((code, out.splitlines()), (1, expected))
+        code, out, _ = self.run_main(base, new, "--expect", self.listing("A.png\na.png\n"))
+        self.assertEqual((code, out.splitlines()), (1, expected))
+
+    def test_a_link_to_a_sibling_folder_whose_name_differs_only_in_case_is_refused(self):
+        # 경로의 글자를 소문자로 맞춰 견주면 base 밖의 BASE를 base 안이라고 한다
+        folder = self.case_sensitive_folder()
+        base, new, sibling = os.path.join(folder, "base"), os.path.join(folder, "new"), os.path.join(folder, "BASE")
+        self.put(sibling, "shared.png")
+        os.makedirs(base)
+        self.link(sibling, os.path.join(base, "external"))
+        self.put(new, "external/shared.png")
+        code, out, _ = self.run_main(base, new, "--expect", self.listing("external/shared.png\n"))
+        self.assertEqual(code, 2)
+        self.assertEqual(out.splitlines()[0],
+                         "external/shared.png: cannot compare: baseline file: resolves to a path outside the folder")
+
+    def test_names_are_not_merged_by_letter_case(self):
+        # 대소문자를 가리지 않는 곳에서는 같은 파일을 두 번 세고, 가리는 곳에서는 없는 쪽이 missing이다.
+        # 어느 쪽이든 목록의 두 이름을 하나로 줄이지 않는다
+        self.both("one.png")
+        code, out, _ = self.run_main(self.base, self.new, "--expect", self.listing("one.png\nONE.png\none.png\n"))
+        self.assertTrue(out.splitlines()[-1].startswith("summary: 2 listed, "), out)
 
     def test_nothing_to_compare_exits_two(self):
         self.put(self.base, "notes.txt", data=b"x")

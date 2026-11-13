@@ -25,7 +25,7 @@
   이름은 두 폴더 안의 상대 경로여야 한다(절대 경로, 드라이브 글자, `..`는 받지 않는다).
 - 링크(심볼릭 링크, junction)를 따라간 실제 파일이 그 폴더 밖에 있으면 비교하지 않는다(`cannot compare`).
   두 폴더의 링크가 같은 바깥 파일을 가리키면 찍은 것이 없어도 같다고 나오기 때문이다.
-- 대소문자만 다른 이름은 파일 시스템이 같은 파일로 보는 곳(Windows)에서 한 번만 센다.
+- 대소문자만 다른 이름은 다른 이름으로 본다. 파일 시스템이 둘을 같은 파일로 여는 곳에서는 같은 파일을 두 번 센다.
 - `--expect`가 없으면 두 폴더 어느 쪽에든 있는 PNG를 모두 본다. 한쪽에만 있으면 `missing`이다.
   두 폴더 모두에서 빠진 PNG는 이 방식으로는 드러나지 않는다. 찍혀야 할 것이 정해져 있으면 목록을 준다.
 
@@ -358,13 +358,14 @@ def compare_files(baseline, candidate):
 
 
 def unique(names):
-    """같은 파일을 가리키는 이름을 한 번만 남긴다(Windows는 대소문자를 가리지 않는다). 순서는 그대로다."""
-    seen = set()
+    """글자가 똑같은 이름을 한 번만 남긴다. 순서는 그대로다.
+
+    대소문자만 다른 이름은 합치지 않는다. 그 둘이 같은 파일인지는 폴더마다 다르다(Windows에서도 폴더별로
+    대소문자를 가리게 켤 수 있다). 합치면 서로 다른 PNG 하나를 비교에서 빠뜨릴 수 있다.
+    """
     out = []
     for name in names:
-        key = os.path.normcase(name)
-        if key not in seen:
-            seen.add(key)
+        if name not in out:
             out.append(name)
     return out
 
@@ -397,13 +398,21 @@ def inside(folder, name):
     """folder 아래의 name이, 링크(심볼릭 링크, junction)를 따라간 뒤에도 folder 안에 있는가.
 
     두 폴더 안의 링크가 같은 바깥 파일을 가리키면, 찍은 것이 없어도 그 파일을 자기 자신과 비교해 같다고 하게 된다.
+    경로의 글자가 아니라 파일 시스템이 같은 폴더라고 하는지로 본다. 글자를 소문자로 맞춰 견주면, 대소문자를
+    가리는 폴더에서 이름의 대소문자만 다른 바깥 폴더를 안이라고 하게 된다.
     """
-    root = os.path.normcase(os.path.realpath(folder))
-    real = os.path.normcase(os.path.realpath(os.path.join(folder, name)))
-    try:
-        return os.path.commonpath([root, real]) == root
-    except ValueError:  # 드라이브가 다르다
-        return False
+    root = os.path.realpath(folder)
+    path = os.path.dirname(os.path.realpath(os.path.join(folder, name)))
+    while True:
+        try:
+            if os.path.samefile(path, root):
+                return True
+        except OSError:
+            return False
+        parent = os.path.dirname(path)
+        if parent == path:
+            return False
+        path = parent
 
 
 def compare_folders(baseline, candidate, expect):
