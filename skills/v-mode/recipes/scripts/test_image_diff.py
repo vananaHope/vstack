@@ -6,6 +6,7 @@ PNG는 테스트가 직접 만든다. 필터와 색 형식마다 풀어 낸 픽�
 
 import io
 import os
+import shutil
 import struct
 import subprocess
 import sys
@@ -474,7 +475,8 @@ class FolderTest(Files):
 
     def test_expect_list_format(self):
         self.both("one.png", "sub/two.png")
-        text = "﻿# screens\r\n\r\none.png\ttarget, empty state\r\nsub\\two.png\t# note\r\none.png\r\n"
+        bom = chr(0xFEFF)  # Windows의 편집기와 PowerShell 5가 UTF-8 파일 앞에 붙인다
+        text = bom + "# screens\r\n\r\none.png\ttarget, empty state\r\nsub\\two.png\t# note\r\none.png\r\n"
         code, out, _ = self.run_main(self.base, self.new, "--expect", self.listing(text))
         self.assertEqual(code, 0)
         self.assertEqual(out.splitlines(), [
@@ -487,11 +489,83 @@ class FolderTest(Files):
         # 절대 경로를 받으면 같은 파일을 자기 자신과 비교해 "같다"가 나온다
         self.both("one.png")
         absolute = os.path.join(self.base, "one.png")
-        for entry in (absolute, "../base/one.png", "sub/../../base/one.png", "/one.png"):
+        entries = [absolute, "../base/one.png", "sub/../../base/one.png", "/one.png"]
+        if os.name == "nt":
+            entries.append("C:one.png")  # 드라이브만 적은 상대 경로. 폴더와 이으면 폴더가 버려진다
+        for entry in entries:
             with self.subTest(entry=entry):
                 code, out, err = self.run_main(self.base, self.new, "--expect", self.listing("one.png\n%s\n" % entry))
                 self.assertEqual((code, out), (2, ""))
                 self.assertTrue(err.startswith("cannot compare: list entry is not a path inside the folders"), err)
+
+    def link(self, target, path):
+        """path를 target 폴더로 가는 링크로 만든다. 심볼릭 링크를 못 만드는 Windows에서는 junction을 쓴다."""
+        try:
+            os.symlink(target, path, target_is_directory=True)
+        except (OSError, NotImplementedError):
+            if os.name != "nt":
+                self.skipTest("cannot create a directory link here")
+            import _winapi
+            _winapi.CreateJunction(target, path)
+
+    def test_a_png_reached_through_a_link_that_leaves_the_folder_is_refused(self):
+        # 두 폴더 안의 링크가 같은 바깥 폴더를 가리키면, 찍은 것이 없어도 바깥 파일을 자기 자신과 비교하게 된다
+        outside = os.path.join(self.dir.name, "outside")
+        self.put(outside, "shared.png")
+        self.both("one.png")
+        self.link(outside, os.path.join(self.base, "external"))
+        self.link(outside, os.path.join(self.new, "external"))
+        listing = self.listing("one.png\nexternal/shared.png\n")
+        code, out, _ = self.run_main(self.base, self.new, "--expect", listing)
+        self.assertEqual(code, 2)
+        self.assertEqual(out.splitlines(), [
+            "one.png: identical: 3x3",
+            "external/shared.png: cannot compare: baseline file: resolves to a path outside the folder",
+            "summary: 2 listed, 1 identical, 0 different, 0 missing, 1 cannot compare",
+        ])
+        self.assertEqual(self.run_main(self.base, self.new)[0], 2)  # 목록 없이 폴더를 훑어도 통과하지 않는다
+
+    def test_a_link_that_leaves_the_folder_on_one_side_only_is_refused(self):
+        outside = os.path.join(self.dir.name, "outside")
+        self.put(outside, "shared.png")
+        listing = self.listing("external/shared.png\n")
+        for linked, real, label in ((self.base, self.new, "baseline"), (self.new, self.base, "candidate")):
+            with self.subTest(side=label):
+                self.link_one_side(linked, real, outside)
+                code, out, _ = self.run_main(self.base, self.new, "--expect", listing)
+                self.assertEqual(code, 2)
+                self.assertEqual(out.splitlines()[0],
+                                 "external/shared.png: cannot compare: %s file: resolves to a path outside the folder" % label)
+
+    def link_one_side(self, linked, real, outside):
+        """linked 쪽의 external은 바깥으로 가는 링크, real 쪽의 external은 진짜 폴더로 만든다."""
+        for folder in (linked, real):
+            path = os.path.join(folder, "external")
+            if os.path.lexists(path):
+                try:
+                    os.unlink(path)  # 링크나 junction
+                except OSError:
+                    shutil.rmtree(path)
+        self.link(outside, os.path.join(linked, "external"))
+        self.put(real, "external/shared.png")
+
+    def test_a_link_that_stays_inside_the_folder_is_followed(self):
+        for folder in (self.base, self.new):
+            self.put(folder, "real/shot.png")
+            self.link(os.path.join(folder, "real"), os.path.join(folder, "alias"))
+        code, out, _ = self.run_main(self.base, self.new, "--expect", self.listing("alias/shot.png\n"))
+        self.assertEqual((code, out.splitlines()[0]), (0, "alias/shot.png: identical: 3x3"))
+
+    @unittest.skipUnless(os.name == "nt", "names differ only in case on a case-insensitive file system")
+    def test_names_that_differ_only_in_case_are_one_file_on_windows(self):
+        self.put(self.base, "Case.PNG")
+        self.put(self.new, "case.png")
+        code, out, _ = self.run_main(self.base, self.new)
+        self.assertEqual(code, 0)
+        self.assertEqual(out.splitlines()[-1], "summary: 1 listed, 1 identical, 0 different, 0 missing, 0 cannot compare")
+        listing = self.listing("case.png\nCASE.png\n")
+        code, out, _ = self.run_main(self.base, self.new, "--expect", listing)
+        self.assertEqual(out.splitlines()[-1], "summary: 1 listed, 1 identical, 0 different, 0 missing, 0 cannot compare")
 
     def test_nothing_to_compare_exits_two(self):
         self.put(self.base, "notes.txt", data=b"x")

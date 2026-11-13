@@ -22,7 +22,10 @@
     summary: <N> listed, <i> identical, <d> different, <m> missing, <c> cannot compare
 - `--expect <목록 파일>`을 주면 목록에 적힌 이름만 본다. 목록에 있는데 폴더에 없는 PNG는 `missing`이다.
   목록은 UTF-8, 한 줄에 이름 하나다. 탭 뒤는 메모로 보고 읽지 않는다. 빈 줄과 `#`으로 시작하는 줄은 건너뛴다.
-  이름은 두 폴더 안의 상대 경로여야 한다(절대 경로와 `..`는 받지 않는다).
+  이름은 두 폴더 안의 상대 경로여야 한다(절대 경로, 드라이브 글자, `..`는 받지 않는다).
+- 링크(심볼릭 링크, junction)를 따라간 실제 파일이 그 폴더 밖에 있으면 비교하지 않는다(`cannot compare`).
+  두 폴더의 링크가 같은 바깥 파일을 가리키면 찍은 것이 없어도 같다고 나오기 때문이다.
+- 대소문자만 다른 이름은 파일 시스템이 같은 파일로 보는 곳(Windows)에서 한 번만 센다.
 - `--expect`가 없으면 두 폴더 어느 쪽에든 있는 PNG를 모두 본다. 한쪽에만 있으면 `missing`이다.
   두 폴더 모두에서 빠진 PNG는 이 방식으로는 드러나지 않는다. 찍혀야 할 것이 정해져 있으면 목록을 준다.
 
@@ -354,6 +357,18 @@ def compare_files(baseline, candidate):
     return (0 if same else 1), text
 
 
+def unique(names):
+    """같은 파일을 가리키는 이름을 한 번만 남긴다(Windows는 대소문자를 가리지 않는다). 순서는 그대로다."""
+    seen = set()
+    out = []
+    for name in names:
+        key = os.path.normcase(name)
+        if key not in seen:
+            seen.add(key)
+            out.append(name)
+    return out
+
+
 def png_names(folder):
     """폴더 아래 모든 PNG의 이름(폴더 기준 상대 경로, `/`로 구분)."""
     names = []
@@ -370,18 +385,31 @@ def expected_names(path):
     with open(path, encoding="utf-8-sig") as handle:
         for line in handle:
             name = line.split("\t")[0].strip().replace("\\", "/")
-            if not name or name.startswith("#") or name in names:
+            if not name or name.startswith("#"):
                 continue
-            if os.path.isabs(name) or name.startswith("/") or ".." in name.split("/"):
+            if name.startswith("/") or os.path.splitdrive(name)[0] or ".." in name.split("/"):
                 raise Unsupported("list entry is not a path inside the folders: %s" % name)
             names.append(name)
-    return names
+    return unique(names)
+
+
+def inside(folder, name):
+    """folder 아래의 name이, 링크(심볼릭 링크, junction)를 따라간 뒤에도 folder 안에 있는가.
+
+    두 폴더 안의 링크가 같은 바깥 파일을 가리키면, 찍은 것이 없어도 그 파일을 자기 자신과 비교해 같다고 하게 된다.
+    """
+    root = os.path.normcase(os.path.realpath(folder))
+    real = os.path.normcase(os.path.realpath(os.path.join(folder, name)))
+    try:
+        return os.path.commonpath([root, real]) == root
+    except ValueError:  # 드라이브가 다르다
+        return False
 
 
 def compare_folders(baseline, candidate, expect):
     """두 폴더를 비교해 줄들을 표준 출력에 내고 종료 코드를 돌려준다."""
     if expect is None:
-        names = sorted(set(png_names(baseline)) | set(png_names(candidate)))
+        names = unique(sorted(png_names(baseline) + png_names(candidate)))
     else:
         try:
             names = expected_names(expect)
@@ -398,7 +426,13 @@ def compare_folders(baseline, candidate, expect):
     for name in names:
         in_baseline = os.path.isfile(os.path.join(baseline, name))
         in_candidate = os.path.isfile(os.path.join(candidate, name))
-        if in_baseline and in_candidate:
+        if in_baseline and not inside(baseline, name):
+            counts["cannot compare"] += 1
+            text = "cannot compare: baseline file: resolves to a path outside the folder"
+        elif in_candidate and not inside(candidate, name):
+            counts["cannot compare"] += 1
+            text = "cannot compare: candidate file: resolves to a path outside the folder"
+        elif in_baseline and in_candidate:
             code, text = compare_files(os.path.join(baseline, name), os.path.join(candidate, name))
             counts[("identical", "different", "cannot compare")[code]] += 1
         else:
