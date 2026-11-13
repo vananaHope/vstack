@@ -321,6 +321,10 @@
     {
       "stage": 7,
       "to": "skills/v-mode/subagents.md"
+    },
+    {
+      "stage": 7,
+      "to": "agents/explorer.md"
     }
   ],
   "runtime_commands": {

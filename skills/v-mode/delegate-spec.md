@@ -55,7 +55,7 @@
 
 `<vstack 절대 경로>/skills/v-mode/subagents.md`를 읽고 따른다. 요점:
 
-- 코드는 네가 쓴다. 서브에이전트는 읽기 전용 조사에만 쓴다(Agent 도구의 `Explore`, `model: sonnet`).
+- 코드는 네가 쓴다. 서브에이전트는 읽기 전용 조사에만 쓰고, 조사 에이전트 `vstack:explorer`를 띄운다. 없으면 서브에이전트를 쓰지 않는다.
 - 서브에이전트의 답은 단서다. 그 답에 기대어 고치기 전에 해당 파일과 줄을 직접 읽는다.
 - 코드 검토를 서브에이전트에게 받지 않는다. 검토는 네가 보고한 뒤 Codex가 한다.
 - Orca 작업자를 띄우지 않는다(`orca orchestration worker-start`, `orca worktree create --agent` 등).
