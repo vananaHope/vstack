@@ -337,6 +337,10 @@
     {
       "stage": 7,
       "to": "skills/v-mode/recipes/investigation.md"
+    },
+    {
+      "stage": 7,
+      "to": "skills/v-mode/recipes/correct.md"
     }
   ],
   "runtime_commands": {
