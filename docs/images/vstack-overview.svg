@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 518" width="1080" height="518" role="img" aria-labelledby="t d">
 <title id="t">vstack이 요청을 처리하는 세 갈래</title>
-<desc id="d">v-mode 라우터가 요청을 진행 중인 일인지, 크기, 작업 유형과 레시피 순으로 보고 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 이 대화가 직접 하거나 omp 작업자에게 맡기고, 수용 기준을 다시 돌려 확인한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.</desc>
+<desc id="d">v-mode 라우터가 요청을 진행 중인 일인지, 크기, 작업 유형과 레시피 순으로 보고 세 갈래로 보낸다. 바로 갈래는 이 대화가 바로 처리한다. 한 세션 갈래는 레시피를 골라 이 대화가 직접 하거나 omp 작업자에게 맡기고, 수용 기준을 다시 돌려 확인한다. UI 다듬기 레시피는 맡기지 않고 직접 한다. 지휘 갈래는 정렬과 티켓, 작업자의 구현, 다른 계열의 교차 검토, 관리자의 증거 보관, 병합 관문을 차례로 거쳐 병합한다.</desc>
 <style>
   svg { --bg:#FAFBFD; --ink:#18223A; --muted:#566379; --line:#CDD4E0; --line-strong:#9AA6BA; --base-bg:#DDE3EC;
         --user:#A35F00; --user-bg:#FBEACB; --craft:#0A7A72; --craft-bg:#D3EFEA; --run:#3F4FC2; --run-bg:#DFE3FB; }
@@ -62,15 +62,16 @@
 <text x="537" y="194" class="mid b">레시피를 고른다</text>
 <text x="537" y="210" class="mid mono">bug-fix · feature</text>
 <text x="537" y="226" class="mid mono">refactoring · ui-polish</text>
-<path class="ln" d="M622 206H636V179"/>
-<path class="ln" d="M636 179H648" marker-end="url(#mk)"/>
-<path class="ln" d="M636 206V233"/>
-<path class="ln" d="M636 233H648" marker-end="url(#mk)"/>
-<rect class="bx c" x="650" y="160" width="160" height="38" rx="4"/>
-<text x="730" y="183" class="mid">이 대화가 직접 한다</text>
-<rect class="bx c" x="650" y="214" width="160" height="38" rx="4"/>
-<text x="730" y="237" class="mid">omp 작업자에게 맡긴다</text>
-<path class="ln" d="M810 179H824V233H810"/>
+<path class="ln" d="M622 206H636V173"/>
+<path class="ln" d="M636 173H648" marker-end="url(#mk)"/>
+<path class="ln" d="M636 206V229"/>
+<path class="ln" d="M636 229H648" marker-end="url(#mk)"/>
+<rect class="bx c" x="650" y="154" width="160" height="38" rx="4"/>
+<text x="730" y="177" class="mid">이 대화가 직접 한다</text>
+<rect class="bx c" x="650" y="206" width="160" height="46" rx="4"/>
+<text x="730" y="225" class="mid">omp 작업자에게 맡긴다</text>
+<text x="730" y="241" class="mid s">ui-polish는 맡기지 않는다</text>
+<path class="ln" d="M810 173H824V229H810"/>
 <path class="ln" d="M824 206H838" marker-end="url(#mk)"/>
 <rect class="bx r" x="840" y="180" width="160" height="52" rx="4"/>
 <text x="920" y="202" class="mid">수용 기준을</text>

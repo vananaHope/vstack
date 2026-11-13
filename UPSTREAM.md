@@ -162,7 +162,7 @@ pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적�
 | `skills/blast-radius` | `code-review` | 겹치지 않음 | `code-review`는 변경이 저장소의 코딩 규칙을 지켰는지와 명세대로 만들었는지를 하위 에이전트 둘이 읽어서 판정한다. 변경이 diff 밖에서 깨뜨리는 것을 찾거나 코드를 돌려 증명하는 단계가 없다. 이 확인은 가져온 뒤(2026-11-13)에 했다 |
 | `skills/v-mode/recipes/ui-polish.md`(pstack `visual-parity`·`hillclimb`를 조합) | `prototype` | 겹치지 않음 | 스킬 38개의 원문에서 화면·스크린샷·다듬기를 다루는 것을 찾았고, 맞닿는 것은 `prototype`의 UI 갈래뿐이다. 그것은 버릴 시안 여러 개로 "어떤 모양이어야 하나"를 정하는 일이다. `ui-polish`는 이미 정해진 모양의 화면을 다듬고, 모양을 새로 정하는 일은 시작하지 않는다. 그 일이 `prototype`의 몫이다. 이 확인도 만든 뒤(2026-11-13)에 했다 |
 
-이 규칙을 두기 전에 가져온 것(원칙 24개, `create-verification-skill`, 레시피 `bug-fix`·`feature`·`refactoring`)은 이 표에 없다. 그 가운데 `tdd`와 `diagnosing-bugs`는 mattpocock 것을 고쳐 쓴 사본이라 레시피가 그쪽을 쓴다. 나머지는 다시 손댈 때 확인해 채운다.
+이 규칙을 두기 전에 pstack에서 가져온 것(원칙 24개, `create-verification-skill`, 레시피 `bug-fix`·`feature`·`refactoring`의 바탕이 된 플레이북)은 이 표에 없다. 다시 손댈 때 확인해 채운다. 이와 따로, `tdd`와 `diagnosing-bugs`는 pstack이 아니라 mattpocock-skills에서 고쳐 가져온 사본이고 레시피가 그 사본을 쓴다.
 
 앞으로 가져올 후보와 먼저 비교할 스킬: 조사 레시피와 pstack `how`·`why` ↔ `research`·`wayfinder`, 프로토타입 ↔ `prototype`.
 
