@@ -24,7 +24,7 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 
 ## 1. 결정 상태
 
-되돌리기 어렵고 이유가 궁금해질 결정은 [adr/](adr/)에 번호를 붙여 하나씩 따로 둔다(2026-11-14부터). 이 표는 요약이고, 둘이 다르면 ADR이 우선한다. 용어는 저장소 루트의 [GLOSSARY.md](../GLOSSARY.md)다.
+되돌리기 어렵고 이유가 궁금해질 결정은 [adr/](adr/)에 번호를 붙여 하나씩 따로 둔다(2026-11-14부터). 이 표는 요약이고, 둘이 다르면 ADR이 우선한다. ADR은 계약의 실행 규칙(`skills/v-mode/contracts/`)을 덮어쓰지 않는다. ADR과 계약이 다르면 ADR을 계약에 맞춰 고친다. 용어는 저장소 루트의 [GLOSSARY.md](../GLOSSARY.md)다.
 
 | 항목 | 내용 | 상태 |
 | --- | --- | --- |
@@ -35,7 +35,7 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 | 가져오는 범위 | 실행 경로의 의존이 닫힌 집합만(5절, [ADR 0002](adr/0002-import-only-closed-execution-paths.md)) | 합의(2판) |
 | agent-orchestra | **vstack으로 옮겨서 고친다.** 사용자가 기존 저장소를 아카이브하기로 함. 기존 플러그인은 시범이 끝날 때까지 설치된 채로 두어 되돌릴 길로 쓴다. 지우는 시점의 기준은 [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md) | 3판에서 바뀜, 2026-11-14 기준 정함 |
 | 기존 플러그인 | 시범이 끝날 때까지 제거하지 않는다 | 합의(2판) |
-| 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기. Orca가 없으면 맡기기와 지휘를 하지 않는다([ADR 0004](adr/0004-orca-only.md)) | 3판에서 추가, 2026-11-13 Orca 필수 |
+| 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기. Orca가 없으면 맡기기를 하지 않는다. 지휘의 herdr를 뺄지는 전체 검수에서 정한다([ADR 0004](adr/0004-orca-only.md)) | 3판에서 추가, 2026-11-13 Orca 필수 |
 | 실행 도구 | v-mode는 Claude Code에서 돈다. omp에서 돌리는 길(v-mode "실행 도구" 절)은 2026-11-10에 넣었다가 2026-11-13에 뺐다(13절, [ADR 0008](adr/0008-no-omp.md)) | 2026-11-13 바뀜 |
 | 맡기기 | Claude Code 관리자가 한 세션 크기 일을 작업자에게 맡긴다: Claude 구현 작업자가 새 worktree에서 구현하고, Codex 검토자가 검토하고, 관리자가 마지막에 확인한다(계약 밖). 한 세션 `bug-fix`·`feature`의 기본 실행 방식. 정본 `skills/v-mode/delegate.md`, 13절. omp 작업자에게 맡기던 앞선 구조는 12절. [ADR 0009](adr/0009-cross-family-review-via-orca-codex.md), [0010](adr/0010-manager-writes-no-product-code.md), [0011](adr/0011-delegation-and-orchestration-boundary.md) | `bug-fix` 정상 경로 1회(2026-11-13, [pilot-delegate.md](pilot-delegate.md)). omp 구조로는 `bug-fix` 2회·`feature` 1회 |
 
