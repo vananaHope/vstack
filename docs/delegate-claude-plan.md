@@ -114,7 +114,7 @@ Orca에는 Codex 작업자를 읽기 전용으로 띄우는 옵션이 없다(`wo
 
 ### 출처
 
-pstack `skills/poteto-mode/SKILL.md`의 "Subagents" 절에서 일부를 가져온다(`extracted`). 고정한 버전(0.15.36, 커밋 `6b03002`)의 원문을 2026-11-13에 받아 읽었다.
+pstack `skills/poteto-mode/SKILL.md`의 "Subagents" 절에서 일부를 가져온다(`extracted`. 실행하면서 `own`으로 바꿨다: 원문을 복사하지 않고 뜻만 가져와 새로 썼기 때문이다. 이유와 갱신 방법은 `UPSTREAM.md`). 고정한 버전(0.15.36, 커밋 `6b03002`)의 원문을 2026-11-13에 받아 읽었다.
 
 | pstack의 문장 | vstack에서 |
 | --- | --- |

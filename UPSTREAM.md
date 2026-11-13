@@ -171,6 +171,8 @@ vstack이 새로 쓴 파일이고, 아래 문장의 뜻을 pstack에서 가져�
 
 vstack이 더한 것: 누구에게 적용하는가(한 세션 갈래의 Claude. 계약 작업자와 Codex 검토자는 아님), 쓰는 때와 쓰지 않는 때, 맡기지 않는 일, 한 번에 셋까지, Orca 작업자를 띄우지 않는다.
 
+분류: `upstream.json`에서는 레시피와 같은 `own`이다. 원문의 문장을 복사하지 않고 뜻만 가져와 한국어로 새로 썼기 때문이다(`extracted`는 원문의 일부를 떼어 파일로 만드는 방식이다). 계획(`docs/delegate-claude-plan.md`)은 `extracted`라고 적었는데 실행하면서 이렇게 바꿨다. 그래서 이 파일은 closure 검사와 import 갱신의 대상이 아니다. pstack 버전을 올릴 때는 `poteto-mode/SKILL.md`의 "Subagents" 절과 19줄이 바뀌었는지 위 표의 줄 번호로 손으로 비교한다.
+
 ## mattpocock-skills와의 겹침
 
 pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적는다. 비교한 mattpocock-skills는 1.3.1(`49dd158`)이다.
