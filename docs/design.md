@@ -26,6 +26,8 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 
 되돌리기 어렵고 이유가 궁금해질 결정은 [adr/](adr/)에 번호를 붙여 하나씩 따로 둔다(2026-11-14부터). 이 표는 요약이고, 둘이 다르면 ADR이 우선한다. ADR은 계약의 실행 규칙(`skills/v-mode/contracts/`)을 덮어쓰지 않는다. ADR과 계약이 다르면 ADR을 계약에 맞춰 고친다. 용어는 저장소 루트의 [GLOSSARY.md](../GLOSSARY.md)다.
 
+[ADR 0010](adr/0010-manager-writes-no-product-code.md)·[0011](adr/0011-delegation-and-orchestration-boundary.md)과 용어집의 "바로"는 2026-11-14에 정한 것이고 스킬 문서에는 아직 들어가지 않았다([#19](https://github.com/vananaHope/vstack/issues/19)). 그때까지 v-mode는 지금 스킬 문서대로 돈다.
+
 | 항목 | 내용 | 상태 |
 | --- | --- | --- |
 | 형태 | Claude Code 플러그인. `/vstack:v-mode`가 입구. mattpocock-skills를 의존성으로 함께 설치([ADR 0003](adr/0003-mattpocock-dependency-with-adapted-copies.md)) | 합의 |
