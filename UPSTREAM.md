@@ -8,10 +8,11 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | --- | --- | --- | --- |
 | [pstack](https://github.com/cursor/plugins/tree/main/pstack) | 0.15.36 | `6b0300214a09fd6029cfb7077043125758cd1fd2` | MIT, Copyright (c) 2026 Lauren Tan. [`licenses/pstack-LICENSE`](licenses/pstack-LICENSE) |
 | mattpocock-skills(claude-plugins-official) | 1.3.1 | `49dd158d1076134a641b33efb035946536778336` | MIT, Copyright (c) 2026 Matt Pocock. [`licenses/mattpocock-skills-LICENSE`](licenses/mattpocock-skills-LICENSE) |
-| [agent-orchestra](https://github.com/vananaHope/agent-orchestra) | 0.20.0 | `c62be33381a546fb7127088795a83378cfe35371` | MIT, Copyright (c) 2026 vananaHope. [`licenses/agent-orchestra-LICENSE`](licenses/agent-orchestra-LICENSE) |
+| [agent-orchestra](https://github.com/vananaHope/agent-orchestra)(아카이브된 원본, 2026-11-14) | 0.20.0 | `c62be33381a546fb7127088795a83378cfe35371` | MIT, Copyright (c) 2026 vananaHope. [`licenses/agent-orchestra-LICENSE`](licenses/agent-orchestra-LICENSE) |
 
 - pstack 커밋은 가져올 때 받은 `cursor/plugins` 저장소의 HEAD다.
 - mattpocock-skills와 agent-orchestra 커밋은 설치 기록(`installed_plugins.json`의 `gitCommitSha`)에서 읽었다. 설치 캐시 내용이 그 커밋과 같은지는 해시로 검증하지 않았다.
+- agent-orchestra는 아카이브된 원본이다(2026-11-14, vstack 0.20.0). 옮겨 온 파일은 vstack이 소유하고, 원본과 다시 대조하지 않는다. 그래서 `check-links`의 closure 검사는 `moved` 항목을 보지 않고, `--source agent-orchestra`가 필요 없다.
 
 ## 가져오는 방식
 
@@ -20,7 +21,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | `verbatim` | 원문 그대로. 고치지 않는다. 안의 다른 스킬·원칙 언급과 링크는 가리키는 곳이 vstack 안이든 밖이든 출처 참조이며, 작업자는 따라가지 않는다([reference-policy.md](skills/v-mode/contracts/reference-policy.md)) |
 | `adapted` | 복사한 뒤 고친다. 고친 내용은 아래 "고친 내용"에 적는다. 실행 경로라서 검사 대상이다: 경로는 표준 형태로 바꾸고(링크 또는 `<vstack>/` 경로, [FORMAT.md](skills/v-mode/recipes/FORMAT.md) "실행 경로 표기"), 남는 스킬 이름은 vstack 스킬이어야 하며, 특정 런타임의 스킬 도구 문장은 없앤다. 원본이 가리키던 파일은 가져오거나 `dropped`에 이유와 함께 적는다 |
 | `extracted` | 원문의 일부만 떼어 새 파일로 만든다. 원본이 가리키던 파일 가운데 가져오지 않는 것은 `dropped`에 적는다 |
-| `moved` | vstack이 이어받는다. 원본 저장소는 아카이브한다 |
+| `moved` | vstack이 이어받아 소유한다. 원본 저장소는 아카이브한다. 원본과 대조하지 않으므로 closure 검사 대상이 아니다 |
 
 **pstack에서 가져오기 전에 mattpocock-skills와 겹치는지 본다.** vstack은 mattpocock-skills를 의존성으로 함께 설치한다. 같은 역할의 스킬이 두 벌 생기면 무엇을 써야 할지 헷갈리고, pstack 사본은 원본이 바뀔 때마다 다시 맞춰야 한다. 그래서 pstack에서 가져오는 것(스킬, 플레이북을 바탕으로 만드는 레시피)마다 먼저 한다.
 
@@ -200,6 +201,22 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 `backends/herdr.md`, 나머지 문서, `scripts/*.py`는 그대로 옮겼다. herdr는 vstack 첫 버전에서 검증하지 않았다.
 
+### agent-orchestra 은퇴(2026-11-14, vstack 0.20.0, #22)
+
+agent-orchestra 플러그인을 지우고 원래 저장소를 아카이브하기로 하면서 옮긴 파일을 다시 고쳤다. 위 표의 일부를 되돌린다.
+
+| 파일 | 바꾼 것 | 이유 |
+| --- | --- | --- |
+| `orchestrate-issues/SKILL.md`, `check-limits/SKILL.md` | description 앞의 "vstack 사본"과 "옮겨 온 사본" 머리말을 뺐다. `orchestrate-issues`의 머리말은 계약 문장만 남겼다 | 이름이 겹치는 플러그인이 없다 |
+| `check-limits/SKILL.md` | `disable-model-invocation: true`를 뺐다 | 읽기 전용 측정이라 모델이 불러도 된다. "한도 확인해 줘"처럼 이름으로 부르던 습관을 받는다. 지휘(`orchestrate-issues`)와 설정(`configure`)은 그대로 사용자가 실행한다 |
+| `orchestrate-issues/setup.md` | AGENTS.md 한 줄을 "of the vstack plugin"으로 | 설정을 쓰는 플러그인이 vstack 하나다 |
+| `orchestrate-issues/SKILL.md` 1단계 | "기존 agent-orchestra의" → "agent-orchestra 때의 작업 파일" | 옛 작업을 이어받지 않는 규칙은 남긴다 |
+| `orchestrate-issues/vstack.md`, `ui-polish.md`, `backends/orca.md` | agent-orchestra로 돌아가라는 안내를 뺐다. 출처 문장은 "(아카이브됨)"을 붙여 기록으로 남겼다 | 돌아갈 곳이 없다. 레시피가 없는 일은 맡기기로 하거나 레시피를 먼저 만든다 |
+
+`upstream.json`: `user_commands`에서 `agent-orchestra:configure`를 뺐다(실행 경로에서 그 명령을 안내하는 곳이 없다). agent-orchestra 출처에 `status: archived`와 날짜를 적었다. `check-links`의 closure 검사에서 `moved` 항목을 뺐다.
+
+옛 경로 이름(`.local/orchestration/`, `~/.agent-orchestra/`, `check-limits/scripts/claude_limit.py`의 캐시 폴더 이름)은 그대로 둔다(ADR 0007).
+
 ### vstack 계약 연결(3-2단계)
 
 | 파일 | 바꾼 것 |
@@ -240,6 +257,7 @@ vstack이 더한 것: 누구에게 적용하는가(바로와 맡기기 갈래의
 
 레시피는 vstack이 쓴 것(`own`)이라 출처와 대조하지 않는다. 버전을 올린 변경만 적는다.
 
+- `bug-fix@7`, `feature@3`, `refactoring@4`, `investigation@3`, `correct@2`, `perf@3`, `ui-polish@5`(2026-11-14, #22): 머리말의 `contract`를 `vstack-contract@4`로 올렸다. `ui-polish@5`는 출처 문장에 "agent-orchestra(아카이브됨)"도 적었다. 절차는 그대로다.
 - `perf@2`(2026-11-14, #21, 처음 싣는 버전): 반영 전 초안 `perf@1`(시범에서 그 사본을 씀)에서 Codex 검토로 바꿨다. 비교 기준을 현재 확인 기준 `C`로, 판정 절차(횟수, 개선 판정식, 다시 재기)를 맡길 때 고정하게, 목표 미달과 판단 못 함은 누가 쟀든 사용자 선택으로 잇게 했다.
 - `bug-fix@6`(2026-11-14, #21): "쓰지 않을 때"의 "성능 레시피(첫 버전 미포함)"를 `perf` 레시피로 바꿨다.
 - `investigation@2`(2026-11-14, #21): "쓰지 않을 때"의 "성능은 레시피가 없다"를 `perf` 레시피로 바꿨다.

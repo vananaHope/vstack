@@ -1,8 +1,8 @@
 # vstack
 
-Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 고르고, 레시피는 원칙과 검증 계약을 지키며 일한다. mattpocock 정렬 스킬(무엇을, 왜), pstack 원칙과 검증(어떻게 제대로), agent-orchestra 지휘(누가, 언제)를 하나로 묶는다.
+Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 고르고, 레시피는 원칙과 검증 계약을 지키며 일한다. mattpocock 정렬 스킬(무엇을, 왜), pstack 원칙과 검증(어떻게 제대로), 지휘(누가, 언제)를 하나로 묶는다. 지휘는 agent-orchestra(아카이브됨)에서 옮겨 와 vstack이 소유한다.
 
-> 만드는 중이다. 계약, 원칙 24개, v-mode 라우터, 옮겨 온 지휘 스킬, 레시피 일곱(버그 수정, 기능, 리팩토링, UI 다듬기, 조사, 반복 실수 막기, 성능 개선), 조사 에이전트가 있고, Orca에서 지휘 시범 다섯 번과 맡기기 시범을 돌렸다. 다음은 실제 프로젝트에서 쓰며 확인하는 일이다. 진행 상태와 설계는 [docs/design.md](docs/design.md), 되돌리기 어려운 결정은 [docs/adr/](docs/adr/), 용어는 [GLOSSARY.md](GLOSSARY.md)에 있다.
+> 만드는 중이다. 계약, 원칙 24개, v-mode 라우터, 지휘 스킬, 레시피 일곱(버그 수정, 기능, 리팩토링, UI 다듬기, 조사, 반복 실수 막기, 성능 개선), 조사 에이전트가 있고, Orca에서 지휘 시범 다섯 번과 맡기기 시범을 돌렸다. 다음은 실제 프로젝트에서 쓰며 확인하는 일이다. 진행 상태와 설계는 [docs/design.md](docs/design.md), 되돌리기 어려운 결정은 [docs/adr/](docs/adr/), 용어는 [GLOSSARY.md](GLOSSARY.md)에 있다.
 
 ## 설치
 
@@ -33,11 +33,13 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 
 ## agent-orchestra를 쓰던 프로젝트에서
 
-- 프로젝트 설정(`docs/agents/orchestration.md` 또는 `.local/orchestration/settings.md`)과 `common-findings.md`는 그대로 읽는다. 두 플러그인이 같은 파일을 쓴다.
-- `.local/orchestration/`(개인용 설정 위치)과 `~/.agent-orchestra/`(실창 잠금)는 agent-orchestra 때의 이름이다. 경로는 바꾸지 않았다. vstack의 작업 파일은 `.local/vstack/`에 따로 둔다.
-- vstack 지휘가 다르게 하는 것: 레시피가 있는 작업(버그 수정, 기능, 리팩토링)만 맡는다. 검토 목록의 `관리자` 항목은 건너뛴다. UI 다듬기는 지휘에서 하지 않고 맡기기 갈래의 `ui-polish` 레시피로 한다. 앞부분 선행 병합은 하지 않는다(`skills/orchestrate-issues/vstack.md` "첫 버전에서 하지 않는 것").
+vstack이 agent-orchestra를 대신한다. agent-orchestra 플러그인은 지우고 원래 저장소는 아카이브한다(2026-11-14, [ADR 0001](docs/adr/0001-move-agent-orchestra-into-vstack.md)). vstack 하나만 설치하면 된다.
+
+- 프로젝트 설정(`docs/agents/orchestration.md` 또는 `.local/orchestration/settings.md`)과 `common-findings.md`는 그대로 읽는다.
+- `.local/orchestration/`(개인용 설정 위치)과 `~/.agent-orchestra/`(실창 잠금)는 agent-orchestra 때의 이름이다. 경로는 바꾸지 않았다([ADR 0007](docs/adr/0007-keep-agent-orchestra-legacy-paths.md)). vstack의 작업 파일은 `.local/vstack/`에 따로 둔다.
+- vstack 지휘가 다르게 하는 것: 레시피가 있는 작업(버그 수정, 기능, 리팩토링)만 맡는다. 레시피가 없는 일은 한 단위면 맡기기 갈래로 수용 기준만으로 맡기고, 여러 티켓이면 티켓마다 레시피가 있는 유형으로 나누거나 레시피를 먼저 만든다. 검토 목록의 `관리자` 항목은 건너뛴다. UI 다듬기는 지휘에서 하지 않고 맡기기 갈래의 `ui-polish` 레시피로 한다. 앞부분 선행 병합은 하지 않는다(`skills/orchestrate-issues/vstack.md` "첫 버전에서 하지 않는 것").
 - 처음 지휘하기 전에 갖출 것: 요구 동작을 검증할 수단(없으면 v-mode가 검증 스킬 만들기부터 한다)과 티켓의 vstack 절(v-mode가 초안을 쓰고 승인을 받는다).
-- 한 저장소에서 두 플러그인의 관리자를 동시에 돌리지 않는다. agent-orchestra가 진행 중인 작업(`.local/orchestration/*/state.md`)은 vstack이 이어받지 않는다.
+- agent-orchestra 때 끝나지 않은 작업(`.local/orchestration/*/state.md`)은 vstack이 이어받지 않고 사용자에게 알린다.
 
 ## 구성
 
@@ -45,7 +47,7 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 .claude-plugin/          플러그인·마켓플레이스 정의
 skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
-  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@3)
+  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@4)
   recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring, ui-polish, investigation, correct, perf)
                          ui-polish는 맡기기 갈래에서만 쓴다. scripts/image_diff.py는 PNG 비교
   delegate*.md           한 단위의 일을 작업자에게 맡기는 절차와 명세 양식(구현, 검토)
@@ -62,7 +64,7 @@ skills/maintain-verification-skill/
 skills/blast-radius/     변경이 다른 곳에서 깨뜨릴 것을 찾아 실행으로 증명하는 스킬
                          (pstack에서 고쳐 쓴 사본. 검토 명세와 v-mode가 경로로 읽음)
 skills/orchestrate-issues/, skills/check-limits/, skills/configure/
-                         agent-orchestra에서 옮겨 온 지휘 스킬(v-mode가 경로로 읽음)
+                         지휘, 한도 확인, 지휘 설정 스킬(agent-orchestra에서 옮겨 와 vstack이 소유. v-mode가 경로로 읽음)
 GLOSSARY.md              용어집
 docs/
   design.md              설계와 변경 이력
@@ -81,7 +83,7 @@ scripts/
 ## 검사
 
 ```
-node scripts/check-links.mjs --stage <현재 단계> [--source pstack=<cursor/plugins> --source mattpocock-skills=<mattpocock-skills> --source agent-orchestra=<agent-orchestra>]
+node scripts/check-links.mjs --stage <현재 단계> [--source pstack=<cursor/plugins> --source mattpocock-skills=<mattpocock-skills>]
 node scripts/collect-references.mjs --source pstack=<cursor/plugins> --check
 python -I -m unittest discover -s skills/v-mode/recipes/scripts -p "test_*.py"   # 이미지 비교 스크립트의 테스트
 ```

@@ -1,8 +1,8 @@
 # vstack 설계
 
-상태(2026-11-14): 플러그인 0.19.0. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
+상태(2026-11-14): 플러그인 0.20.0. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
 
-만들 때의 상태: 3판 + 0단계 완료(2026-11-08, 6차 Codex 검토 "0단계 완료, 1단계로 가도 됨"). 첫 시범·두 번째 시범 완료(2026-11-08, [pilot-1.md](pilot-1.md), [pilot-2.md](pilot-2.md)). 계약의 정본은 `skills/v-mode/contracts/`(`vstack-contract@3`)이고, 이 문서의 3절은 요약이다. 둘이 다르면 contracts가 우선한다(차이는 변경 이력 "0단계"에 있다).
+만들 때의 상태: 3판 + 0단계 완료(2026-11-08, 6차 Codex 검토 "0단계 완료, 1단계로 가도 됨"). 첫 시범·두 번째 시범 완료(2026-11-08, [pilot-1.md](pilot-1.md), [pilot-2.md](pilot-2.md)). 계약의 정본은 `skills/v-mode/contracts/`(지금 `vstack-contract@4`)이고, 이 문서의 3절은 요약이다. 둘이 다르면 contracts가 우선한다(차이는 변경 이력 "0단계"에 있다).
 
 ## 목표
 
@@ -20,7 +20,7 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 | --- | --- | --- | --- |
 | pstack (https://github.com/cursor/plugins/tree/main/pstack) | 0.15.36 | 작업 시 기록 | MIT (Lauren Tan) |
 | mattpocock-skills (claude-plugins-official) | 1.3.1 | `49dd158d1076134a641b33efb035946536778336` | MIT (Matt Pocock) |
-| agent-orchestra (https://github.com/vananaHope/agent-orchestra) | 0.20.0 | `c62be33381a546fb7127088795a83378cfe35371` | MIT (vananaHope) |
+| agent-orchestra (https://github.com/vananaHope/agent-orchestra, 2026-11-14 아카이브된 원본) | 0.20.0 | `c62be33381a546fb7127088795a83378cfe35371` | MIT (vananaHope) |
 
 커밋은 `installed_plugins.json`의 `gitCommitSha`에서 읽었다. 캐시 내용이 그 커밋과 같은지는 해시로 검증하지 않았다.
 
@@ -35,8 +35,8 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 | 원칙 | pstack 원칙 24개 전부. 원문 영어 그대로 + 출처 | 합의 |
 | 중심 | 검증과 원칙 | 합의 |
 | 가져오는 범위 | 실행 경로의 의존이 닫힌 집합만(5절, [ADR 0002](adr/0002-import-only-closed-execution-paths.md)) | 합의(2판) |
-| agent-orchestra | **vstack으로 옮겨서 고친다.** 사용자가 기존 저장소를 아카이브하기로 함. 기존 플러그인은 시범이 끝날 때까지 설치된 채로 두어 되돌릴 길로 쓴다. 지우는 시점의 기준은 [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md) | 3판에서 바뀜, 2026-11-14 기준 정함 |
-| 기존 플러그인 | 되돌릴 길로 설치된 채 둔다. 지우고 아카이브하는 시점은 [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md)의 세 조건이 모두 맞을 때다. 옛 경로 이름은 그대로 둔다([ADR 0007](adr/0007-keep-agent-orchestra-legacy-paths.md)) | 합의(2판), 2026-11-14 ADR 0001로 바뀜 |
+| agent-orchestra | **vstack으로 옮겨서 고쳤다.** [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md)의 세 조건이 모두 맞아 은퇴시켰다: 플러그인을 지우고 원래 저장소를 아카이브한다(16절). vstack이 지휘를 소유한다 | 3판에서 바뀜, 2026-11-14 기준 정함, 2026-11-14 은퇴 |
+| 기존 플러그인 | 지운다. [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md)의 세 조건이 모두 맞았다(16절). 되돌릴 길(계약의 "명시적 이행")은 `vstack-contract@4`에서 뺐다. 옛 경로 이름은 그대로 둔다([ADR 0007](adr/0007-keep-agent-orchestra-legacy-paths.md)) | 합의(2판), 2026-11-14 ADR 0001로 바뀜, 2026-11-14 지움 |
 | 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기. Orca가 없으면 맡기기를 하지 않는다. 지휘의 herdr를 뺄지는 전체 검수에서 정한다([ADR 0004](adr/0004-orca-only.md)) | 3판에서 추가, 2026-11-13 Orca 필수 |
 | 실행 도구 | v-mode는 Claude Code에서 돈다. omp에서 돌리는 길(v-mode "실행 도구" 절)은 2026-11-10에 넣었다가 2026-11-13에 뺐다(13절, [ADR 0008](adr/0008-no-omp.md)) | 2026-11-13 바뀜 |
 | 맡기기 | Claude Code 관리자가 티켓으로 나누지 않는 한 단위의 일을 작업자에게 맡긴다: Claude 구현자가 새 worktree에서 구현하고, Codex 검토자가 검토하고, 관리자가 마지막에 확인한다(계약 밖). 레시피가 있든 없든 맡기고, 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 정본 `skills/v-mode/delegate.md`, 13·14절. omp 작업자에게 맡기던 앞선 구조는 12절. [ADR 0009](adr/0009-cross-family-review-via-orca-codex.md), [0010](adr/0010-manager-writes-no-product-code.md), [0011](adr/0011-delegation-and-orchestration-boundary.md) | `bug-fix` 정상 경로 1회(2026-11-13, [pilot-delegate.md](pilot-delegate.md)), `refactoring`과 레시피 없는 일을 함께 맡김 1회, `ui-polish` 1회(2026-11-14, [manager-only-plan.md](manager-only-plan.md) "진행 기록"). omp 구조로는 `bug-fix` 2회·`feature` 1회 |
@@ -447,6 +447,24 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
   - 시범(2026-11-14, `vstack-pilot-todo`, 반영 전 초안 `perf@1` 사본): 관리자가 시범 준비로 로컬 브랜치 `pilot/perf-base`에 느림(불러올 때 같은 id를 항목마다 `findIndex`로 다시 훑는 O(n²))과 측정 스크립트 `scripts/bench.mjs`를 넣고 맡겼다. 구현자가 프로파일로 그 줄(96%)을 찾고 주문 2("다시 하지 않는다", Set)로 고쳐 20000건 `list`가 약 1054 ms에서 약 72 ms가 됐다. 동작 고정 테스트를 바꾸기 전 코드에서 먼저 통과시켰고 출력은 바이트 단위로 같았다. 관리자는 7번씩 번갈아 다시 재서 범위가 겹치지 않음을 확인했다. 검토 통과. 검토자가 범위 밖으로 측정 스크립트가 임시 폴더를 남기는 결함(관리자가 쓴 준비 스크립트)을 찾았다. 결과는 브랜치 `perf/load-dedupe`에 있고 반영하지 않았다.
 - **따라잡기**(플러그인 0.19.0, `skills/ketchup`, adapted): pstack에서. 사용자의 마지막 메시지 뒤로 바뀐 것을 쉬운 말과 작은 그림으로 알리고, 사용자만 정할 것을 그 답만 보고 정할 수 있게 근거·위험·추천과 함께 모은다. 읽기 전용이라 바로 갈래에서 관리자가 따른다. 맡기기 기록, 지휘 상태, Orca 받은 편지함을 모으는 곳에 더했고, v-mode "답 쓰기"를 따르게 했다. mattpocock과 겹치지 않는다. Codex 검토 두 번(진행 중인 작업의 따라잡기 요청이 고르기 0과 두 갈래로 읽히던 것을 고침: 따라잡기만 요청하면 0을 거치지 않고 읽기만 한다). 이것으로 #21의 1차 후보 다섯을 모두 가져왔다.
   - 시험(2026-11-14): `vstack-pilot-todo`에서 새 headless 세션에 "자는 동안 뭐가 바뀌었고 내가 정할 게 뭔지"를 줬다(쓰기 도구 금지, 수정 전 사본). 바로 갈래로 맡기기 기록 셋과 브랜치를 읽고, 정할 것 둘(두 브랜치의 반영 방법, 시범 브랜치 정리)을 추천·근거·위험과 함께 냈다. 사실 오류 하나: 커밋 검사가 `npm test`에 연결되지 않았다고 `(측정)`을 붙였지만 실제로는 관문 테스트로 연결돼 있다. 스킬의 "숫자와 사실을 근거와 대조한다"는 규칙이 있어도 이런 오류는 남는다.
+
+## 16. agent-orchestra 은퇴(2026-11-14, #22)
+
+상태: 정본은 `skills/v-mode/contracts/state-and-rollback.md`("새로 시작"), `skills/v-mode/SKILL.md` 고르기 3(레시피가 없는 일), `skills/orchestrate-issues/vstack.md`다. 결정은 [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md)(상태)과 [0007](adr/0007-keep-agent-orchestra-legacy-paths.md).
+
+**까닭.** ADR 0001의 완성 기준 셋이 맞았다. 1·2는 #19·#20이다. 3은 `my-video-manager`의 맡기기 `onscreen-277`(PR #350 병합)과 지휘 #283(기록: my-video-manager `.local/vstack/issue-283/`, 이 저장소 `docs/pilot-6.md`)이다.
+
+**바꾼 것(플러그인 0.20.0, 계약 `vstack-contract@4`).**
+
+- **레시피가 없는 일**(사용자 결정): 맡기기 크기면 레시피 없이 수용 기준만으로 맡긴다. 지휘 크기면 티켓마다 레시피가 있는 유형(`bug-fix`, `feature`, `refactoring`)으로 나누고, 맞는 레시피가 없는 티켓은 레시피를 먼저 만든다. 수용 기준만으로 지휘하지는 않는다(레시피 ID와 증거 계약을 바꿔야 한다). 라우터의 갈래 표, `vstack.md` "첫 버전에서 하지 않는 것", README에 적었다.
+- **계약 `@4`**: 소유권에서 기존 관리자와의 관계를 빼고, 되돌리기 두 길을 vstack 안의 "새로 시작" 하나로 줄였다("명시적 이행"을 뺐다). `.local/orchestration/`에서는 설정과 `common-findings.md`만 읽고, 옛 작업(`.local/orchestration/*/state.md`)은 이어받지 않고 알린다. 옮기기 완료 조건이던 "옮긴 orchestra 사본의 내부 참조" 절은 지웠다. 전체 검수의 1.12(`intake.md`가 없는 절을 가리킴)와 2.7(`archive.md`가 없는 절을 가리킴)을 고쳤다. 판정식(G1~G5)과 작업자 의무는 그대로다. 계약 예시 넷을 `@4`로 다시 판정했다(판정은 같고 04f의 장면이 바뀜). 레시피 일곱은 머리말의 계약 버전만 올렸다(`bug-fix@7` 등, UPSTREAM.md).
+- **옮긴 스킬**: "vstack 사본" 표기와 머리말을 뗐다. `check-limits`는 모델이 불러도 된다(`disable-model-invocation`을 뗌. 읽기 전용 측정이다). 지휘와 설정은 그대로 사용자가 실행한다. 설정 스킬이 프로젝트 `AGENTS.md`에 쓰는 줄은 "vstack plugin"으로 바꿨다.
+- **출처 기록**: agent-orchestra를 아카이브된 원본으로 표시하고, `user_commands`에서 `agent-orchestra:configure`를 빼고, 링크 검사의 closure에서 `moved` 항목을 뺐다(`--source agent-orchestra`가 필요 없다).
+- **그대로 둔 것**: 옛 경로 이름(ADR 0007), `docs/`의 만든 과정 기록(시범, 계획, 검수).
+
+**이 저장소 밖의 일**(병합 뒤 관리자가, 이름을 적은 승인으로): agent-orchestra 플러그인 제거, 원래 저장소의 README 안내와 아카이브, `my-video-manager`의 언급 고치기(그 저장소의 PR).
+
+**남은 것.** 같은 작업 이름으로 다시 맡길 때 포기한 작업의 작업 파일 폴더를 어떻게 다룰지 계약이 정하지 않는다(계약 예시 04f, 지휘의 "그만둘 때"도 같다). herdr 실행 환경의 "정지" 절은 비어 있다(검수 2.1).
 
 ## 변경 이력
 
