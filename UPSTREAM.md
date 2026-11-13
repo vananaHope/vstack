@@ -113,7 +113,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 25 | `.cursor/skills/verify-*/` → `.claude/skills/verify-*/`, "ask which one" → "ask the manager which one" | Claude Code 경로, 작업자는 관리자에게 묻는다 |
 | 29 | "launched concurrently" → 한 번에 셋까지, `vstack:explorer`, 없으면 직접 읽음 | `skills/v-mode/subagents.md` |
 | 33 | "The coordinator owns all driving" → "You own all driving" | 이 스킬을 따르는 것은 구현자 한 명이다 |
-| 37 | "one PR of proven corrections" → 작업 브랜치에 커밋. 어느 결과든 다룬 기능, `verified-unreachable` 전제, 확인된 어긋남, 고친 실행 수단, 찾은 제품 고장을 보고 | 맡기기의 권한과 관리자의 수용 기준(`delegate.md` "검증 스킬 점검") |
+| 37 | changed의 "one PR of proven corrections" → 작업 브랜치에 커밋. clean의 "no PR" → 커밋 없음. blocked의 "no PR" → 증명한 수정만 커밋하고 증명하지 못한 수정은 되돌려 diff로 보고(작업 트리를 깨끗하게). 어느 결과든 다룬 기능, `verified-unreachable` 전제, 확인된 어긋남, 고친 실행 수단, 찾은 제품 고장을 보고 | 맡기기의 권한과 관리자의 수용 기준(`delegate.md` "검증 스킬 점검"). blocked에서 이미 증명한 수정을 버리지 않으면서 관리자의 확인(깨끗한 작업 트리)과 사용자의 선택(이어 가기, 증명된 것만 받기, 그만두기)으로 이어지게 했다 |
 | 39 | scratch → 저장소 밖(OS 임시 폴더) | 작업 트리를 깨끗하게 둔다 |
 
 ### `skills/blast-radius/SKILL.md`(pstack 0.15.36, 7단계)

@@ -36,6 +36,6 @@ Only edit the verification skill's own directory (its SKILL.md, features/, and a
 
 5. **Triage.** Wrong or missing user-POV description → doc drift, fix it. Working behavior the harness can't drive → harness gap, fix it; a harness fix follows the same helpers rule as generation (scripts executable, invocation documented in the skill body). App behavior that's actually broken → product gap; record it for the user, keep it out of this PR.
 
-6. **Ship or stop.** For changed: commit the proven corrections on your task branch, re-read every changed file first. For clean or blocked: no commits, report the outcome and the coverage honestly. In every case report the features covered, `verified-unreachable` prerequisites, confirmed drift, harness gaps fixed, and product gaps found.
+6. **Ship or stop.** For changed: commit the proven corrections on your task branch, re-read every changed file first. For clean: no commits. For blocked: commit only corrections you already proved (each re-driven live), revert every unproven edit and list it with its diff in the report, so the worktree is clean; report what blocked you exactly. Report the outcome and the coverage honestly. In every case report the features covered, `verified-unreachable` prerequisites, confirmed drift, harness gaps fixed, and product gaps found.
 
 Keep concise run notes (features covered, unreachable prerequisites, confirmed drift, outcome) in a scratch location outside the repo (the OS temp folder); don't commit them.
