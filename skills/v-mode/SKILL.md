@@ -61,7 +61,7 @@ disable-model-invocation: true
 
 **바로의 경계**: 동작이 바뀌는 수정은 한 줄이어도 맡긴다. 화면에 보이는 문구는 한 글자라도 맡긴다. 동작을 보존하는 일이라도 레시피가 있는 일(리팩토링, UI 다듬기)과 검증 수단을 만들거나 고치는 일은 맡긴다. 판단이 서지 않으면 맡긴다.
 
-크기와 위험은 따로 본다. 위험(난도, 틀리면 드는 비용)은 지휘 경로에서 등급이 정한다. 위험이 큰데 맡기기 크기면 사용자에게 지휘 경로를 권한다(계약, 교차 검토, 관문이 붙는다).
+크기와 위험은 따로 본다. 위험(난도, 틀리면 드는 비용)은 지휘 갈래에서 등급이 정한다. 위험이 큰데 맡기기 크기면 사용자에게 지휘 갈래를 권한다(계약, 교차 검토, 관문이 붙는다).
 
 ### 2. 작업 유형과 레시피
 
@@ -144,8 +144,6 @@ disable-model-invocation: true
 
 | 경우 | 후보 원칙 |
 | --- | --- |
-| 기능 | `model-the-domain`, `type-system-discipline`(타입 있는 언어), `boundary-discipline`, `laziness-protocol`, `test-behavior-not-implementation`, `prove-it-works` |
-| 리팩토링 | `subtract-before-you-add`, `minimize-reader-load`, `test-behavior-not-implementation`, `prove-it-works`, `sequence-verifiable-units`, `migrate-callers-then-delete-legacy-apis`(API 모양이 바뀔 때) |
 | 성능 | `explain-the-number`, `fix-root-causes`, `prove-it-works` |
 | 조사 | `prove-it-works`, `explain-the-number`(수치 주장이 있을 때) |
 | 지휘·이어받기 | `guard-the-context-window`, `make-operations-idempotent`, `separate-before-serializing-shared-state` |

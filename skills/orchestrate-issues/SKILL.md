@@ -59,14 +59,14 @@ disable-model-invocation: true
 | UI(프로젝트 설정의 "UI 작업") | Claude | `UI` 검토 목록(기본 Codex) |
 | UI 다듬기([ui-polish.md](ui-polish.md)) | 관리자(vstack 첫 버전에서는 하지 않음) | `UI` 검토 목록(기본 Codex) |
 
-- 구현한 쪽과 다른 계열이 검토하는 것이 교차 검토다. 검토 목록에서 구현자와 같은 계열은 건너뛴다([tiers.md](tiers.md) "검토자 고르기").
+- 구현한 쪽과 다른 계열이 검토하는 것이 교차 검토다. 검토 목록에서 구현자와 같은 계열은 건너뛴다. 다른 계열이 한도 때문에 하나도 없을 때만, 구현 맥락이 없는 새 작업자·2차 의견·PR 기록을 갖춘 같은 계열 검토를 허용한다([tiers.md](tiers.md) "검토자 고르기" 2, 계약 `<vstack>/skills/v-mode/contracts/evidence.md` "역할 자격").
 - 한 이슈에 코어와 UI가 섞여 있으면 UI 쪽을 Claude가 맡는다. 코어만 먼저 떼어 등급 목록으로 맡길 수 있으면 나눠도 된다.
 - 한도가 `ok`가 아닌 에이전트는 목록에서 건너뛴다. 관리자와 검토자 쪽 변화는 [limits.md](limits.md)에 있다.
 - 넓게 훑어야 하는 짧은 질문은 OpenCode `plan` 에이전트에 먼저 묻는다([opencode.md](opencode.md)).
 
 ## 고정 규칙
 
-- **새 작업 시작 조건**: 동시 구현 작업자 수에는 고정 상한이 없다. 검토자는 이 수에 넣지 않는다. 새 작업은 다음을 **모두** 만족할 때만 시작한다.
+- **새 작업 시작 조건**: 동시 구현자 수에는 고정 상한이 없다. 검토자는 이 수에 넣지 않는다. 새 작업은 다음을 **모두** 만족할 때만 시작한다.
   - 등급 구현 목록에서 작업자를 골랐고, 그 작업자 기준으로 검토 목록에서 검토자를 고를 수 있다([tiers.md](tiers.md) "검토자 고르기" 1 또는 2).
   - 검토를 기다리는 작업(구현은 끝났는데 검토자가 아직 붙지 않은 것)이 1개 이하다.
   - 실창 잠금 대기가 길게 이어지고 있지 않다.
@@ -137,7 +137,7 @@ disable-model-invocation: true
 
 ### 4. 교차 검토
 
-구현 작업자가 끝나면 `state.md`를 `검토 중`으로 바꾸고, 그 작업자를 **남겨 두기**한다(수정 지시에 재사용). 그다음 검토 목록에서 검토자를 고른다([tiers.md](tiers.md) "검토자 고르기"). 검토자는 [vstack.md](vstack.md) "교차 검토 배정"의 조건(역할 자격, `scope: review`, 필수 수용 기준 전부)을 채워야 한다.
+구현자가 끝나면 `state.md`를 `검토 중`으로 바꾸고, 그 작업자를 **남겨 두기**한다(수정 지시에 재사용). 그다음 검토 목록에서 검토자를 고른다([tiers.md](tiers.md) "검토자 고르기"). 검토자는 [vstack.md](vstack.md) "교차 검토 배정"의 조건(역할 자격, `scope: review`, 필수 수용 기준 전부)을 채워야 한다.
 
 - [vstack.md](vstack.md) "배정 전"을 한 뒤 [review-template.md](review-template.md)를 채워 구현자와 **같은 worktree**에 새로 **띄우기**한다. 모델·강도는 검토 목록의 표기대로 주고, [tiers.md](tiers.md)의 "띄우기"를 따른다(Codex면 fast를 정한다. 검토는 기본으로 켜는 경우다).
 - 검토 목록의 `관리자`는 첫 버전에서 건너뛴다(관리자는 검토자 역할을 맡지 않는다).
@@ -177,7 +177,7 @@ disable-model-invocation: true
 병합 방식이 `자동`이면 1부터 차례로 한다.
 
 1. 브랜치를 push하고([vstack.md](vstack.md) "원격 반영") [pr-template.md](pr-template.md)로 PR을 만든다. GitHub 이슈면 본문에 `Closes #<n>`을 넣고, 다른 저장소면 이슈 위치를 적는다. PR 번호는 `gh pr create`가 출력한 URL에서 읽어 `state.md`에 적는다. 이슈 번호와 같다고 보지 않는다(이슈와 PR은 번호를 함께 쓴다).
-2. `main`이 그사이 앞으로 갔으면, 같은 worktree에 `light` 목록의 작업자(기본은 OpenCode)를 새로 **띄우기**해 `main` 위로 rebase하고 관련 테스트를 다시 돌리라고 맡긴다. 충돌 해결도 그 작업자가 한다. 같은 동작이 양쪽에서 바뀐 충돌이라 되돌리고 보고하면 원래 구현 작업자에게 맡긴다([opencode.md](opencode.md)의 "rebase"). rebase 작업자는 레시피의 "구현자: rebase"를 따르고(작업 종류 `rebase`), 끝나면 [vstack.md](vstack.md) "대상이 바뀌면"대로 재검증한다. "main 변경" 안내는 **진행 중인 작업이 구현일 때만** **보내기**한다. 검토 중인 이슈는 그 검토가 끝난 뒤 다음 구현 지시에 rebase를 넣는다(검토자에게 rebase 안내를 보내지 않는다).
+2. `main`이 그사이 앞으로 갔으면, 같은 worktree에 `light` 목록의 작업자(기본은 OpenCode)를 새로 **띄우기**해 `main` 위로 rebase하고 관련 테스트를 다시 돌리라고 맡긴다. 충돌 해결도 그 작업자가 한다. 같은 동작이 양쪽에서 바뀐 충돌이라 되돌리고 보고하면 원래 구현자에게 맡긴다([opencode.md](opencode.md)의 "rebase"). rebase 작업자는 레시피의 "구현자: rebase"를 따르고(작업 종류 `rebase`), 끝나면 [vstack.md](vstack.md) "대상이 바뀌면"대로 재검증한다. "main 변경" 안내는 **진행 중인 작업이 구현일 때만** **보내기**한다. 검토 중인 이슈는 그 검토가 끝난 뒤 다음 구현 지시에 rebase를 넣는다(검토자에게 rebase 안내를 보내지 않는다).
 3. [vstack.md](vstack.md) "병합 관문"을 한다. 관문을 통과해야만 `gh pr merge <PR> --<병합 방법> --match-head-commit <H> --subject "<제목> (<이슈 표시>)"`로 병합한다. `MERGED`를 확인한 뒤 원격 브랜치를 지운다. 병합 방법은 프로젝트 설정 "병합" 절(`merge`/`squash`/`rebase`, 없으면 `merge`)이다.
 4. 메인 저장소의 `main`을 pull하고, GitHub 이슈가 아니면 이슈를 닫는다([trackers.md](trackers.md)). `state.md`를 `끝`으로 바꾼다.
 5. 이 작업의 작업자들을 **정리**한다.
