@@ -40,6 +40,8 @@ disable-model-invocation: true
 
 ### 0. 진행 중인 지휘 작업인가
 
+**따라잡기만 요청했으면**("남은 게 뭐야", "자는 동안 뭐가 바뀌었어", `/vstack:ketchup`) 아래를 거치지 않는다. 진행 중인 지휘 작업과 맡기기의 기록과 받은 편지함을 읽기만 하고 [../ketchup/SKILL.md](../ketchup/SKILL.md)로 답한다. 갈래, 작업 상태, 작업자, 기록의 관리자 칸을 바꾸지 않는다(관리자가 다른 세션이면 그 사실을 답에 적는다). 중단, 수정, 이어 가기, 반영 같은 지시가 함께 있으면 그 지시만 아래대로 처리하고 따라잡기도 답한다. 따라잡기 요청은 어떤 동작의 승인도 아니다.
+
 크기를 보기 전에, 요청이 이 저장소에서 이미 지휘 중인 작업에 속하는지 본다. 메인 저장소의 `.local/vstack/*/state.md` 가운데 첫 줄이 `끝`이 아닌 것, 그 작업의 브랜치·PR·worktree가 기준이다([contracts/state-and-rollback.md](contracts/state-and-rollback.md) "소유권").
 
 - 속하면 크기와 관계없이 지휘 절차로 보낸다. 그 작업의 수정, 검토 반영, "PR 올려", "병합해", "병합됐어", "그만둬"는 [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md) 6단계 표와 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "그만둘 때"를 따른다. 지휘 중인 작업의 코드를 이 대화가 직접 고치지 않는다(관리자는 작업자 역할을 맡지 않는다, [contracts/worker-contract.md](contracts/worker-contract.md)).
@@ -139,7 +141,7 @@ disable-model-invocation: true
 | 지휘 설정(등급 배치, 병합 방식 등) | [../configure/SKILL.md](../configure/SKILL.md)를 읽고 따른다 |
 | 어떤 변경이 다른 곳에서 무엇을 깨뜨릴 수 있는지(영향 범위) | 고르기 0에 들지 않는 변경(이미 병합된 커밋, 지휘와 맡기기 밖의 브랜치)이면 [../blast-radius/SKILL.md](../blast-radius/SKILL.md)를 읽고 이 대화에서 따른다. 제품 파일은 고치지 않고, 증명용 스크립트는 OS 임시 폴더에 둔다. 진행 중인 지휘 작업이나 맡기기의 변경이면 여기서 하지 않고 위 "0"으로 간다. 지휘 작업은 관리자가 그 작업의 다음 검토 명세에 이 점검을 넣는다([../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "교차 검토 배정"). 맡기기는 그 맡기기의 다음 Codex 검토(첫 검토나 재검토 요청)에 넣는다([delegate-review-spec.md](delegate-review-spec.md) "요청받은 영향 범위 점검"). 모든 검토에 자동으로 넣지는 않는다 |
 | 프로젝트의 검증 스킬과 기능 지도가 앱과 맞는지 점검 | 맡기기 갈래다(검증이 읽는 파일을 고친다). [delegate.md](delegate.md) "검증 스킬 점검"을 따른다 |
-| 마지막 메시지 뒤로 무엇이 바뀌었고 무엇을 정해야 하는지("따라잡기", "남은 게 뭐야", `/vstack:ketchup`) | 바로 갈래다(읽기 전용). [../ketchup/SKILL.md](../ketchup/SKILL.md)를 읽고 따른다. 진행 중인 맡기기와 지휘 작업의 상태도 함께 본다. 이 요청은 어떤 동작의 승인도 아니다 |
+| 마지막 메시지 뒤로 무엇이 바뀌었고 무엇을 정해야 하는지("따라잡기", "남은 게 뭐야", `/vstack:ketchup`) | 바로 갈래다(읽기 전용). 위 "고르기" 0의 첫 문단(따라잡기만 요청했을 때)을 따른다 |
 | 직전 답을 다시 설명해 달라는 요청 | 위 "답 쓰기"의 다시 설명 요청 |
 | 자율 실행 | 첫 버전에 없다. 그렇게 알린다. 진행 중인 지휘 작업과 맡기기의 이어 가기와 중단은 위 "0"이다 |
 
