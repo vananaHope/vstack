@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import image_diff  # noqa: E402
 
 SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "image_diff.py")
+SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
 def chunk(kind, body):
@@ -48,9 +49,10 @@ def encode_rows(rows, bpp, filter_kind):
     return bytes(out)
 
 
-def png(width, height, color, depth, rows, bpp, filter_kind=0, palette=None, transparency=None, interlace=0):
-    body = b"\x89PNG\r\n\x1a\n"
-    body += chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, depth, color, 0, 0, interlace))
+def png(width, height, color, depth, rows, bpp, filter_kind=0, palette=None, transparency=None, interlace=0,
+        declared_height=None, end=True):
+    body = SIGNATURE
+    body += chunk(b"IHDR", struct.pack(">IIBBBBB", width, declared_height or height, depth, color, 0, 0, interlace))
     if palette is not None:
         body += chunk(b"PLTE", palette)
     if transparency is not None:
@@ -58,7 +60,7 @@ def png(width, height, color, depth, rows, bpp, filter_kind=0, palette=None, tra
     data = zlib.compress(encode_rows(rows, bpp, filter_kind))
     half = len(data) // 2
     body += chunk(b"IDAT", data[:half]) + chunk(b"IDAT", data[half:])  # IDAT가 여러 개인 경우
-    return body + chunk(b"IEND", b"")
+    return body + (chunk(b"IEND", b"") if end else b"")
 
 
 def rgba_png(pixels, filter_kind=0):
@@ -116,17 +118,28 @@ class DecodeTest(Files):
         _, _, decoded = image_diff.decode(self.write("pal.png", data))
         self.assertEqual(decoded, [bytes((255, 0, 0, 255, 0, 255, 0, 128, 0, 0, 255, 255))])
 
+    def test_two_bit_palette_packs_four_pixels_in_a_byte(self):
+        palette = bytes((1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4))
+        rows = [bytes((0b00011011,))]  # 번호 0, 1, 2, 3
+        _, _, decoded = image_diff.decode(self.write("p2.png", png(4, 1, 3, 2, rows, 1, palette=palette)))
+        self.assertEqual(decoded, [bytes((1, 1, 1, 255, 2, 2, 2, 255, 3, 3, 3, 255, 4, 4, 4, 255))])
+
     def test_one_bit_gray_scales_to_black_and_white(self):
         rows = [bytes((0b10100000,))]  # 픽셀 3개: 1, 0, 1
         _, _, decoded = image_diff.decode(self.write("g1.png", png(3, 1, 0, 1, rows, 1)))
         self.assertEqual(decoded, [bytes((255, 255, 255, 255, 0, 0, 0, 255, 255, 255, 255, 255))])
 
-    def test_gray_alpha_and_sixteen_bit(self):
-        _, _, ga = image_diff.decode(self.write("ga.png", png(1, 1, 4, 8, [bytes((90, 7))], 2)))
-        self.assertEqual(ga, [bytes((90, 90, 90, 7))])
-        rows = [bytes((0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC))]  # 16비트 RGB 한 픽셀
-        _, _, deep = image_diff.decode(self.write("d16.png", png(1, 1, 2, 16, rows, 6)))
-        self.assertEqual(deep, [bytes((0x12, 0x56, 0x9A, 255))])
+    def test_gray_with_alpha(self):
+        _, _, decoded = image_diff.decode(self.write("ga.png", png(1, 1, 4, 8, [bytes((90, 7))], 2)))
+        self.assertEqual(decoded, [bytes((90, 90, 90, 7))])
+
+    def test_transparent_key_makes_matching_gray_and_rgb_pixels_transparent(self):
+        gray = png(2, 1, 0, 8, [bytes((64, 65))], 1, transparency=struct.pack(">H", 64))
+        _, _, decoded = image_diff.decode(self.write("gt.png", gray))
+        self.assertEqual(decoded, [bytes((64, 64, 64, 0, 65, 65, 65, 255))])
+        rgb = png(2, 1, 2, 8, [bytes((16, 32, 48, 16, 32, 49))], 3, transparency=struct.pack(">HHH", 16, 32, 48))
+        _, _, decoded = image_diff.decode(self.write("rt.png", rgb))
+        self.assertEqual(decoded, [bytes((16, 32, 48, 0, 16, 32, 49, 255))])
 
 
 class CompareTest(Files):
@@ -146,6 +159,12 @@ class CompareTest(Files):
         self.assertEqual(code, 1)
         self.assertEqual(out, "different: 1 of 60 pixels (1.667%), bbox 7,4-7,4, max channel delta 9")
 
+    def test_a_delta_of_one_is_different(self):
+        first = self.write("a.png", rgba_png([[(100, 100, 100, 255)]]))
+        second = self.write("b.png", rgba_png([[(100, 101, 100, 255)]]))
+        self.assertEqual(self.run_main(first, second),
+                         (1, "different: 1 of 1 pixels (100.000%), bbox 0,0-0,0, max channel delta 1", ""))
+
     def test_bbox_covers_every_changed_pixel(self):
         pixels = [[(0, 0, 0, 255)] * 8 for _ in range(8)]
         changed = [list(row) for row in pixels]
@@ -159,35 +178,66 @@ class CompareTest(Files):
         second = self.write("b.png", rgba_png([[(5, 5, 5, 254)]]))
         self.assertEqual(self.run_main(first, second)[0], 1)
 
-    def test_tolerance_hides_small_deltas_only(self):
-        first = self.write("a.png", rgba_png([[(100, 100, 100, 255), (0, 0, 0, 255)]]))
-        second = self.write("b.png", rgba_png([[(102, 100, 100, 255), (0, 9, 0, 255)]]))
-        code, out, _ = self.run_main(first, second, "--tolerance", "2")
-        self.assertEqual((code, out), (1, "different: 1 of 2 pixels (50.000%), bbox 1,0-1,0, max channel delta 9"))
-        code, out, _ = self.run_main(first, second, "--tolerance", "9")
-        self.assertEqual((code, out), (0, "identical: 2x1 (max channel delta 9 within tolerance 9)"))
+    def test_a_transparent_key_alone_makes_the_images_different(self):
+        opaque = self.write("a.png", png(1, 1, 0, 8, [bytes((64,))], 1))
+        keyed = self.write("b.png", png(1, 1, 0, 8, [bytes((64,))], 1, transparency=struct.pack(">H", 64)))
+        self.assertEqual(self.run_main(opaque, keyed)[0], 1)
+        opaque = self.write("c.png", png(1, 1, 2, 8, [bytes((16, 32, 48))], 3))
+        keyed = self.write("d.png", png(1, 1, 2, 8, [bytes((16, 32, 48))], 3,
+                                        transparency=struct.pack(">HHH", 16, 32, 48)))
+        self.assertEqual(self.run_main(opaque, keyed)[0], 1)
 
     def test_different_size_is_different(self):
         first = self.write("a.png", rgba_png(gradient(4, 4)))
         second = self.write("b.png", rgba_png(gradient(4, 5)))
         self.assertEqual(self.run_main(first, second), (1, "different: size 4x4 vs 4x5", ""))
 
+    def test_there_is_no_tolerance_option(self):
+        good = self.write("a.png", rgba_png(gradient(2, 2)))
+        with self.assertRaises(SystemExit) as raised, redirect_stderr(io.StringIO()):
+            image_diff.main([good, good, "--tolerance", "2"])
+        self.assertEqual(raised.exception.code, 2)
+
 
 class CannotCompareTest(Files):
-    def test_missing_file_not_png_and_interlaced_exit_two(self):
+    def cases(self):
+        whole = rgba_png(gradient(6, 6))
+        flipped = bytearray(whole)
+        flipped[-1] ^= 0x01  # 마지막 청크의 CRC 한 비트. 픽셀 데이터는 멀쩡하므로 CRC 검사만 잡을 수 있다
+        two_rows = [bytes((1, 2, 3, 4)), bytes((5, 6, 7, 8))]
+        return {
+            "none.png": None,
+            "not-png.jpg": b"\xff\xd8\xff\xe0 not a png",
+            "interlaced.png": png(1, 1, 6, 8, [bytes((1, 2, 3, 4))], 4, interlace=1),
+            "cut-in-chunk.png": whole[:60],
+            "cut-last-chunk.png": whole[:-3],
+            "no-iend.png": png(1, 1, 6, 8, [bytes((1, 2, 3, 4))], 4, end=False),
+            "bad-crc.png": bytes(flipped),
+            "short-rows.png": png(1, 1, 6, 8, two_rows[:1], 4, declared_height=2),
+            "extra-rows.png": png(1, 2, 6, 8, two_rows, 4, declared_height=1),
+            "sixteen-bit.png": png(1, 1, 0, 16, [bytes((0x12, 0x00))], 2),
+        }
+
+    def test_every_unreadable_input_exits_two_with_an_ascii_reason_naming_the_file(self):
         good = self.write("a.png", rgba_png(gradient(2, 2)))
-        not_png = self.write("b.jpg", b"\xff\xd8\xff\xe0 not a png")
-        interlaced = self.write("i.png", png(1, 1, 6, 8, [bytes((1, 2, 3, 4))], 4, interlace=1))
-        cut = self.write("cut.png", rgba_png(gradient(6, 6))[:60])
-        for other in (os.path.join(self.dir.name, "none.png"), not_png, interlaced, cut):
-            with self.subTest(other=os.path.basename(other)):
+        for name, data in self.cases().items():
+            other = os.path.join(self.dir.name, name) if data is None else self.write(name, data)
+            with self.subTest(other=name):
                 code, out, err = self.run_main(good, other)
                 self.assertEqual((code, out), (2, ""))
                 self.assertTrue(err.startswith("cannot compare: "), err)
+                self.assertIn("candidate", err)
+                self.assertTrue(err.isascii(), err)
+                code, _, err = self.run_main(other, good)
+                self.assertEqual(code, 2)
+                self.assertIn("baseline", err)
 
-    def test_tolerance_out_of_range_exits_two(self):
-        good = self.write("a.png", rgba_png(gradient(2, 2)))
-        self.assertEqual(self.run_main(good, good, "--tolerance", "300")[0], 2)
+    def test_sixteen_bit_images_are_refused_rather_than_compared_coarsely(self):
+        first = self.write("a.png", png(1, 1, 0, 16, [bytes((0x12, 0x00))], 2))
+        second = self.write("b.png", png(1, 1, 0, 16, [bytes((0x12, 0xFF))], 2))
+        code, out, err = self.run_main(first, second)
+        self.assertEqual((code, out), (2, ""))
+        self.assertIn("16-bit", err)
 
 
 class CommandLineTest(Files):
@@ -197,11 +247,18 @@ class CommandLineTest(Files):
         changed = [list(row) for row in pixels]
         changed[0][0] = (1, 2, 3, 4)
         second = self.write("b.png", rgba_png(changed))
-        same = subprocess.run([sys.executable, "-I", SCRIPT, first, first], capture_output=True, text=True)
-        self.assertEqual((same.returncode, same.stdout.strip()), (0, "identical: 3x3"))
-        diff = subprocess.run([sys.executable, "-I", SCRIPT, first, second], capture_output=True, text=True)
+        same = subprocess.run([sys.executable, "-I", SCRIPT, first, first], capture_output=True)
+        self.assertEqual((same.returncode, same.stdout.strip()), (0, b"identical: 3x3"))
+        diff = subprocess.run([sys.executable, "-I", SCRIPT, first, second], capture_output=True)
         self.assertEqual(diff.returncode, 1)
-        self.assertTrue(diff.stdout.startswith("different: 1 of 9 pixels"), diff.stdout)
+        self.assertTrue(diff.stdout.startswith(b"different: 1 of 9 pixels"), diff.stdout)
+
+    def test_error_output_is_ascii_bytes_when_piped(self):
+        bad = self.write("bad.png", b"bad")
+        result = subprocess.run([sys.executable, "-I", SCRIPT, bad, bad], capture_output=True)
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, b"")
+        self.assertEqual(result.stderr.strip(), b"cannot compare: baseline file: not a PNG file")
 
 
 if __name__ == "__main__":
