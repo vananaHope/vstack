@@ -299,6 +299,10 @@
       "to": "skills/v-mode/recipes/feature.md"
     },
     {
+      "stage": 7,
+      "to": "skills/v-mode/recipes/ui-polish.md"
+    },
+    {
       "stage": 6,
       "to": "skills/v-mode/recipes/refactoring.md"
     },

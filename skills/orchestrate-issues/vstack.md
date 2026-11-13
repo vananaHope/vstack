@@ -6,9 +6,9 @@
 
 ## 첫 버전에서 하지 않는 것
 
-- **레시피가 없는 작업**: vstack 지휘는 레시피가 있는 작업만 맡는다. 레시피는 `bug-fix`(버그 수정, [bug-fix.md](../v-mode/recipes/bug-fix.md)), `feature`(기능, [feature.md](../v-mode/recipes/feature.md)), `refactoring`(리팩토링, [refactoring.md](../v-mode/recipes/refactoring.md))이다. 맞는 레시피가 없는 이슈(성능, 프로토타입, 조사 등)는 맡기지 않고, 사용자에게 "레시피 없음: 기존 agent-orchestra로 하거나 레시피를 먼저 만든다"고 알린다.
+- **레시피가 없는 작업**: vstack 지휘는 레시피가 있는 작업만 맡는다. 레시피는 `bug-fix`(버그 수정, [bug-fix.md](../v-mode/recipes/bug-fix.md)), `feature`(기능, [feature.md](../v-mode/recipes/feature.md)), `refactoring`(리팩토링, [refactoring.md](../v-mode/recipes/refactoring.md))이다. `ui-polish`는 한 세션 갈래에서만 쓰는 레시피라 지휘에서는 없는 것으로 본다. 맞는 레시피가 없는 이슈(성능, 프로토타입, 조사 등)는 맡기지 않고, 사용자에게 "레시피 없음: 기존 agent-orchestra로 하거나 레시피를 먼저 만든다"고 알린다.
 - **앞부분 선행 병합**: SKILL.md 1단계 "앞부분 착수"는 하지 않는다. 앞부분은 이슈의 수용 기준을 다 채우지 못해 관문 G1에서 막히고, 범위를 줄여 통과시키면 이슈가 너무 일찍 닫힌다. 프런티어가 비면 그대로 기다린다.
-- **UI 다듬기**: [ui-polish.md](ui-polish.md)는 관리자가 직접 구현하는 일이다. 첫 버전에서 관리자는 작업자 역할을 맡지 않고, 레시피도 없다. 화면 묶음이 모두 병합되면 "UI 다듬기는 vstack 첫 버전 밖: 기존 agent-orchestra로 하거나 나중에 레시피를 만든다"고 알린다.
+- **UI 다듬기**: [ui-polish.md](ui-polish.md)는 관리자가 직접 구현하는 일이다. vstack 관리자는 작업자 역할을 맡지 않으므로 지휘 안에서는 하지 않는다. 화면 묶음이 모두 병합되면 "UI 다듬기는 지휘 밖이다: 새 요청으로 v-mode 한 세션 갈래의 `ui-polish` 레시피([ui-polish.md](../v-mode/recipes/ui-polish.md))로 하거나, 기존 agent-orchestra로 한다"고 알린다. 그 요청은 묶음의 작업이 모두 `끝`난 뒤에 받는다(v-mode 고르기 0).
 
 ## 작업 종류 이름
 
