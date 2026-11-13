@@ -12,8 +12,9 @@
 //    A dependency that was never carried over is caught by the closure check (4).
 // 3. Skill references must name a skill vstack ships, and tool-specific invocation
 //    phrases ("Skill tool") are not allowed (workers on other runtimes cannot follow them).
-// 4. Closure (with --source): every file an adapted, extracted or moved source file points to
+// 4. Closure (with --source): every file an adapted or extracted source file points to
 //    must have been carried into vstack, or be listed in the entry's "dropped".
+//    Moved entries are owned by vstack and their source is archived, so they are not compared.
 //
 // Skipped: URLs, #anchors, paths that still hold a <placeholder>.
 // Usage: node scripts/check-links.mjs [--root <dir>] [--stage <n>] [--source <name>=<dir> ...]
@@ -108,7 +109,7 @@ for (const file of walkMarkdown(join(root, 'skills'))) {
 
 // Closure: compare adapted/extracted imports against their sources.
 for (const entry of upstream.imports) {
-  if (entry.stage > stage || !['adapted', 'extracted', 'moved'].includes(entry.mode)) continue;
+  if (entry.stage > stage || !['adapted', 'extracted'].includes(entry.mode)) continue;
   const srcRoot = sources[entry.source];
   if (!srcRoot) {
     failures.push({ kind: 'CLOSURE', at: entry.to, detail: `needs --source ${entry.source}=<dir> to check closure` });

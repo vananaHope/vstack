@@ -6,9 +6,9 @@
 
 ## 첫 버전에서 하지 않는 것
 
-- **레시피가 없는 작업**: vstack 지휘는 레시피가 있는 작업만 맡는다. 레시피는 `bug-fix`(버그 수정, [bug-fix.md](../v-mode/recipes/bug-fix.md)), `feature`(기능, [feature.md](../v-mode/recipes/feature.md)), `refactoring`(리팩토링, [refactoring.md](../v-mode/recipes/refactoring.md))이다. `ui-polish`는 맡기기 갈래에서만 쓰는 레시피라 지휘에서는 없는 것으로 본다. 맞는 레시피가 없는 이슈(성능, 프로토타입, 조사 등)는 맡기지 않고, 사용자에게 "레시피 없음: 기존 agent-orchestra로 하거나 레시피를 먼저 만든다"고 알린다.
+- **레시피가 없는 작업**: vstack 지휘는 레시피가 있는 작업만 맡는다. 레시피는 `bug-fix`(버그 수정, [bug-fix.md](../v-mode/recipes/bug-fix.md)), `feature`(기능, [feature.md](../v-mode/recipes/feature.md)), `refactoring`(리팩토링, [refactoring.md](../v-mode/recipes/refactoring.md))이다. `ui-polish`, `correct`, `perf`는 맡기기 갈래에서만 쓰는 레시피라 지휘에서는 없는 것으로 본다. 맞는 레시피가 없는 이슈(성능, 프로토타입, 조사 등)는 맡기지 않고, 사용자에게 "레시피 없음"을 알린다. 그 이슈가 한 단위의 일이면 v-mode 맡기기 갈래로(레시피 없이 수용 기준만으로) 하고, 여러 티켓이면 티켓마다 위 세 레시피 가운데 하나로 나누거나 맞는 레시피를 먼저 만든다고 권한다(v-mode "고르기" 3). 수용 기준만으로 지휘하지는 않는다.
 - **앞부분 선행 병합**: SKILL.md 1단계 "앞부분 착수"는 하지 않는다. 앞부분은 이슈의 수용 기준을 다 채우지 못해 관문 G1에서 막히고, 범위를 줄여 통과시키면 이슈가 너무 일찍 닫힌다. 프런티어가 비면 그대로 기다린다.
-- **UI 다듬기**: [ui-polish.md](ui-polish.md)는 관리자가 직접 구현하는 일이다. vstack 관리자는 작업자 역할을 맡지 않으므로 지휘 안에서는 하지 않는다. 화면 묶음이 모두 병합되면 "UI 다듬기는 지휘 밖이다: 새 요청으로 v-mode 맡기기 갈래의 `ui-polish` 레시피([ui-polish.md](../v-mode/recipes/ui-polish.md))로 하거나, 기존 agent-orchestra로 한다"고 알린다. 그 요청은 묶음의 작업이 모두 `끝`난 뒤에 받는다(v-mode 고르기 0).
+- **UI 다듬기**: [ui-polish.md](ui-polish.md)는 관리자가 직접 구현하는 일이다. vstack 관리자는 작업자 역할을 맡지 않으므로 지휘 안에서는 하지 않는다. 화면 묶음이 모두 병합되면 "UI 다듬기는 지휘 밖이다: 새 요청으로 v-mode 맡기기 갈래의 `ui-polish` 레시피([ui-polish.md](../v-mode/recipes/ui-polish.md))로 한다"고 알린다. 그 요청은 묶음의 작업이 모두 `끝`난 뒤에 받는다(v-mode 고르기 0).
 
 ## 작업 종류 이름
 
@@ -53,7 +53,7 @@
 6. **명세 채우기**: [task-template.md](task-template.md) 또는 [review-template.md](review-template.md)의 "vstack 계약" 절을 채운다. 증거 폴더는 `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`, scratch는 `<worktree>/.vstack/scratch/<시도 ID>/`.
 7. **띄우기**: 바로 전에 archive.md "준비" 5(띄우기 직전 `HEAD`·status 기록)를 한다. 그다음 `--worktree path:<worktree 경로>`. 결과의 `dispatchId`, `terminal`(세션)을 시도 표에 적는다.
 
-`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@3 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
+`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@4 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
 
 ## 완료 보고를 받으면
 
@@ -213,7 +213,7 @@ SKILL.md 6단계에서 **병합 명령을 내리기 바로 전에** 한다. "병
 1. 이 작업의 작업자를 모두 실행 환경 문서의 **정지**로 멈추고 정지를 확인한다. 확인되지 않은 작업자가 있으면 사용자에게 알리고 그 작업을 정리하지 않는다.
 2. 시도를 모두 정산한다(archive.md).
 3. PR을 닫을지 사용자에게 묻는다. 닫지 않고 열어 두면, 열린 PR 때문에 그 이슈는 "진행 중"으로 보여 다시 맡겨지지 않는다는 것을 함께 알린다.
-4. worktree는 병합되지 않았으므로 지우지 않는다. state-and-rollback.md "되돌리기"의 "새로 시작"처럼 보존하고, 지울지는 사용자가 정한다(미병합 변경 삭제는 안전 멈춤이다).
+4. worktree는 병합되지 않았으므로 지우지 않는다. state-and-rollback.md "새로 시작"처럼 보존하고, 지울지는 사용자가 정한다(미병합 변경 삭제는 안전 멈춤이다).
 5. PR을 닫았으면 이슈를 맡길 상태로 되돌린다. `state.md`를 `끝`, 소유를 `소유: 포기(<날짜>, 그만둠)`로 쓴다.
 
 ## worktree 지우기 전
