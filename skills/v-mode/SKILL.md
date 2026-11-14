@@ -138,7 +138,7 @@ disable-model-invocation: true
 | 요청 | 할 일 |
 | --- | --- |
 | 한도·사용량 | [../check-limits/SKILL.md](../check-limits/SKILL.md)를 읽고 따른다 |
-| 지휘 설정(등급 배치, 병합 방식 등) | [../configure/SKILL.md](../configure/SKILL.md)를 읽고 따른다 |
+| 프로젝트 설정(맡기기와 지휘가 함께 읽는 명령·규칙, 지휘의 등급 배치·병합 방식 등)과 처음 쓰기 전 점검 | [../configure/SKILL.md](../configure/SKILL.md)를 읽고 따른다 |
 | 어떤 변경이 다른 곳에서 무엇을 깨뜨릴 수 있는지(영향 범위) | 고르기 0에 들지 않는 변경(이미 병합된 커밋, 지휘와 맡기기 밖의 브랜치)이면 [../blast-radius/SKILL.md](../blast-radius/SKILL.md)를 읽고 이 대화에서 따른다. 제품 파일은 고치지 않고, 증명용 스크립트는 OS 임시 폴더에 둔다. 진행 중인 지휘 작업이나 맡기기의 변경이면 여기서 하지 않고 위 "0"으로 간다. 지휘 작업은 관리자가 그 작업의 다음 검토 명세에 이 점검을 넣는다([../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "교차 검토 배정"). 맡기기는 그 맡기기의 다음 Codex 검토(첫 검토나 재검토 요청)에 넣는다([delegate-review-spec.md](delegate-review-spec.md) "요청받은 영향 범위 점검"). 모든 검토에 자동으로 넣지는 않는다 |
 | 프로젝트의 검증 스킬과 기능 지도가 앱과 맞는지 점검 | 맡기기 갈래다(검증이 읽는 파일을 고친다). [delegate.md](delegate.md) "검증 스킬 점검"을 따른다 |
 | 마지막 메시지 뒤로 무엇이 바뀌었고 무엇을 정해야 하는지("따라잡기", "남은 게 뭐야", `/vstack:ketchup`) | 바로 갈래다(읽기 전용). 위 "고르기" 0의 첫 문단(따라잡기만 요청했을 때)을 따른다 |

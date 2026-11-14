@@ -23,6 +23,8 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 
 `/vstack:v-mode`로 시작해 하려는 일을 말한다. v-mode가 크기와 작업 유형을 보고 갈래를 고른다.
 
+프로젝트에서 처음 쓰기 전에 `/vstack:configure`를 한 번 실행하면 좋다. 프로젝트 설정(준비·테스트 명령, 작성 규칙, 구현 제약, 지휘의 배치·병합)을 설정 창으로 만들고, 맡기기와 지휘가 이것을 함께 읽는다. 끝에 전제(Orca, `gh`·`claude`·`codex`, 한도, `.local/` 무시, mattpocock 설정, 검증 수단)를 점검해 알려 준다. 설정이 없어도 맡기기는 저장소를 훑어 정하고, 지휘는 처음 실행할 때 이 설정부터 띄운다.
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/vstack-overview-dark.svg">
   <img src="docs/images/vstack-overview.svg" width="960" alt="v-mode 라우터가 요청을 바로, 맡기기, 지휘 세 갈래로 보낸다. 바로 갈래는 이 대화가 읽기 전용 질문·조사와 제품에 닿지 않는 수정만 처리하고, 맡기기는 Claude 구현자·Codex 검토자·관리자 확인을 거치며, 지휘는 정렬과 티켓, vstack 절, orchestrate-issues, 병합 관문 G1~G5를 거쳐 병합한다. 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다.">
@@ -81,7 +83,8 @@ skills/maintain-verification-skill/
 skills/blast-radius/     변경이 다른 곳에서 깨뜨릴 것을 찾아 실행으로 증명하는 스킬
                          (pstack에서 고쳐 쓴 사본. 검토 명세와 v-mode가 경로로 읽음)
 skills/orchestrate-issues/, skills/check-limits/, skills/configure/
-                         지휘, 한도 확인, 지휘 설정 스킬(agent-orchestra에서 옮겨 와 vstack이 소유. v-mode가 경로로 읽음)
+                         지휘, 한도 확인, 프로젝트 설정 스킬(agent-orchestra에서 옮겨 와 vstack이 소유. v-mode가 경로로 읽음.
+                         프로젝트 설정은 맡기기와 지휘가 함께 읽는다)
 GLOSSARY.md              용어집
 docs/
   design.md              설계와 변경 이력

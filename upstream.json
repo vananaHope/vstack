@@ -379,14 +379,15 @@
     ]
   },
   "user_commands": {
-    "note": "사용자가 직접 실행하는 다른 플러그인의 명령(모델이 부르지 않는다). vstack에 싣지 않으므로 check-links의 SKILL 검사에서 뺀다. v-mode의 정렬 단계가 안내하는 mattpocock 명령, UI 다듬기 입력에서 시안이 필요할 때 안내하는 prototype, 조사 레시피가 바깥 자료 조사로 안내하는 research.",
+    "note": "사용자가 직접 실행하는 다른 플러그인의 명령(모델이 부르지 않는다). vstack에 싣지 않으므로 check-links의 SKILL 검사에서 뺀다. v-mode의 정렬 단계가 안내하는 mattpocock 명령, UI 다듬기 입력에서 시안이 필요할 때 안내하는 prototype, 조사 레시피가 바깥 자료 조사로 안내하는 research, 프로젝트 설정의 전제 확인이 안내하는 setup-matt-pocock-skills.",
     "names": [
       "mattpocock-skills:grill-with-docs",
       "mattpocock-skills:to-spec",
       "mattpocock-skills:to-tickets",
       "mattpocock-skills:wait-what",
       "mattpocock-skills:prototype",
-      "mattpocock-skills:research"
+      "mattpocock-skills:research",
+      "mattpocock-skills:setup-matt-pocock-skills"
     ]
   }
 }
