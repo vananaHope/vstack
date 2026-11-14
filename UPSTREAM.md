@@ -199,7 +199,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | `orchestrate-issues/SKILL.md` 6단계 6 | 터미널 확인을 실행 환경 문서의 **정리** 완료로, 브랜치를 지울 수 없으면 남기고 알림 | Orca 정리 의미가 바뀌었다 |
 | `orchestrate-issues/setup.md` | AGENTS.md 한 줄의 "agent-orchestra plugin" → "shared by the vstack and agent-orchestra plugins" | 설정을 두 플러그인이 함께 쓴다 |
 
-`backends/herdr.md`, 나머지 문서, `scripts/*.py`는 그대로 옮겼다. herdr는 vstack 첫 버전에서 검증하지 않았다.
+`backends/herdr.md`, 나머지 문서, `scripts/*.py`는 그대로 옮겼다. herdr는 vstack 첫 버전에서 검증하지 않았고, 2026-11-14(0.20.1)에 `backends/herdr.md`를 지웠다(사용자가 herdr를 쓰지 않는다).
 
 ### agent-orchestra 은퇴(2026-11-14, vstack 0.20.0, #22)
 

@@ -17,7 +17,7 @@ description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화
   - Python에 딸린 OpenSSL이 새 인증서 체인을 검증하지 못하면(`CERTIFICATE_VERIFY_FAILED`) `codex exec`로 넘어가기 전에 운영체제 인증서 저장소를 쓰는 `curl`로 한 번 더 읽는다. 성공하면 `source`는 그대로 `usage-api`다.
   - 창은 `primary`와 `secondary`이고 길이는 `window_minutes`로 본다(요금제에 따라 창이 하나뿐이거나 `primary`가 7일 창일 수 있다). 창마다 `elapsed_percent`(창이 지난 비율)도 낸다.
 - **Claude**: `python -I <스킬 폴더>/scripts/claude_limit.py --json`
-  - Claude Code 로그인 정보(`$CLAUDE_CONFIG_DIR/.credentials.json`, 없으면 `~/.claude/.credentials.json`)로 Claude Code의 `/usage`가 쓰는 사용량 API를 읽는다. 상태 표시줄이나 다른 플러그인에 기대지 않아 Orca·herdr 어디서나 같다. macOS는 로그인 정보가 키체인에 있어 지원하지 않는다.
+  - Claude Code 로그인 정보(`$CLAUDE_CONFIG_DIR/.credentials.json`, 없으면 `~/.claude/.credentials.json`)로 Claude Code의 `/usage`가 쓰는 사용량 API를 읽는다. 상태 표시줄이나 다른 플러그인에 기대지 않는다. macOS는 로그인 정보가 키체인에 있어 지원하지 않는다.
   - 창은 `five_hour`와 `seven_day`이고, 창마다 `elapsed_percent`(창이 지난 비율)도 낸다. 아직 열리지 않은 창(쓴 적이 없는 5시간 창 등)은 결과에 없다.
   - 사용량이 들지 않는다. 자주 부르면 API가 막으므로(HTTP 429) 결과를 1분 동안 보관했다가 다시 쓴다(`source`가 `cache`). 조회가 실패하면 10분 안의 보관 결과를 쓰고 실패 이유를 `api_error`에 적는다. 그 밖에는 `source`가 `usage-api`다.
 

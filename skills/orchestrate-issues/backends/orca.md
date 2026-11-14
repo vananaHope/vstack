@@ -152,6 +152,3 @@ Codex는 작업 폴더의 `.codex/config.toml`을 전역 설정보다 우선해 
 - 완료 보고(검토자): "보고서 파일 경로를 `--report-path`로 넘긴다. `worker_done` 본문은 3문장 이내로 결론만."
 - 질문: "질문은 orchestration `ask`로 하고 턴을 끝낸다. Orca가 답으로 깨운다."
 
-## herdr
-
-[herdr.md](herdr.md)는 agent-orchestra(아카이브됨)에서 그대로 옮겼고 vstack 첫 버전에서 검증하지 않았다.
