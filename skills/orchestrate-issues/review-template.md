@@ -34,7 +34,7 @@
 - git 무시: 관리자가 이 worktree git의 `info/exclude`에 `.vstack/`(Codex fast를 쓰면 `/.codex/`도)를 넣었다. 증거 폴더와 scratch에 써도 `git status`는 비어 있어야 한다. 무시 규칙을 정하는 파일(`.gitignore`, `info/exclude`)은 만들거나 고치지 않는다. 실행 환경 입력(예: `.env.local`)을 만들거나 고쳐도 되는지는 명세의 실행 조건이 정한다.
 - 증거 폴더: `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`
 - scratch: `<worktree>/.vstack/scratch/<시도 ID>/`(빌드 산출물, 임시 데이터, 테스트 사본)
-- manifest 값: `task` = `<작업 이름>`, `attempt` = `<시도 ID>`, `role` = `rev`, `scope` = `review`, `executor` = `<opencode/codex/claude>`, `session` = `<세션 키>`, `recipe` = `<id>@<버전>`. 과정 증거는 `process/` 아래에 두고 `files`에만 올린다. 보고서에서 증거를 가리킬 때는 시도 ID와 증거 폴더 기준 상대 경로로 쓴다.
+- manifest 값: `task` = `<작업 이름>`, `attempt` = `<시도 ID>`, `role` = `rev`, `scope` = `review`, `executor` = `<codex/claude>`, `session` = `<세션 키>`, `recipe` = `<id>@<버전>`. 과정 증거는 `process/` 아래에 두고 `files`에만 올린다. 보고서에서 증거를 가리킬 때는 시도 ID와 증거 폴더 기준 상대 경로로 쓴다.
 - 구현자의 완료 보고와 증거: `<보관된 구현자 시도 폴더의 절대 경로>`(`.local/vstack/<작업 이름>/evidence/<impl 시도 ID>/`. 관리자가 보관한 뒤의 위치다)
 - 권한: 증거 폴더, 보고서 경로, scratch에만 쓴다. 제품 소스·테스트 수정, 커밋, 다른 시도의 증거 폴더, ignore 파일 수정은 하지 않는다.
 

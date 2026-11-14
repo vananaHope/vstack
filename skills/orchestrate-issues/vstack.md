@@ -53,7 +53,7 @@
 6. **명세 채우기**: [task-template.md](task-template.md) 또는 [review-template.md](review-template.md)의 "vstack 계약" 절을 채운다. 증거 폴더는 `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`, scratch는 `<worktree>/.vstack/scratch/<시도 ID>/`.
 7. **띄우기**: 바로 전에 archive.md "준비" 5(띄우기 직전 `HEAD`·status 기록)를 한다. 그다음 `--worktree path:<worktree 경로>`. 결과의 `dispatchId`, `terminal`(세션)을 시도 표에 적는다.
 
-`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@4 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
+`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@5 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
 
 ## 완료 보고를 받으면
 
@@ -68,7 +68,7 @@
      | 작업 종류 | 확인 |
      | --- | --- |
      | 새 수정, 지적 수정 | 배정 대상에서 결과 대상까지의 커밋이 이 시도의 것이다(`git log <배정 H 또는 시작 커밋>..<결과 H>`). 결과 `B`는 배정 `B`와 같다 |
-     | rebase | 결과 `B`가 rebase 목표 기준 브랜치 tip이고, `git range-diff <배정 B>..<배정 H> <결과 B>..<결과 H>`가 충돌 해결분 말고는 같다([opencode.md](opencode.md) "rebase") |
+     | rebase | 결과 `B`가 rebase 목표 기준 브랜치 tip이고, `git range-diff <배정 B>..<배정 H> <결과 B>..<결과 H>`가 충돌 해결분 말고는 같다(아래 "rebase") |
      | 재검증, 검토(`review`·`rerun-only`) | 결과 대상이 배정 대상과 같다(커밋을 만들지 않았다) |
 
    어긋나면 그 시도의 기록(수용 기준 기록과 `review`의 코드 검토 결론 모두)은 판정에 쓰지 않고 아래 "검토 보고를 받으면"의 무효 증거처럼 다시 맡긴다. status가 비지 않은 것은 배정 전부터 있던 변경이어도(띄우기 직전 기록과 같아도) 어긋난 것이다. 작업자가 본 코드가 `H`와 같다는 보장이 없기 때문이다. 관리자가 남은 변경을 치우고(지울지 사용자에게 물어야 하는 변경이면 묻는다) 깨끗한 상태에서 다시 맡긴다. 띄우기 직전 기록과 다르면 작업자가 worktree를 바꾼 것이므로 그 사실도 판정에 적는다. 집계(evidence.md)의 "대상"은 이 결과 대상이다.
@@ -169,6 +169,14 @@ SKILL.md 4단계에서:
 3. 두 시도의 증거를 보관한다.
 
 사소 수정을 관리자가 확인했어도([fixes.md](fixes.md)) 2를 건너뛰지 않는다.
+
+## rebase
+
+[SKILL.md](SKILL.md) 6단계 2의 rebase는 **원래 구현자의 계열**이 한다. rebase 작업자도 변경 작성자가 되므로, 다른 계열이 rebase하면 다른 계열 검토자가 남지 않는다(계약 `evidence.md` "역할 자격"). 남겨 둔 구현자가 있으면 그 세션에 보내고, 없으면 같은 계열의 새 작업자를 띄운다. 맡김 기록의 등급은 `light`다.
+
+- 명세나 보내는 지시에 rebase 전 `HEAD`를 적어 둔다.
+- 같은 함수의 동작이 양쪽에서 바뀐 충돌처럼 양쪽 의도를 함께 살릴 수 없으면 `git rebase --abort`로 되돌리고 보고하게 한다. 관리자는 무엇을 살릴지 사용자에게 묻거나 새 구현 지시로 맡긴다.
+- 검증: 관리자가 `git range-diff <rebase 전 HEAD>...HEAD`로 충돌 해결분 말고는 변경이 같은지 본다. 그다음 위 "대상이 바뀌면"대로 재검증한다(rebase 작업자가 필수 수용 기준 전부, 그다음 rev `review` 시도). range-diff가 같아도 재검증을 건너뛰지 않는다.
 
 ## 원격 반영
 

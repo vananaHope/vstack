@@ -1,6 +1,6 @@
 # 반복 실수 막기
 
-id: correct · version: 2 · contract: vstack-contract@4
+id: correct · version: 3 · contract: vstack-contract@5
 
 pstack `skills/correct/SKILL.md`를 따른다. 에이전트가 이 저장소에서 같은 실수를 되풀이하면, 다음 에이전트가 그 실수를 할 수 없게 저장소를 바꾼다. 막는 층은 위에서부터 고른다(구조 → 타입 → 고칠 곳을 말하는 검사 → 테스트 → 문서). 새 검사는 실제로 있었던 실수에서 실패하는 것을 보인다. 원칙 `encode-lessons-in-structure`(같은 지시를 두 번 쓰게 되면 글 대신 장치로)가 바탕이다. 가져온 것과 뺀 것은 저장소의 `UPSTREAM.md`에 있다.
 

@@ -16,14 +16,14 @@
 
 ```json
 {
-  "contract": "vstack-contract@4",
+  "contract": "vstack-contract@5",
   "task": "issue-42",
   "attempt": "rev-3ecbf1e7-1",
   "role": "rev",
   "scope": "review",
   "executor": "claude",
   "session": "3ecbf1e7",
-  "recipe": "bug-fix@7",
+  "recipe": "bug-fix@8",
   "target": { "head": "<40자 SHA>", "base": "<40자 SHA>", "base_ref": "main" },
   "tree_before": "",
   "env": {
@@ -95,7 +95,7 @@
 - **impl**: 기본은 변경 작성자 세션이다. 변경 작성자 세션이 사라졌으면(닫힘, 멈춤 뒤 정지 확인) 관리자가 새 세션을 **impl 인계**로 지정할 수 있다. `state.md` 시도 표에 `impl 인계(<이유>)`를 적는다. impl은 자기 검증이며 독립 검토를 대신하지 않는다.
 - **rev**: 다음을 모두 만족해야 한다.
   - 대상 `T`에 커밋을 만들지 않은 세션이다. 변경 작성자 세션도, impl 세션도 아니다.
-  - 실행기 계열(`opencode`/`codex`/`claude`)이 변경 작성자와 다르다. 다를 수 없으면 orchestra `tiers.md`의 같은 계열 조건(맥락 없는 새 작업자, 2차 의견 필수, PR 본문 기록)을 모두 채운다. 하나라도 없으면 자격이 없다.
+  - 실행기 계열(`codex`/`claude`)이 변경 작성자와 다르다. 다를 수 없으면 orchestra `tiers.md`의 같은 계열 조건(맥락 없는 새 작업자, 2차 의견 필수, PR 본문 기록)을 모두 채운다. 하나라도 없으면 자격이 없다.
 
 ## 최신성
 

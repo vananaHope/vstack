@@ -1,6 +1,6 @@
 # UI 다듬기
 
-id: ui-polish · version: 5 · contract: vstack-contract@4
+id: ui-polish · version: 6 · contract: vstack-contract@5
 
 pstack에는 이 일에 짝이 되는 플레이북이 없다. 네 곳에서 가져와 조합했다.
 

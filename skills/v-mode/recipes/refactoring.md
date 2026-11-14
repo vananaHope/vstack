@@ -1,6 +1,6 @@
 # 리팩토링
 
-id: refactoring · version: 4 · contract: vstack-contract@4
+id: refactoring · version: 5 · contract: vstack-contract@5
 
 흐름은 pstack `playbooks/refactoring.md`(동작 계약을 먼저 고정하고 → 빼기 먼저 → 고정을 green으로 지키며 작은 단계로 옮기기 → 동작이 같음을 증명 → 읽기 부담이 줄었는지 확인)를 따른다. 원본의 하위 에이전트 위임, `how`·`architect`·`figure-it-out` 호출, PR 단계는 vstack에서 관리자가 맡거나 첫 버전에서 뺐다. 목표 구조와 전환 방식은 정렬 단계에서 정해 티켓에 싣는다.
 

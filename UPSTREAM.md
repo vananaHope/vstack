@@ -227,7 +227,7 @@ agent-orchestra 플러그인을 지우고 원래 저장소를 아카이브하기
 | `orchestrate-issues/review-template.md` | "vstack 계약" 절(scope review, 대상 확인, 검토 범위, scratch, 권한), "파일 수정 금지·흔적 금지·화면은 사람 몫" → 역할별 권한과 실창 잠금·막힘, 수용 기준 판정표, 재검토를 새 대상의 `review` 시도로, "재실행 전용(rerun-only)" 양식 |
 | `orchestrate-issues/tiers.md` | 검토 목록의 `관리자` 건너뜀, "구현자"를 변경 작성자로 읽고 역할 자격 확인, 관리자 확인은 검토 결론이 아님 |
 | `orchestrate-issues/fixes.md` | 수정 명세에 계약 절과 필수 수용 기준 전부, 수정 뒤 항상 rev `review` 시도(사소 수정 포함), 완료 기준 |
-| `orchestrate-issues/opencode.md` | rebase 검증에 재검증(range-diff가 같아도) |
+| `orchestrate-issues/opencode.md` | rebase 검증에 재검증(range-diff가 같아도). 0.24.0에서 파일을 지웠다(ADR 0012). rebase 절차는 `vstack.md` "rebase", 2차 의견은 `tiers.md` "2차 의견"으로 옮겼다 |
 | `orchestrate-issues/pr-template.md` | "검증"에 수용 기준별 판정과 증거 위치 |
 | `orchestrate-issues/ui-polish.md` | 첫 버전에서 하지 않는다는 머리말 |
 
