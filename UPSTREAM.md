@@ -128,7 +128,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 3 | `/vstack:ketchup` 추가 | Claude Code의 플러그인 명령 접두사 |
 | 6 뒤 | "vstack copy of pstack …"과 바로 갈래에서 관리자가 따른다는 한 줄 | 다른 adapted 사본과 같다 |
 | 11 | "Use `/bro`'s voice, not its task" → "Use a plain voice"(뒤의 말투 설명은 그대로), 그리고 v-mode "답 쓰기"(맥락 먼저, 용어집, 고정 규칙 2의 표시)를 따른다는 문장 | `bro`는 vstack에 없다. v-mode의 답 규칙과 어긋나지 않게 |
-| 15 | 모으는 곳에 vstack의 맡기기 기록, 지휘 작업 상태, Orca 받은 편지함을 더함 | 관리자가 작업자의 결과와 기록이 기다리는 것을 따라잡게 |
+| 15 | 모으는 곳에 vstack의 맡기기 기록, 지휘 작업 상태, Orca 받은 편지함을 더함. 기록은 메인 저장소([main-repo.md](skills/v-mode/main-repo.md))에서 읽음 | 관리자가 작업자의 결과와 기록이 기다리는 것을 따라잡게. `/vstack:ketchup`을 홈 레포에서 바로 불러도 제품 저장소의 기록을 읽게 |
 | 37, 43 | `/visualize` 언급 → "a chart" | `visualize`는 vstack에 없다 |
 
 ### `skills/benchmark-checklist/SKILL.md`(pstack 0.15.36, 7단계)

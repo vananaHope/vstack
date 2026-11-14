@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 ## 가장 먼저: 설정 확인
 
-이 스킬이 불리면 다른 어떤 일(한도 측정, 이슈 조회, 작업자 띄우기)보다 먼저 프로젝트 설정을 찾는다. 메인 저장소의 `docs/agents/orchestration.md`, 없으면 `.local/orchestration/settings.md`다. 이 문서에서 "프로젝트 설정의 ○○"는 그 파일의 해당 절이다.
+이 스킬이 불리면 다른 어떤 일(한도 측정, 이슈 조회, 작업자 띄우기)보다 먼저 메인 저장소를 정하고([main-repo.md](../v-mode/main-repo.md)), 프로젝트 설정을 찾는다. 메인 저장소의 `docs/agents/orchestration.md`, 없으면 `.local/orchestration/settings.md`다. 이 문서에서 "프로젝트 설정의 ○○"는 그 파일의 해당 절이다.
 
 - **둘 다 없으면(첫 실행)**: 사용자에게 "이 프로젝트는 프로젝트 설정이 없어 설정부터 합니다"라고 한 줄 알리고, 곧바로 [setup.md](setup.md)의 설정 창을 띄운다. 사용자가 원래 요청한 일(이슈 구현 등)은 설정을 저장한 뒤에 이어 간다.
 - **사용자가 설정 창을 닫거나 저장하지 않으면** 지휘를 시작하지 않고, 나중에 `/vstack:configure`로 설정할 수 있다고 알린다.
