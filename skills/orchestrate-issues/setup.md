@@ -33,6 +33,7 @@
 | UI 작업 | 없음. UI도 등급 목록으로 맡긴다 | 작업 나누기 | 아니오 |
 | 간단한 구현에서 뺄 영역 | 없음. 등급 기준만으로 정한다 | 작업 나누기 | 아니오 |
 | 등급별 배치 | [tiers.md](tiers.md)의 기본 배치, 크기 상한 파일 4개·변경 200줄 안팎. 표에 검토 목록 열, `UI` 줄, 2차 의견 줄이 없으면 그 부분만 기본값 | 등급별 배치, 검토 배치 | 아니오 |
+| 명세 점검 (선택) | `opencode`(전역 설정 모델) → `claude`(관리자와 같은 모델). Codex는 쓰지 않는다([spec-check.md](spec-check.md) "누구에게") | 명세 점검 | 아니오 |
 | 추가 완료 조건 | 없음 | 명령 | 예 |
 | 실창 검사 (선택) | 실창 잠금을 명세에 넣지 않는다 | 작업 나누기 | 예 |
 | 확인 자료 (선택) | 없음 | 훑기 | 예 |
@@ -71,8 +72,13 @@
    - `standard`·`hard`에는 `opencode`가 든 선택지를 내지 않는다(OpenCode는 `light`에서만 주 검토자). "Other"로 넣으면 건너뛴다고 알리고 그대로 저장한다.
    - 2차 의견 선택지: "같은 계열 검토일 때만 (추천)", "standard 이상", "모든 검토". `opencode` 명령이 없으면 묻지 않는다.
    - 답을 받으면 검토 목록 표기도 `check_tiers.py`로 본다(`관리자`는 통과).
-6. **명령**: 환경 준비 명령, 관련 테스트 명령, 추가 완료 조건. 찾은 명령(`package.json` scripts, `Makefile`, 설정 스크립트)을 선택지로 낸다.
-7. **작성 규칙**: 메시지 언어(최근 커밋 메시지·PR에서 찾은 언어를 추천), PR 서명 줄("🤖 Generated with Claude Code")을 넣을지. `AGENTS.md`에 이미 정해져 있으면 이 창은 건너뛴다.
+6. **명세 점검**([spec-check.md](spec-check.md)): 질문 3개. 점검자 목록 `opencode[:모델][@강도]` → `codex[:모델][@강도]` → `claude[:모델][@강도]`의 세 항목을 하나씩 묻는다. 순서는 이대로이고, 바꾸려면 "Other"나 마지막 확인 창에서 목록을 직접 쓴다.
+   - OpenCode 점검 모델: 첫 선택지는 전역 설정(`~/.config/opencode/opencode.json`)의 `model`에 "(추천)"을 붙이고 설명에 그 이름을 적는다. 그 값이 없거나 `opencode models`에 없으면 그 사실을 설명에 적고 "(추천)"을 붙이지 않는다. 둘째는 등급별 배치에서 고른 OpenCode 모델이 전역 설정과 다를 때 그 모델, 마지막은 "OpenCode 쓰지 않음"이다. 다른 모델·강도는 "Other"로 `provider/model[@강도]`를 받는다. `opencode` 명령이 없으면 이 질문을 빼고 "OpenCode 쓰지 않음"으로 둔다.
+   - Codex 점검 모델: "쓰지 않음 (추천)"(기본값과 같다), "`codex@medium`", "`codex@low`". 설명에 `$CODEX_HOME/config.toml`(없으면 `~/.codex/config.toml`)의 `model`·`model_reasoning_effort`를 적는다. 다른 모델은 "Other"로 `모델[@강도]`(예: `gpt-6-astra@medium`)를 받는다. `codex` 명령이 없으면 이 질문을 빼고 "쓰지 않음"으로 둔다.
+   - Claude 점검 모델(앞 점검자를 쓰지 않거나 못 쓸 때): "관리자와 같은 모델 (추천)", "sonnet", "haiku", "opus". 강도는 "Other"로 `모델@강도`(예: `sonnet@high`)를 받는다.
+   - 답으로 목록을 만든다. 쓰지 않는 항목은 뺀다. 예: `opencode:opencode-go/deepseek-v4.1-flash → codex@medium → claude:sonnet`, OpenCode를 쓰지 않으면 `codex@medium → claude:sonnet`. 모델을 설정·관리자 그대로 두면 모델을 뺀다(`opencode → claude`). OpenCode·Codex 표기는 `check_tiers.py`로 본다(4와 같이 처리).
+7. **명령**: 환경 준비 명령, 관련 테스트 명령, 추가 완료 조건. 찾은 명령(`package.json` scripts, `Makefile`, 설정 스크립트)을 선택지로 낸다.
+8. **작성 규칙**: 메시지 언어(최근 커밋 메시지·PR에서 찾은 언어를 추천), PR 서명 줄("🤖 Generated with Claude Code")을 넣을지. `AGENTS.md`에 이미 정해져 있으면 이 창은 건너뛴다.
 
 아티팩트는 URL을 받은 뒤 `Artifact` `read`와 `ArtifactData` `list`로 컬렉션·필드를 보고(권한 확인은 [trackers.md](trackers.md) "아티팩트"), 필드 대응과 상태 값을 한 창 더 띄워 확인한다. 데이터베이스가 없거나 편집 권한이 없으면 그 사실을 알리고 읽기 전용으로 할지 같은 창에서 묻는다. 로컬 md도 파일 몇 개를 열어 본 뒤 같은 식으로 확인하고, 파일이 Git에서 제외됐는지 `git check-ignore`로 본다([trackers.md](trackers.md) "로컬 md").
 
@@ -87,7 +93,7 @@
 ```markdown
 # 프로젝트 설정
 
-vstack 플러그인의 맡기기와 지휘(`orchestrate-issues`)가 읽는 이 프로젝트의 설정이다. 이슈 저장소, 병합, UI 작업, 간단한 구현에서 뺄 영역, 등급별 배치, Codex fast는 지휘만 읽는다.
+vstack 플러그인의 맡기기와 지휘(`orchestrate-issues`)가 읽는 이 프로젝트의 설정이다. 이슈 저장소, 병합, UI 작업, 간단한 구현에서 뺄 영역, 등급별 배치, Codex fast, 명세 점검은 지휘만 읽는다.
 
 ## 이슈 저장소
 
@@ -151,6 +157,10 @@ vstack 플러그인의 맡기기와 지휘(`orchestrate-issues`)가 읽는 이 �
 ## Codex fast (선택)
 
 <Codex fast를 켜고 끄는 기준. 비우면 codex-fast.md의 기본값(짧은 창 문턱 60%, 긴 창 상한 75%, 긴 창 속도 하한 40%·여유 15%p(초기화 24시간 전부터는 보지 않음), 동시 상한 3명, 검토·병합 직전·임계 경로·묶음의 마지막·사용자가 기다림이면 켬)을 쓴다. 바꿀 항목만 적는다.>
+
+## 명세 점검 (선택)
+
+- 점검자(앞부터): <예: opencode:opencode-go/deepseek-v4.1-flash → codex@medium → claude:sonnet. 쓸 수 있는 에이전트는 opencode, codex, claude. 모델을 빼면 OpenCode는 전역 설정 모델, Codex는 config.toml의 모델, Claude는 관리자와 같은 모델>
 
 ## 추가 완료 조건
 

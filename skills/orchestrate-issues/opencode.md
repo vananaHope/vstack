@@ -25,7 +25,7 @@ OpenCode는 정한 모델을 쓸 수 없으면 오류 없이 기본 무료 모�
 - `-m opencode-go/deepseek-v4.1-flash`로 주면 로그인이 없을 때 `Error: Model unavailable`로 멈춘다.
 - `-m` 없이 전역 설정에만 그 모델을 적으면, 로그인이 없을 때 **오류 없이** `big-pickle`로 돈다.
 
-1. **쓸 모델**: 등급 표기의 모델(`opencode:<provider/model>`), 없으면 `~/.config/opencode/opencode.json`의 `model`. 둘 다 없으면 OpenCode를 쓰지 않는다. 기본 모델에 맡기지 않는다.
+1. **쓸 모델**: 등급 표기의 모델(`opencode:<provider/model>`. 명세 새 눈 점검이면 프로젝트 설정 "명세 점검" 절의 표기, [spec-check.md](spec-check.md)), 없으면 `~/.config/opencode/opencode.json`의 `model`. 둘 다 없으면 OpenCode를 쓰지 않는다. 기본 모델에 맡기지 않는다.
 2. **쓸 수 있는지**: `opencode models`에 그 이름이 있는지 본다. 없으면 OpenCode를 건너뛰고(한도가 `ok`가 아닌 것과 같다) 사용자에게 알린다. `opencode-go/` 모델은 OpenCode Go 로그인(`opencode auth login`)이 있어야 목록에 나온다. 로그인은 사용자가 한다.
 3. **실제로 쓰였는지**: `opencode run`이면 출력의 `> <에이전트> · <모델>` 줄**과** 종료 코드 0, 그리고 그 뒤에 답이 있는지를 함께 본다. 그 줄은 모델 호출 전에 찍혀서 호출이 실패해도 나온다(측정: 키가 모델을 부를 수 없을 때 그 줄 다음에 `Error: This API key can't call models`, 종료 코드 1). 대화형 작업자면 `~/.local/share/opencode/opencode.db`에서 그 세션의 `session_message` 기록에 든 `"model"`(`providerID`와 `id`)을 본다. `session_v2.model`은 `-m`으로 줬을 때만 채워지고, 전역 설정으로 돌면 비어 있다(측정). 그래서 빈 값만으로 기본 모델이라고 판단하지 않는다. 1의 모델이 아니면 그 결과를 쓰지 않고 사용자에게 알린다.
 

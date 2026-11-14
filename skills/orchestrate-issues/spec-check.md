@@ -10,12 +10,20 @@
 
 ## 누구에게
 
-1. OpenCode `plan` 에이전트(읽기 전용)에게 메인 저장소에서 묻는다: `opencode run --agent plan -m <모델> "<질문>" < /dev/null`([opencode.md](opencode.md) "`opencode run` 공통 주의"). 먼저 opencode.md "모델 확인" 1·2를 하고, 답을 쓰기 전에 3을 한다(출력의 `> plan · <모델>` 줄, 종료 코드 0, 답이 있는지). 명세가 가리킨 문서와 코드를 훑느라 **5분 안팎**이 걸릴 수 있다(측정: DeepSeek 4.1 Flash 무료판으로 좁힌 질문 234초, 도구 호출 22번).
+점검자는 프로젝트 설정 "명세 점검" 절의 점검자 목록을 앞부터 쓴다. 절이 없으면 `opencode` → `claude`다. 표기는 [tiers.md](tiers.md)와 같은 `에이전트[:모델][@강도]`이고, 쓸 수 있는 에이전트는 `opencode`, `codex`, `claude` 셋이다. 앞 항목이 아래 1~3의 건너뛰는 조건에 걸리면 다음 항목을 쓴다. 목록이 다 막히면 모델·강도를 정하지 않은 `claude`(3)로 한다.
+
+1. **`opencode[:모델][@강도]`**: OpenCode `plan` 에이전트(읽기 전용)에게 메인 저장소에서 묻는다: `opencode run --agent plan -m <모델>[#<강도>] "<질문>" < /dev/null`([opencode.md](opencode.md) "`opencode run` 공통 주의"). 모델은 표기의 모델, 없으면 전역 설정의 `model`이다(opencode.md "모델 확인" 1). 먼저 opencode.md "모델 확인" 1·2를 하고, 답을 쓰기 전에 3을 한다(출력의 `> plan · <모델>` 줄, 종료 코드 0, 답이 있는지). 명세가 가리킨 문서와 코드를 훑느라 **5분 안팎**이 걸릴 수 있다(측정: DeepSeek 4.1 Flash 무료판으로 좁힌 질문 234초, 도구 호출 22번).
    - 셸 도구의 시간 제한이나 `timeout`은 10분 이상으로 둔다. 더 짧으면 도는 중에 끊긴다. 끊기면 `opencode run`이 띄운 서비스(`opencode serve --service`)도 함께 죽고, CLI는 `Error: Transport: ECONNRESET: The socket connection was closed unexpectedly`를 남긴다. 네트워크 오류처럼 보이지만 시간 제한 때문이다. 종료 코드(`timeout`이면 124)를 파이프(`| tail`)로 가리지 않는다.
    - 시간 제한 없이 `ECONNRESET`이 나면 한 번 다시 묻는다.
    - 시간 제한에 걸리면 다시 묻기 전에 출력의 `> plan · <모델>` 줄을 본다. 정한 모델이 아니면(예: `big-pickle`) 시간 초과의 원인은 모델이다. 첫 시범에서 그랬다(opencode.md "모델 확인").
    - 출력도 세션도 없이 멈춰 있으면 표준 입력을 닫지 않은 것이다(`< /dev/null`).
-2. OpenCode의 한도가 `ok`가 아니거나 쓸 수 없으면(다시 물어도 끊기면 포함), Agent 도구로 새 서브에이전트를 띄워 같은 질문을 준다. 이 대화의 내용은 넣지 않는다.
+   - 건너뛰는 조건: OpenCode의 한도가 `ok`가 아니다, 쓸 모델이 없거나 쓸 수 없다("모델 확인" 1·2), 다시 물어도 끊긴다, "모델 확인" 3에서 정한 모델이 쓰이지 않았다.
+2. **`codex[:모델][@강도]`**: 읽기 전용 샌드박스로 메인 저장소에서 묻는다: `codex exec -s read-only -C <메인 저장소> [-m <모델>] [-c model_reasoning_effort='"<강도>"'] -o <출력 파일> "<질문>" < /dev/null`. 모델을 빼면 `$CODEX_HOME/config.toml`(없으면 `~/.codex/config.toml`)의 `model`, 강도를 빼면 그 파일의 `model_reasoning_effort`다. 출력 파일은 `.local/vstack/<작업 이름>/spec-check-answer.md`로 두고, 답은 이 파일에서 읽는다. fast는 켜지 않는다(작업자가 아니라 [codex-fast.md](codex-fast.md)를 따르지 않는다).
+   - 셸 도구의 시간 제한은 10분 이상으로 둔다.
+   - 답을 쓰기 전에 표준 오류의 머리말에서 `model:`이 정한 모델(뺐으면 설정의 모델), `sandbox: read-only`, 강도를 정했으면 `reasoning effort:`가 그 값인지와, 종료 코드 0, 출력 파일에 답이 있는지 본다(측정: codex-cli 0.166.0, 짧은 질문 6초). 표준 오류를 파이프로 버리지 않는다.
+   - 건너뛰는 조건: Codex의 한도가 `ok`가 아니다([limits.md](limits.md)), `codex` 명령이 없다, 종료 코드가 0이 아니다(없는 모델 포함), 머리말의 모델이나 샌드박스가 다르다.
+3. **`claude[:모델][@강도]`**: Agent 도구로 새 서브에이전트를 띄워 같은 질문을 준다. 이 대화의 내용은 넣지 않는다. 표기의 모델은 Agent 도구의 `model`(`sonnet`, `opus`, `haiku`, `fable`)로, 강도는 `effort`(`low`~`max`)로 준다. 프로젝트 설정이 정한 값이라 그대로 넣는다. 빼면 그 값을 주지 않는다(관리자와 같은 모델, 기본 강도).
+   - 건너뛰는 조건: Agent 도구가 그 모델 이름을 받지 않는다(그때는 사용자에게 알린다). 서브에이전트는 관리자 세션에서 돌므로 한도는 따로 보지 않는다.
 
 ## 질문
 
