@@ -8,6 +8,7 @@ disable-model-invocation: true
 
 [setup.md](../orchestrate-issues/setup.md)를 읽고 그대로 한다. 이 설정은 지휘(`orchestrate-issues`)와 맡기기(v-mode [delegate.md](../v-mode/delegate.md) "프로젝트 설정")가 함께 읽는다. 어느 절을 어느 갈래가 읽는지는 setup.md "절이 빠졌을 때" 표에 있다.
 
+- 가장 먼저 메인 저장소를 정한다([main-repo.md](../v-mode/main-repo.md)). 설정을 찾고 만드는 곳은 메인 저장소다.
 - 프로젝트 설정(`docs/agents/orchestration.md` 또는 `.local/orchestration/settings.md`)이 없으면 처음부터 만든다.
 - 있으면 먼저 `AskUserQuestion` 창 하나로 고칠 창을 고르게 한다. 질문 두 개, 둘 다 여러 개 고름이다. 선택지는 setup.md 2단계의 창 이름이고, 설명에 그 창이 채우는 절의 지금 값을 줄여 적는다.
 

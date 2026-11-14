@@ -40,9 +40,11 @@ disable-model-invocation: true
 
 ### 0. 진행 중인 지휘 작업인가
 
+가장 먼저 메인 저장소를 정한다([main-repo.md](main-repo.md)). 아래의 기록, `.local/`, 브랜치·PR·worktree는 모두 메인 저장소의 것이다.
+
 **따라잡기만 요청했으면**("남은 게 뭐야", "자는 동안 뭐가 바뀌었어", `/vstack:ketchup`) 아래를 거치지 않는다. 진행 중인 지휘 작업과 맡기기의 기록과 받은 편지함을 읽기만 하고 [../ketchup/SKILL.md](../ketchup/SKILL.md)로 답한다. 갈래, 작업 상태, 작업자, 기록의 관리자 칸을 바꾸지 않는다(관리자가 다른 세션이면 그 사실을 답에 적는다). 중단, 수정, 이어 가기, 반영 같은 지시가 함께 있으면 그 지시만 아래대로 처리하고 따라잡기도 답한다. 따라잡기 요청은 어떤 동작의 승인도 아니다.
 
-크기를 보기 전에, 요청이 이 저장소에서 이미 지휘 중인 작업에 속하는지 본다. 메인 저장소의 `.local/vstack/*/state.md` 가운데 첫 줄이 `끝`이 아닌 것, 그 작업의 브랜치·PR·worktree가 기준이다([contracts/state-and-rollback.md](contracts/state-and-rollback.md) "소유권").
+크기를 보기 전에, 요청이 메인 저장소에서 이미 지휘 중인 작업에 속하는지 본다. 메인 저장소의 `.local/vstack/*/state.md` 가운데 첫 줄이 `끝`이 아닌 것, 그 작업의 브랜치·PR·worktree가 기준이다([contracts/state-and-rollback.md](contracts/state-and-rollback.md) "소유권").
 
 - 속하면 크기와 관계없이 지휘 절차로 보낸다. 그 작업의 수정, 검토 반영, "PR 올려", "병합해", "병합됐어", "그만둬"는 [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md) 6단계 표와 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "그만둘 때"를 따른다. 지휘 중인 작업의 코드를 이 대화가 직접 고치지 않는다(관리자는 작업자 역할을 맡지 않는다, [contracts/worker-contract.md](contracts/worker-contract.md)).
   - 사용자가 그 작업의 코드를 고쳐 달라고 하면(작은 수정 포함) 검토 지적처럼 받는다. 요청을 `.local/vstack/<작업 이름>/user-request-<k>.md`에 지적 형식(심각도, 내용, 근거: 사용자 요청과 시각)으로 적는다. orchestrate-issues 5단계 판정으로 `지금 고침`에 넣고 [../orchestrate-issues/fixes.md](../orchestrate-issues/fixes.md)대로 지적 수정을 맡긴다. 수정 명세의 "검토 보고서 경로"에는 그 파일(검토 보고서가 있으면 함께)을 적는다. 그 worktree에서 작업자가 일하는 중이면 그 작업자의 보고를 받은 뒤에 맡긴다(두 역할이 같은 worktree에 동시에 쓰지 않는다). 수정은 대상을 바꾸므로 재검증과 새 `review` 시도가 따른다. 그 비용이 요청에 비해 크면 맡기기 전에 말한다(고정 규칙 6).
