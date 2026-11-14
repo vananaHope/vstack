@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vstack이 요청을 처리하는 세 갈래</title>
+  <!-- Font source: system. No web-font link: the exported SVG is shown through <img>
+       on GitHub, where web fonts cannot load. Stacks fall through to local faces. -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #2d3142;
+      --color-ink:     #f5f5f5;
+      --color-muted:   #bfc0c0;
+      --color-accent:  #f08a59;
+      --font-sans:     'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif;
+      --font-mono:     'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+
+    .frame { max-width: 1200px; width: 100%; min-width: 0; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · Diagram Design</p>
+    <h1>vstack이 요청을 처리하는 세 갈래</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="vstack-overview-dark-title vstack-overview-dark-desc">
+        <title id="vstack-overview-dark-title">vstack이 요청을 처리하는 세 갈래</title>
+        <desc id="vstack-overview-dark-desc">v-mode 라우터가 요청을 크기와 유형에 따라 바로, 맡기기, 지휘 세 갈래로 보내며, 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bfc0c0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f08a59"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#2d3142"/>
+
+        <line x1="480" y1="80" x2="480" y2="110" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M 380 196 V 216 Q 380 224 372 224 H 178 Q 170 224 170 232 V 246" fill="none" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="480" y1="196" x2="480" y2="246" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M 580 196 V 216 Q 580 224 588 224 H 782 Q 790 224 790 232 V 246" fill="none" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M 80 434 Q 82 468 98 488" fill="none" stroke="rgba(240,138,89,0.50)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="104" y="506" fill="#f08a59" font-size="14" font-weight="400" font-style="italic" font-family="'Instrument Serif', 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif" text-anchor="start">관리자는 바로 갈래 말고는</text>
+        <text x="104" y="526" fill="#f08a59" font-size="14" font-weight="400" font-style="italic" font-family="'Instrument Serif', 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif" text-anchor="start">제품 코드를 쓰지 않는다</text>
+        <rect x="420" y="40" width="120" height="40" rx="20" fill="#2d3142"/>
+        <rect x="420" y="40" width="120" height="40" rx="20" fill="rgba(191,192,192,0.10)" stroke="#949eb2" stroke-width="1"/>
+        <text x="480" y="64" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">요청</text>
+        <rect x="280" y="112" width="400" height="84" rx="6" fill="#2d3142"/>
+        <rect x="280" y="112" width="400" height="84" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1.2"/>
+        <text x="480" y="140" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="12" font-weight="600" fill="#f5f5f5">/vstack:v-mode</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5"> 라우터</tspan></text>
+        <text x="480" y="162" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">크기와 유형을 보고 세 갈래 중 하나로</text>
+        <text x="480" y="182" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">먼저: 진행 중인 지휘·맡기기에 속하면 그쪽으로</text>
+        <rect x="40" y="248" width="260" height="184" rx="6" fill="#2d3142"/>
+        <rect x="40" y="248" width="260" height="184" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="56" y="278" fill="#f5f5f5" font-size="14" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">바로</text>
+        <text x="56" y="298" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">이 대화(관리자)가 처리</text>
+        <line x1="56" y1="312" x2="284" y2="312" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="56" y="336" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">읽기 전용 질문·조사</text>
+        <text x="56" y="354" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="11" font-weight="400" fill="#bfc0c0">investigation</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="500" fill="#bfc0c0"> 레시피</tspan></text>
+        <text x="56" y="384" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">제품에 닿지 않는 수정</text>
+        <text x="56" y="402" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">문서, 주석 오타</text>
+        <rect x="320" y="248" width="320" height="304" rx="6" fill="#2d3142"/>
+        <rect x="320" y="248" width="320" height="304" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="336" y="278" fill="#f5f5f5" font-size="14" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">맡기기</text>
+        <text x="336" y="298" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">티켓으로 나누지 않는 한 단위의 일</text>
+        <line x1="336" y1="312" x2="624" y2="312" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="336" y="336" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">레시피</text>
+        <text x="336" y="354" fill="#f5f5f5" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">bug-fix · feature · refactoring</text>
+        <text x="336" y="370" fill="#f5f5f5" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">ui-polish · correct · perf</text>
+        <text x="336" y="392" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">또는 레시피 없이 수용 기준만</text>
+        <line x1="336" y1="408" x2="624" y2="408" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="336" y="432" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">1</text>
+        <text x="354" y="432" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">Claude 구현자가 구현</text>
+        <text x="336" y="454" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">2</text>
+        <text x="354" y="454" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">Codex 검토자가 검토</text>
+        <text x="336" y="476" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">3</text>
+        <text x="354" y="476" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">관리자가 확인</text>
+        <rect x="336" y="510" width="60" height="24" rx="2" fill="#2d3142" stroke="rgba(245,245,245,0.30)" stroke-width="0.8"/>
+        <text x="366" y="526" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">계약 밖</text>
+        <rect x="404" y="510" width="76" height="24" rx="2" fill="#2d3142" stroke="rgba(245,245,245,0.30)" stroke-width="0.8"/>
+        <text x="442" y="526" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">Orca 필요</text>
+        <rect x="660" y="248" width="260" height="304" rx="6" fill="#2d3142"/>
+        <rect x="660" y="248" width="260" height="304" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="676" y="278" fill="#f5f5f5" font-size="14" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">지휘</text>
+        <text x="676" y="298" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">여러 티켓·교차 검토·병합 관문</text>
+        <line x1="676" y1="312" x2="904" y2="312" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="676" y="336" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">1</text>
+        <text x="694" y="336" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">정렬 · mattpocock</text>
+        <text x="694" y="354" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">grill-with-docs →</text>
+        <text x="694" y="370" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">to-spec → to-tickets</text>
+        <text x="676" y="392" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">2</text>
+        <text x="694" y="392" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">티켓의 vstack 절</text>
+        <text x="676" y="414" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">3</text>
+        <text x="694" y="414" fill="#f5f5f5" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">orchestrate-issues</text>
+        <text x="676" y="436" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">4</text>
+        <text x="694" y="436" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">병합 관문 G1~G5</text>
+        <text x="676" y="458" fill="#bfc0c0" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">5</text>
+        <text x="694" y="458" fill="#f5f5f5" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">병합</text>
+        <line x1="676" y1="474" x2="904" y2="474" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="676" y="496" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">레시피</text>
+        <text x="676" y="514" fill="#f5f5f5" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">bug-fix · feature · refactoring</text>
+        <text x="676" y="536" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="start">계약</text>
+        <text x="712" y="536" fill="#f5f5f5" font-size="11" font-weight="400" font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" text-anchor="start">vstack-contract@4</text>
+        <circle cx="80" cy="432" r="2" fill="#f08a59"/>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>
