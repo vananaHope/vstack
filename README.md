@@ -25,7 +25,7 @@ vstack은 mattpocock-skills(`claude-plugins-official` 마켓플레이스)에 기
 
 프로젝트에서 처음 쓰기 전에 `/vstack:configure`를 한 번 실행하면 좋다. 프로젝트 설정(준비·테스트 명령, 작성 규칙, 구현 제약, 지휘의 배치·명세 점검 모델·병합)을 설정 창으로 만들고, 맡기기와 지휘가 이것을 함께 읽는다. 끝에 전제(Orca, `gh`·`claude`·`codex`, 한도, `.local/` 무시, mattpocock 설정, 검증 수단)를 점검해 알려 준다. 설정이 없어도 맡기기는 저장소를 훑어 정하고, 지휘는 처음 실행할 때 이 설정부터 띄운다.
 
-홈 레포(다른 저장소를 가리키는 포인터를 `AGENTS.md`에 둔 저장소)에서 실행해도 된다. 그때는 다룰 저장소를 이름이나 경로로 말한다(예: "my-video-manager 이슈 진행해"). v-mode가 그 저장소를 메인 저장소로 정하고, 설정·기록·worktree를 모두 그 저장소에 둔다([skills/v-mode/main-repo.md](skills/v-mode/main-repo.md)).
+홈 레포(다른 저장소를 가리키는 포인터를 `AGENTS.md`에 둔 저장소)에서 실행해도 된다. 그때는 다룰 저장소를 이름, 포인터 줄에 적은 별칭, 경로 가운데 하나로 말한다(예: "my-video-manager 이슈 진행해", "mvm #285 지휘해"). v-mode가 그 저장소를 메인 저장소로 정하고, 설정·기록·worktree를 모두 그 저장소에 둔다([skills/v-mode/main-repo.md](skills/v-mode/main-repo.md)).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/vstack-overview-dark.svg">
