@@ -1,14 +1,14 @@
 # vstack 설계
 
-상태(2026-11-14): 플러그인 0.23.1. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
+상태(2026-11-15): 플러그인 0.24.0. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
 
-만들 때의 상태: 3판 + 0단계 완료(2026-11-08, 6차 Codex 검토 "0단계 완료, 1단계로 가도 됨"). 첫 시범·두 번째 시범 완료(2026-11-08, [pilot-1.md](pilot-1.md), [pilot-2.md](pilot-2.md)). 계약의 정본은 `skills/v-mode/contracts/`(지금 `vstack-contract@4`)이고, 이 문서의 3절은 요약이다. 둘이 다르면 contracts가 우선한다(차이는 변경 이력 "0단계"에 있다).
+만들 때의 상태: 3판 + 0단계 완료(2026-11-08, 6차 Codex 검토 "0단계 완료, 1단계로 가도 됨"). 첫 시범·두 번째 시범 완료(2026-11-08, [pilot-1.md](pilot-1.md), [pilot-2.md](pilot-2.md)). 계약의 정본은 `skills/v-mode/contracts/`(지금 `vstack-contract@5`)이고, 이 문서의 3절은 요약이다. 둘이 다르면 contracts가 우선한다(차이는 변경 이력 "0단계"에 있다).
 
 ## 목표
 
 pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 만든다. v-mode는 요청에 맞는 레시피를 고르고, 레시피는 mattpocock·agent-orchestra·pstack에서 가져온 스킬을 단계마다 쓴다. 중심은 pstack의 **검증과 원칙**이다.
 
-배경: 사용자는 작업 전에 자기 생각과 AI 생각의 간격을 줄이는 데 공을 들인다(mattpocock `grill-with-docs` → `to-spec` → `to-tickets`). 구현은 직접 만든 agent-orchestra로 관리자를 두고 맡긴다(등급별 OpenCode·Codex·Claude 배치, 다른 실행기 교차 검토). pstack의 검증·플레이북·원칙이 이 흐름에서 비어 있는 실행 품질을 채운다고 본다.
+배경: 사용자는 작업 전에 자기 생각과 AI 생각의 간격을 줄이는 데 공을 들인다(mattpocock `grill-with-docs` → `to-spec` → `to-tickets`). 구현은 직접 만든 agent-orchestra로 관리자를 두고 맡긴다(등급별 Codex·Claude 배치, 다른 실행기 교차 검토). pstack의 검증·플레이북·원칙이 이 흐름에서 비어 있는 실행 품질을 채운다고 본다.
 
 **첫 버전의 성공 기준**(첫 버전 때의 기준): Orca 위에서 버그 수정 한 건이 Claude 관리자 → Codex 구현 → 다른 실행기 검토 → 병합 직전 재검증까지 이 문서의 계약대로 통과하고, 10절의 행동 회귀 사례가 기대대로 움직인다. 스킬을 몇 개 가져왔는지는 기준이 아니다.
 
@@ -506,6 +506,23 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 - `spec-check.md` "누구에게": 목록을 앞부터 쓰고, 항목마다 건너뛰는 조건을 적었다. OpenCode는 `-m <모델>[#<강도>]`, Codex는 `codex exec -s read-only -m <모델> -c model_reasoning_effort=...`(머리말의 `model:`·`sandbox:`로 확인, fast 끔), Claude는 Agent 도구의 `model`·`effort`로 준다. 목록이 다 막히면 모델을 정하지 않은 Claude 서브에이전트.
 - `setup.md` 2단계에 6 "명세 점검" 창(질문 3개: OpenCode, Codex, Claude 점검 모델). `configure`의 고르기 창은 질문마다 선택지가 4개를 넘지 않게 "저장소·규칙(기본, 이슈, 작성 규칙, 명령)"과 "배치(작업 나누기, 등급별 배치, 검토 배치, 명세 점검)"로 다시 묶었다.
 - 이 절은 지휘만 읽는다(맡기기는 명세 새 눈 점검을 하지 않는다).
+
+## 21. OpenCode를 뺀다(2026-11-15, ADR 0012)
+
+**까닭.** 실제 프로젝트에서 OpenCode는 구현을 한 번도 맡지 않았고, 명세 새 눈 점검에서는 세 번 가운데 두 번 답을 내지 못했다. 사용자가 쓰지 않기로 했다([ADR 0012](adr/0012-no-opencode.md)). 이 문서의 앞 절과 변경 이력, 시범 기록에 남은 OpenCode는 그때의 기록이다.
+
+**바꾼 것(0.24.0).**
+- 계열은 `codex`, `claude` 둘. `orchestrate-issues/opencode.md`를 지우고, 등급 기본 배치(`light`·`standard` 구현 `codex@medium` → `claude`), 명세 점검 기본값(`claude`), 설정 창, `check_tiers.py`, 실행 환경(Orca)의 OpenCode 부분을 뺐다. OpenCode 전용 규칙(`light` 주 검토자, `standard` 크기 상한, "맡기지 않는 일")도 지웠다.
+- **2차 의견**은 `tiers.md` "2차 의견"으로 옮겼다. 주 검토자와 다른 계열의 맥락 없는 새 세션이 주고, 같은 계열 검토라 다른 계열을 쓸 수 없으면 같은 계열의 다른 모델이 준다. 어느 쪽도 한도가 없으면 기다린다.
+- **rebase**는 원래 구현자의 계열이 한다(`vstack.md` "rebase"). rebase 작업자도 변경 작성자라, 셋째 계열 없이 다른 계열이 rebase하면 다른 계열 검토자가 남지 않는다. 남겨 둔 구현자가 있으면 그 세션에 보낸다. opencode.md의 rebase 절 가운데 일반 절차(rebase 전 `HEAD`, `range-diff`, 재검증)를 함께 옮겼다.
+- **빠른 질문**은 읽기 전용 서브에이전트(`vstack:explorer`, v-mode `subagents.md`)로 한다.
+- **한도**: Codex 소진이면 Claude가 맡는다. Claude `warning`이면 관리자 확인과 Claude 구현만 줄이고 검토는 `claude:sonnet`으로 계속한다(검토까지 Codex로 몰면 Codex가 먼저 바닥날 수 있다). `exhausted`면 Codex 같은 계열 검토와 다른 Codex 모델의 2차 의견. 둘 다 소진이면 기다린다.
+- 계약 문구(`worker-contract.md`, `evidence.md`)의 계열 목록에서 `opencode`를 뺐다. 계약 README의 버전 규칙(시범 뒤에는 계약을 바꾸면 숫자를 올린다)대로 `vstack-contract@5`로 올리고, `@4` 때처럼 레시피 일곱의 버전과 계약 줄도 올렸다. 계약 예시 01·02의 OpenCode 작업자는 Codex로 바꿨다.
+- 같은 계열 검토 뒤의 지적 수정: `fixes.md` "코어의 그 밖의 수정"이 검토자와 같은 계열을 건너뛰면 계열이 둘일 때 고칠 작업자가 없다. 같은 계열 검토였으면 그 계열의 새 작업자가 고치고, 재검토도 같은 계열 조건을 다시 채운다.
+- `tiers.md`의 "한도가 `ok`"에 Claude `warning`의 `claude:sonnet` 검토·2차 의견을 포함했다(limits.md와 맞춤). 2차 의견은 작업자 띄우기가 아니라 "2차 의견"의 방법으로 묻는다.
+- Claude `warning`에서 주 검토가 `claude:sonnet`이고 다른 계열을 쓸 수 없으면 2차 의견은 `claude:haiku`다.
+- 0.24.0 전 프로젝트 설정에 남은 `opencode` 항목은 어느 목록에서든 건너뛰고 한 번 알린다(`/vstack:configure`로 고침). 비면 그 목록이 다 막혔을 때의 규칙을 따른다.
+- 지휘 그림의 "등급별 작업자" 문구.
 
 ## 변경 이력
 

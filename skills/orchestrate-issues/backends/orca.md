@@ -26,7 +26,7 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 ## worktree 만들기
 
-작업자를 새 worktree로 띄울 때는 이 단계 없이 `worker-start`가 만든다(아래 "띄우기"). 띄우기 전에 worktree 안에 설정 파일을 써야 할 때(OpenCode 모델, Codex fast)만 먼저 만든다.
+작업자를 새 worktree로 띄울 때는 이 단계 없이 `worker-start`가 만든다(아래 "띄우기"). 띄우기 전에 worktree 안에 설정 파일을 써야 할 때(Codex fast)만 먼저 만든다.
 
 `orca worktree create --name <작업 이름>-<slug> --branch <작업 이름>-<slug> --repo path:<메인 저장소> --base-branch main --setup run --json`. `--branch`를 주지 않으면 Orca의 기본 접두사가 붙어 SKILL.md가 가정하는 브랜치 이름(`<작업 이름>-`로 시작)과 달라진다. 결과의 worktree 경로와 브랜치를 `state.md`에 적어 둔다.
 
@@ -43,13 +43,8 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 - **Claude·Codex**: `--model <모델> --effort <강도>`. `--effort`는 `--model`이 있어야 한다. 강도만 정했으면 모델은 그 에이전트 설정의 기본 모델을 적는다. 둘 다 없으면 두 옵션을 뺀다.
 - **Codex fast**: `worker-start`에는 Codex 설정을 넘길 옵션이 없다. 아래 "Codex fast"대로 worktree의 Codex 설정으로 준다.
-- **OpenCode**: 모델 선택은 이미 있는 worktree에서만 된다. 강도(`--effort`)는 지원하지 않는다. 언제나 아래 "OpenCode 모델과 강도"대로 worktree에 모델을 적고 확인한 뒤 띄운다(모델을 정하지 않았어도 [opencode.md](../opencode.md) "모델 확인" 1의 모델을 적는다). `--agent opencode`만으로 띄우지 않는다.
 
 `worker-start`가 실패하면 같은 명령을 다시 돌리지 않는다. 결과의 `failedStage`를 보고 `orca skills get orchestration --reference references/recovery-and-cleanup.md`를 따른다.
-
-### OpenCode 모델과 강도
-
-[opencode.md](../opencode.md)의 "모델과 강도"대로 worktree에 `opencode.json`을 쓴 뒤 `worker-start --spec-file ... --worktree path:<worktree 경로> --agent opencode`로 띄운다.
 
 ### Codex fast
 

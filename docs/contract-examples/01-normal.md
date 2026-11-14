@@ -2,7 +2,7 @@
 
 ## 티켓
 
-- 작업 이름: `issue-42` · 레시피: `bug-fix@7` · 등급: `standard` · PR: #57
+- 작업 이름: `issue-42` · 레시피: `bug-fix@8` · 등급: `standard` · PR: #57
 - 증상: 할 일을 완료로 체크한 뒤 새로고침하면 미완료로 돌아온다.
 
 | ID | 필수 | 내용 | 검증 명령 |
@@ -14,7 +14,7 @@
 
 | 항목 | 값 |
 | --- | --- |
-| 레시피 | `bug-fix@7`, `<vstack>/skills/v-mode/recipes/bug-fix.md` |
+| 레시피 | `bug-fix@8`, `<vstack>/skills/v-mode/recipes/bug-fix.md` |
 | seam | 저장소에서 목록을 읽는 경계(`loadTodos`) |
 | 재현 경로 | 앱 실행 → 할 일 하나 체크 → 새로고침 |
 | 실행 조건 | bash(Git Bash), 실창 불필요 |
@@ -78,7 +78,7 @@ AC-1·AC-2는 두 역할 모두 통과. 그런데 `rev-3ecbf1e7-1`이 "가져오
 같은 티켓을 `light`로 정했다고 하자. orchestra 기본 light 검토 목록은 `관리자 → claude → codex`다.
 
 - 첫 버전에서 관리자는 검토자 역할을 맡지 않으므로 `관리자`를 건너뛴다.
-- 구현자가 `opencode`면 다음 항목 `claude`가 다른 계열이므로 검토자로 고른다.
+- 구현자가 `codex`면 다음 항목 `claude`가 다른 계열이므로 검토자로 고른다.
 
 ## 01e. dirty tree로 만든 증거
 
@@ -100,7 +100,7 @@ AC-1·AC-2는 두 역할 모두 통과. 그런데 `rev-3ecbf1e7-1`이 "가져오
 
 01a에서 사소 1을 `지금 고침`으로 정했다고 하자.
 
-1. `fixes.md` "코어의 그 밖의 수정": `light` 목록에서 검토자(claude)와 같은 계열을 건너뛰어 `opencode`가 같은 worktree에서 고친다. 새 세션 `term-o1`, 시도 `impl-9f9f9f9f-1`. H2=2222ccc.
+1. `fixes.md` "코어의 그 밖의 수정": `light` 목록에서 검토자(claude)와 같은 계열을 건너뛰어 `codex`가 같은 worktree에서 고친다. 새 세션 `term-c2`, 시도 `impl-9f9f9f9f-1`. H2=2222ccc.
 2. 이 세션이 (H2, B1)의 변경 작성자이므로 impl이다. AC-1·AC-2 전부를 (H2, B1)에서 돌린다. 통과.
 3. 관리자 확인: 수정 diff를 읽고 사소 1이 고쳐졌다고 판정해 `minor-check-1.md`에 남긴다. 이것은 G3의 "지금 고침 해결" 기록이다.
 4. 진입점 "사소 수정 뒤": rev `review` 시도를 하나 배정한다. `rev-3ecbf1e7-2`(세션 `term-r1`, claude, scope `review`, 맡은 AC: AC-1·AC-2). 수정 diff를 검토하고 AC 전부를 돌린다. 결론 `통과`.
@@ -111,7 +111,7 @@ AC-1·AC-2는 두 역할 모두 통과. 그런데 `rev-3ecbf1e7-1`이 "가져오
 | G1의 rev 기록 | `rev-3ecbf1e7-2` |
 | G3의 결론 | `rev-3ecbf1e7-2`(T=(H2, B1)의 가장 나중 `review` 시도) |
 | G3의 지금 고침 해결 | `minor-check-1.md` |
-| G5 | rev 세션 `term-r1`은 H2에 커밋하지 않았고, claude ≠ opencode(변경 작성자) |
+| G5 | rev 세션 `term-r1`은 H2에 커밋하지 않았고, claude ≠ codex(변경 작성자) |
 
 모두 통과 → 병합 명령(`--match-head-commit <H2>`).
 

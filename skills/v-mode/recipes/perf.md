@@ -1,6 +1,6 @@
 # 성능 개선
 
-id: perf · version: 3 · contract: vstack-contract@4
+id: perf · version: 4 · contract: vstack-contract@5
 
 pstack의 `playbooks/perf-issue.md`를 따른다. 고치는 일마다 측정을 붙이고, 소스를 읽는 것으로 측정을 대신하지 않는다. 측정이 믿을 만한지는 [benchmark-checklist](../../benchmark-checklist/SKILL.md)로 본다. 성능 회귀의 원인을 좁힐 때는 [diagnosing-bugs](../../diagnosing-bugs/SKILL.md)의 Phase 4 "Perf branch"(기준 측정 뒤 이분 탐색)를 쓴다. 원본의 하위 에이전트 구현 위임, 모델 지정, `how`·`architect` 단계, PR 단계, 지표를 오래 올리는 hillclimb는 뺐다. 가져온 것과 뺀 것은 저장소의 `UPSTREAM.md`에 있다.
 

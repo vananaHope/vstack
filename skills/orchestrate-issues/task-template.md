@@ -34,7 +34,7 @@
 - 준비·정리: <verify 스킬 절대 경로 또는 명세의 절차>
 - git 무시: 관리자가 이 worktree git의 `info/exclude`에 `.vstack/`(Codex fast를 쓰면 `/.codex/`도)를 넣었다. 증거 폴더와 scratch에 써도 `git status`는 비어 있어야 한다. 무시 규칙을 정하는 파일(`.gitignore`, `info/exclude`)은 만들거나 고치지 않는다. 실행 환경 입력(예: `.env.local`)을 만들거나 고쳐도 되는지는 명세의 실행 조건이 정한다.
 - 증거 폴더: `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`(이 폴더에만 증거를 쓰고, 커밋하지 않는다) · scratch: `<worktree>/.vstack/scratch/<시도 ID>/`
-- manifest 값: `task` = `<작업 이름>`, `attempt` = `<시도 ID>`, `role` = `impl`, `executor` = `<opencode/codex/claude>`, `session` = `<세션 키>`, `recipe` = `<id>@<버전>`. 과정 증거는 `process/` 아래에 두고 `files`에만 올린다. 완료 보고를 파일로도 남기면 증거 폴더의 `report.md`에 둔다. manifest와 `report.md`에서 증거 파일을 가리키는 경로는 증거 폴더 기준 상대 경로로 쓴다(`results[].cwd` 같은 실행 위치는 절대 경로 그대로).
+- manifest 값: `task` = `<작업 이름>`, `attempt` = `<시도 ID>`, `role` = `impl`, `executor` = `<codex/claude>`, `session` = `<세션 키>`, `recipe` = `<id>@<버전>`. 과정 증거는 `process/` 아래에 두고 `files`에만 올린다. 완료 보고를 파일로도 남기면 증거 폴더의 `report.md`에 둔다. manifest와 `report.md`에서 증거 파일을 가리키는 경로는 증거 폴더 기준 상대 경로로 쓴다(`results[].cwd` 같은 실행 위치는 절대 경로 그대로).
 - 권한: worktree 안의 제품 소스·테스트를 고치고 커밋할 수 있다. push, PR, 병합, worktree 밖 쓰기, 다른 시도의 증거 폴더, ignore 파일 수정은 하지 않는다.
 
 ## 먼저 읽을 것 (필수)

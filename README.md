@@ -2,7 +2,7 @@
 
 Claude Code 플러그인. `v-mode` 라우터가 요청에 맞는 레시피를 고르고, 레시피는 원칙과 검증 계약을 지키며 일한다. mattpocock 정렬 스킬(무엇을, 왜), pstack 원칙과 검증(어떻게 제대로), 지휘(누가, 언제)를 하나로 묶는다. 지휘는 agent-orchestra(아카이브됨)에서 옮겨 와 vstack이 소유한다.
 
-> 완성(0.20.1, 2026-11-14). 계약(`vstack-contract@4`), 원칙 24개, v-mode 라우터, 지휘 스킬, 레시피 일곱(버그 수정, 기능, 리팩토링, UI 다듬기, 조사, 반복 실수 막기, 성능 개선), 조사 에이전트가 있다. 시범 저장소에서 지휘와 맡기기를 여러 번 돌렸고, 실제 프로젝트에서 맡기기 한 번과 지휘 한 번을 끝까지 돌렸다([docs/pilot-6.md](docs/pilot-6.md)). 진행 기록과 설계는 [docs/design.md](docs/design.md), 되돌리기 어려운 결정은 [docs/adr/](docs/adr/), 용어는 [GLOSSARY.md](GLOSSARY.md)에 있다.
+> 완성(0.20.1, 2026-11-14). 계약(`vstack-contract@5`), 원칙 24개, v-mode 라우터, 지휘 스킬, 레시피 일곱(버그 수정, 기능, 리팩토링, UI 다듬기, 조사, 반복 실수 막기, 성능 개선), 조사 에이전트가 있다. 시범 저장소에서 지휘와 맡기기를 여러 번 돌렸고, 실제 프로젝트에서 맡기기 한 번과 지휘 한 번을 끝까지 돌렸다([docs/pilot-6.md](docs/pilot-6.md)). 진행 기록과 설계는 [docs/design.md](docs/design.md), 되돌리기 어려운 결정은 [docs/adr/](docs/adr/), 용어는 [GLOSSARY.md](GLOSSARY.md)에 있다.
 
 ## 설치
 
@@ -68,7 +68,7 @@ vstack이 agent-orchestra를 대신한다. agent-orchestra 플러그인은 지�
 .claude-plugin/          플러그인·마켓플레이스 정의
 skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
-  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@4)
+  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@5)
   recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring, ui-polish, investigation, correct, perf)
                          ui-polish는 맡기기 갈래에서만 쓴다. scripts/image_diff.py는 PNG 비교
   delegate*.md           한 단위의 일을 작업자에게 맡기는 절차와 명세 양식(구현, 검토)
