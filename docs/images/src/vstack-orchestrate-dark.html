@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지휘: 티켓에서 병합까지</title>
+  <!-- Font source: system. No web-font link: the exported SVG is shown through <img>
+       on GitHub, where web fonts cannot load. Stacks fall through to local faces. -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #2d3142;
+      --color-ink:     #f5f5f5;
+      --color-muted:   #bfc0c0;
+      --color-accent:  #f08a59;
+      --font-sans:     'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif;
+      --font-mono:     'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+
+    .frame { max-width: 1200px; width: 100%; min-width: 0; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Process · Diagram Design</p>
+    <h1>지휘: 티켓에서 병합까지</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 452" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="vstack-orchestrate-dark-title vstack-orchestrate-dark-desc">
+        <title id="vstack-orchestrate-dark-title">지휘: 티켓에서 병합까지</title>
+        <desc id="vstack-orchestrate-dark-desc">정렬과 티켓, 티켓의 vstack 절, 배정 전 검사, 등급별 작업자의 구현, 증거 보관, 다른 계열의 교차 검토와 판정(지금 고침이면 지적 수정 뒤 새 검토)을 거쳐 병합 관문 G1~G5를 모두 통과해야 squash 병합하고 정리한다.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bfc0c0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f08a59"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#2d3142"/>
+
+        <line x1="236" y1="82" x2="266" y2="82" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="464" y1="82" x2="494" y2="82" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="692" y1="82" x2="722" y2="82" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="822" y1="124" x2="822" y2="194" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="724" y1="238" x2="694" y2="238" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="496" y1="238" x2="448" y2="238" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M 366 196 V 168 Q 366 160 374 160 H 586 Q 594 160 594 168 V 194" fill="none" stroke="#bfc0c0" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <line x1="366" y1="280" x2="366" y2="326" stroke="#f08a59" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <line x1="692" y1="370" x2="722" y2="370" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="448" y="138" width="64" height="16" rx="2" fill="#2d3142"/>
+        <text x="480" y="150" fill="#949eb2" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">지금 고침</text>
+        <rect x="414" y="166" width="132" height="16" rx="2" fill="#2d3142"/>
+        <text x="480" y="178" fill="#949eb2" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">지적 수정 → 새 검토</text>
+        <rect x="40" y="40" width="196" height="84" rx="6" fill="#2d3142"/>
+        <rect x="40" y="40" width="196" height="84" rx="6" fill="rgba(191,192,192,0.10)" stroke="#949eb2" stroke-width="1"/>
+        <text x="138" y="76" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">정렬 · 명세 · 티켓</text>
+        <text x="138" y="96" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">사용자 · mattpocock</text>
+        <rect x="268" y="40" width="196" height="84" rx="6" fill="#2d3142"/>
+        <rect x="268" y="40" width="196" height="84" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="366" y="66" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">티켓의 vstack 절</text>
+        <text x="366" y="86" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">레시피 · 검증 명령</text>
+        <text x="366" y="106" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="11" font-weight="400" fill="#bfc0c0">AC-n@</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="500" fill="#bfc0c0">버전</tspan></text>
+        <rect x="496" y="40" width="196" height="84" rx="6" fill="#2d3142"/>
+        <rect x="496" y="40" width="196" height="84" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="594" y="66" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">배정 전</text>
+        <text x="594" y="86" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">입력 검사 · worktree</text>
+        <text x="594" y="106" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">명세 새 눈 점검</text>
+        <rect x="724" y="40" width="196" height="84" rx="6" fill="#2d3142"/>
+        <rect x="724" y="40" width="196" height="84" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="822" y="66" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">구현 · 등급별 작업자</text>
+        <text x="822" y="86" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">OpenCode·Codex·Claude</text>
+        <text x="822" y="106" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">UI는 Claude</text>
+        <rect x="724" y="196" width="196" height="84" rx="6" fill="#2d3142"/>
+        <rect x="724" y="196" width="196" height="84" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="822" y="232" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">증거 보관</text>
+        <text x="822" y="252" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">manifest 대조</text>
+        <rect x="496" y="196" width="196" height="84" rx="6" fill="#2d3142"/>
+        <rect x="496" y="196" width="196" height="84" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="594" y="222" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">교차 검토</text>
+        <text x="594" y="242" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">다른 계열</text>
+        <text x="594" y="262" fill="#bfc0c0" font-size="12" font-weight="500" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">필수 수용 기준 전부</text>
+        <polygon points="366,196 446,238 366,280 286,238" fill="#2d3142"/>
+        <polygon points="366,196 446,238 366,280 286,238" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="366" y="243" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">판정</text>
+        <rect x="40" y="328" width="652" height="84" rx="6" fill="#2d3142"/>
+        <rect x="40" y="328" width="652" height="84" rx="6" fill="rgba(240,138,89,0.10)" stroke="#f08a59" stroke-width="1.2"/>
+        <text x="366" y="356" fill="#f5f5f5" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle">병합 관문 G1~G5</text>
+        <rect x="118" y="372" width="124" height="24" rx="2" fill="#2d3142" stroke="rgba(245,245,245,0.30)" stroke-width="0.8"/>
+        <text x="180" y="388" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="11" font-weight="600" fill="#bfc0c0">G1</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="500" fill="#f5f5f5"> 수용 기준 통과</tspan></text>
+        <rect x="250" y="372" width="64" height="24" rx="2" fill="#2d3142" stroke="rgba(245,245,245,0.30)" stroke-width="0.8"/>
+        <text x="282" y="388" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="11" font-weight="600" fill="#bfc0c0">G2</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="500" fill="#f5f5f5"> 버전</tspan></text>
+        <rect x="322" y="372" width="92" height="24" rx="2" fill="#2d3142" stroke="rgba(245,245,245,0.30)" stroke-width="0.8"/>
+        <text x="368" y="388" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="11" font-weight="600" fill="#bfc0c0">G3</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="500" fill="#f5f5f5"> 검토 통과</tspan></text>
+        <rect x="422" y="372" width="92" height="24" rx="2" fill="#2d3142" stroke="rgba(245,245,245,0.30)" stroke-width="0.8"/>
+        <text x="468" y="388" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="11" font-weight="600" fill="#bfc0c0">G4</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="500" fill="#f5f5f5"> 시도 정산</tspan></text>
+        <rect x="522" y="372" width="92" height="24" rx="2" fill="#2d3142" stroke="rgba(245,245,245,0.30)" stroke-width="0.8"/>
+        <text x="568" y="388" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="11" font-weight="600" fill="#bfc0c0">G5</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="500" fill="#f5f5f5"> 역할 자격</tspan></text>
+        <rect x="724" y="328" width="196" height="84" rx="6" fill="#2d3142"/>
+        <rect x="724" y="328" width="196" height="84" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
+        <text x="822" y="374" font-size="12" font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" text-anchor="middle" xml:space="preserve"><tspan font-family="'Geist Mono', ui-monospace, 'SF Mono', Consolas, monospace" font-size="12" font-weight="600" fill="#f5f5f5">squash</tspan><tspan font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5"> 병합 · 정리</tspan></text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

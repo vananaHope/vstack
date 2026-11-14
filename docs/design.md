@@ -1,6 +1,6 @@
 # vstack 설계
 
-상태(2026-11-14): 플러그인 0.20.1. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
+상태(2026-11-14): 플러그인 0.20.2. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
 
 만들 때의 상태: 3판 + 0단계 완료(2026-11-08, 6차 Codex 검토 "0단계 완료, 1단계로 가도 됨"). 첫 시범·두 번째 시범 완료(2026-11-08, [pilot-1.md](pilot-1.md), [pilot-2.md](pilot-2.md)). 계약의 정본은 `skills/v-mode/contracts/`(지금 `vstack-contract@4`)이고, 이 문서의 3절은 요약이다. 둘이 다르면 contracts가 우선한다(차이는 변경 이력 "0단계"에 있다).
 
@@ -37,7 +37,7 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 | 가져오는 범위 | 실행 경로의 의존이 닫힌 집합만(5절, [ADR 0002](adr/0002-import-only-closed-execution-paths.md)) | 합의(2판) |
 | agent-orchestra | **vstack으로 옮겨서 고쳤다.** [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md)의 세 조건이 모두 맞아 은퇴시켰다: 플러그인을 지우고 원래 저장소를 아카이브한다(16절). vstack이 지휘를 소유한다 | 3판에서 바뀜, 2026-11-14 기준 정함, 2026-11-14 은퇴 |
 | 기존 플러그인 | 지운다. [ADR 0001](adr/0001-move-agent-orchestra-into-vstack.md)의 세 조건이 모두 맞았다(16절). 되돌릴 길(계약의 "명시적 이행")은 `vstack-contract@4`에서 뺐다. 옛 경로 이름은 그대로 둔다([ADR 0007](adr/0007-keep-agent-orchestra-legacy-paths.md)) | 합의(2판), 2026-11-14 ADR 0001로 바뀜, 2026-11-14 지움 |
-| 지원 런타임 | 첫 버전은 **Orca만** 검증한다. herdr는 계약은 같게 두되 따로 시험하기 전까지 "미검증"으로 표기. Orca가 없으면 맡기기를 하지 않는다. 지휘의 herdr를 뺄지는 전체 검수에서 정한다([ADR 0004](adr/0004-orca-only.md)) | 3판에서 추가, 2026-11-13 Orca 필수 |
+| 지원 런타임 | **Orca만** 쓴다. Orca가 없으면 맡기기와 지휘를 하지 않는다. 옮겨 왔던 herdr 실행 환경은 0.20.1에서 지웠다(16절, [ADR 0004](adr/0004-orca-only.md)) | 3판에서 추가, 2026-11-13 Orca 필수, 2026-11-14 herdr 뺌 |
 | 실행 도구 | v-mode는 Claude Code에서 돈다. omp에서 돌리는 길(v-mode "실행 도구" 절)은 2026-11-10에 넣었다가 2026-11-13에 뺐다(13절, [ADR 0008](adr/0008-no-omp.md)) | 2026-11-13 바뀜 |
 | 맡기기 | Claude Code 관리자가 티켓으로 나누지 않는 한 단위의 일을 작업자에게 맡긴다: Claude 구현자가 새 worktree에서 구현하고, Codex 검토자가 검토하고, 관리자가 마지막에 확인한다(계약 밖). 레시피가 있든 없든 맡기고, 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 정본 `skills/v-mode/delegate.md`, 13·14절. omp 작업자에게 맡기던 앞선 구조는 12절. [ADR 0009](adr/0009-cross-family-review-via-orca-codex.md), [0010](adr/0010-manager-writes-no-product-code.md), [0011](adr/0011-delegation-and-orchestration-boundary.md) | `bug-fix` 정상 경로 1회(2026-11-13, [pilot-delegate.md](pilot-delegate.md)), `refactoring`과 레시피 없는 일을 함께 맡김 1회, `ui-polish` 1회(2026-11-14, [manager-only-plan.md](manager-only-plan.md) "진행 기록"). omp 구조로는 `bug-fix` 2회·`feature` 1회 |
 
@@ -467,6 +467,8 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 **새로 시작 뒤 다시 맡기기.** 포기한 작업의 이슈를 다시 맡기면 새 작업 이름 `<원래 작업 이름>-r<k>`를 쓴다. 포기한 작업의 폴더와 증거 포인터는 그대로 남고, 새 작업은 새 폴더·worktree·브랜치를 쓴다(state-and-rollback.md "다시 맡길 때의 작업 이름", 계약 예시 04f). 검토에서 같은 폴더를 함께 쓰면 옛 증거 포인터를 잃는다는 지적을 받아 정했다.
 
 **herdr 뺌(0.20.1).** 사용자가 herdr를 쓰지 않기로 해 지휘의 herdr 실행 환경(`orchestrate-issues/backends/herdr.md`)과 그것을 고르는 줄을 지웠다. 지휘의 실행 환경은 Orca 하나다(ADR 0004). 그래서 검수 2.1(herdr에 "정지" 절이 없음)도 없어졌다. 한도 확인의 캐시 폴더 이름처럼 agent-orchestra 때의 이름은 그대로다(ADR 0007).
+
+**README 그림(0.20.2).** README 그림을 diagram-design 스킬(기본 스킨)로 새로 그렸다: 전체 구조, 맡기기, 지휘 세 장. 밝은·어두운 테마 SVG 두 벌을 `<picture>`로 넣고, 고칠 원본 HTML은 `docs/images/src/`에 둔다. GitHub의 `<img>`는 웹 글꼴을 읽지 못하므로 SVG는 시스템 글꼴(한글은 Noto Sans KR·Apple SD Gothic Neo·Malgun Gothic 순)로 내보냈다. 같은 때 README 상태 줄, 맡기기 레시피 목록, 설계 1절의 지원 런타임 줄, 맡기기·계약의 검증 범위(실제 프로젝트 맡기기·지휘, pilot-6)를 고쳤다.
 
 ## 변경 이력
 
