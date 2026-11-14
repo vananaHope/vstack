@@ -85,9 +85,9 @@
 아래 양식으로 프로젝트 설정을 쓴다. 절 이름은 SKILL.md와 양식들이 그대로 가리키므로 바꾸지 않는다. 해당 없는 선택 절은 지운다. 각 절은 명세에 그대로 옮겨질 문장으로 쓴다.
 
 ```markdown
-# 이슈 지휘 설정
+# 프로젝트 설정
 
-`orchestrate-issues` 스킬이 읽는 이 프로젝트의 설정이다.
+vstack 플러그인의 맡기기와 지휘(`orchestrate-issues`)가 읽는 이 프로젝트의 설정이다. 이슈 저장소, 병합, UI 작업, 간단한 구현에서 뺄 영역, 등급별 배치, Codex fast는 지휘만 읽는다.
 
 ## 이슈 저장소
 
@@ -179,13 +179,15 @@ Settings for the vstack plugin (delegation and the `orchestrate-issues` skill). 
 
 ## 5. 전제 확인
 
-설정을 저장한 뒤에 한다(`configure`로 점검만 요청받았으면 이것만 한다). 설정 창이 먼저 뜨도록, 시간이 걸리거나 비용이 드는 확인(Codex 한도 측정)은 여기로 미뤘다. 맡기기와 지휘가 처음 쓰기 전에 필요한 것을 여기서 한데 본다. 항목마다 갖춤 / 빠짐(고치는 방법)을 한 줄로 사용자에게 알린다. 고치는 일은 하지 않고 알리기만 한다. 설정은 그대로 둔다.
+설정을 저장한 뒤에 한다(`configure`로 점검만 요청받았으면 이것만 한다). 설정 창이 먼저 뜨도록, 시간이 걸리거나 비용이 드는 확인(Codex 한도 측정)은 여기로 미뤘다. 맡기기와 지휘가 처음 쓰기 전에 필요한 것을 여기서 한데 본다. 항목마다 갖춤 / 빠짐(고치는 방법)을 한 줄로 사용자에게 알린다. 고치는 일은 하지 않는다. 설정은 그대로 둔다.
+
+**지휘의 첫 실행으로 들어왔으면**([SKILL.md](SKILL.md) "가장 먼저") 아래에서 "지휘 전제"라고 적은 항목이 모두 갖춰진 뒤에 원래 요청한 지휘를 시작한다. 빠졌으면 알리고 기다린다. 나머지 항목과, `configure`로 들어왔거나 점검만 요청받은 경우는 알리기만 한다.
 
 - **Orca**: `orca orchestration run-current`가 답한다(Orca 안에서 실행 중). 맡기기와 지휘 모두 Orca가 있어야 한다(명령은 실행 환경 문서 [backends/orca.md](backends/orca.md)).
-- **GitHub**: 코드 저장소가 GitHub(회사 GitHub Enterprise 포함)이면 `gh`가 그 호스트에 로그인돼 있다(`gh auth status`).
-- **작업자 도구**: `claude`, `codex` 명령이 있다. 등급별 배치에 `opencode`가 있으면 그 명령도 있다.
-- **한도**: [check-limits](../check-limits/SKILL.md)로 잰 Codex와 Claude가 둘 다 `unknown`이 아니다. `unknown`이면 그 스킬이 알려 주는 원인을 사용자에게 전한다.
-- **작업 파일 무시**: `git check-ignore -q .local/x`가 0이다(`.local/vstack/`, `.local/vstack-delegate/`가 커밋되지 않는다). 아니면 1단계 앞의 "`.local/`을 Git에서 뺀다"와 같이 하라고 알린다.
+- **GitHub**(지휘 전제): 코드 저장소가 GitHub(회사 GitHub Enterprise 포함)이면 `gh`가 그 호스트에 로그인돼 있다(`gh auth status`).
+- **작업자 도구**(지휘 전제): 실행 환경 문서([SKILL.md](SKILL.md) "실행 환경")가 요구하는 명령과 `codex`, `opencode` 명령이 있다. 맡기기는 `claude`, `codex`만 쓴다.
+- **한도**(지휘 전제): [check-limits](../check-limits/SKILL.md)로 잰 Codex와 Claude가 둘 다 `unknown`이 아니다. `unknown`이면 그 스킬이 알려 주는 원인을 사용자에게 전한다.
+- **작업 파일 무시**: `git check-ignore -q .local/x`가 0이다(`.local/vstack/`, `.local/vstack-delegate/`가 커밋되지 않는다). 아니면 3단계 "쓰기"의 첫 문단("`.local/`을 Git에서 뺀다")대로 하라고 알린다.
 - **mattpocock 설정**: `docs/agents/issue-tracker.md`가 있거나 `AGENTS.md`/`CLAUDE.md`에 `## Agent skills` 절이 있다. 없으면 지휘의 정렬 단계(`to-spec`, `to-tickets`)가 이슈 저장소를 모르므로, 사용자에게 `/mattpocock-skills:setup-matt-pocock-skills`를 실행하라고 안내한다. vstack이 그 일을 대신하지 않는다.
 - **검증 수단**: "테스트" 절의 명령(없으면 1단계에서 찾은 테스트 명령)이 저장소에 있다. 없으면 맡기기와 지휘의 수용 기준을 정하기 어렵다고 알린다(v-mode 고정 규칙 7이 그때 검증 수단부터 만든다).
 - **실창 잠금**: "실창 검사" 절이 있으면 `~/.agent-orchestra/bin/desktop_lock.py`가 있다. 없으면 `python -I <이 스킬 폴더>/scripts/desktop_lock.py install`을 안내한다([desktop.md](desktop.md) "고정 경로").
