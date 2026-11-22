@@ -4,7 +4,7 @@ description: "Generate a project-local verification skill that drives your app t
 disable-model-invocation: true
 ---
 
-> vstack copy of pstack `create-verification-skill` (0.15.36). Local edits are listed in UPSTREAM.md. In a vstack task, "the manager" is whoever assigned the task; outside one, it is the user.
+> vstack copy of pstack `create-verification-skill` (0.15.46). Local edits are listed in UPSTREAM.md. In a vstack task, "the manager" is whoever assigned the task; outside one, it is the user.
 
 # Create a verification skill
 

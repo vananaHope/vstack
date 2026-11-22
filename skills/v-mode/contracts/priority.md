@@ -32,7 +32,7 @@
 
 ## 출처 참조
 
-원문 그대로 가져온 파일(원칙 24개 등) 안에는 다른 스킬이나 원칙을 가리키는 문장과 링크가 있다. vstack에 없는 스킬(예: `principle-prove-it-works`의 `show-me-your-work`)도 있고, vstack 안의 다른 원칙도 있다. 이것은 모두 출처를 보존하려고 남긴 **출처 참조**다. 작업자는 원문이 "그 스킬을 실행하라"고 해도 실행하지 않고, 링크를 따라가 다른 원칙을 읽거나 적용하지도 않는다. 원칙은 명세와 레시피가 후보로 준 것만 읽고 적용한다. 목록은 [reference-policy.md](reference-policy.md)에 있다(`scripts/collect-references.mjs`가 만든다).
+원문 그대로 가져온 파일(원칙 24개 등) 안에는 다른 스킬이나 원칙을 가리키는 문장과 링크가 있다. vstack에 없는 스킬(예: `principle-type-system-discipline`의 `typescript-best-practices`)도 있고, vstack 안의 다른 원칙도 있다. 이것은 모두 출처를 보존하려고 남긴 **출처 참조**다. 작업자는 원문이 "그 스킬을 실행하라"고 해도 실행하지 않고, 링크를 따라가 다른 원칙을 읽거나 적용하지도 않는다. 원칙은 명세와 레시피가 후보로 준 것만 읽고 적용한다. 목록은 [reference-policy.md](reference-policy.md)에 있다(`scripts/collect-references.mjs`가 만든다).
 
 ## 알려진 충돌과 답
 

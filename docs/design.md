@@ -1,6 +1,6 @@
 # vstack 설계
 
-상태(2026-11-15): 플러그인 0.24.0. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
+상태(2026-11-22): 플러그인 0.25.0. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고, 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
 
 만들 때의 상태: 3판 + 0단계 완료(2026-11-08, 6차 Codex 검토 "0단계 완료, 1단계로 가도 됨"). 첫 시범·두 번째 시범 완료(2026-11-08, [pilot-1.md](pilot-1.md), [pilot-2.md](pilot-2.md)). 계약의 정본은 `skills/v-mode/contracts/`(지금 `vstack-contract@5`)이고, 이 문서의 3절은 요약이다. 둘이 다르면 contracts가 우선한다(차이는 변경 이력 "0단계"에 있다).
 
@@ -18,7 +18,7 @@ pstack의 구조(라우터 → 레시피 → 원칙)를 가져와 **v-mode**를 
 
 | 출처 | 버전 | 커밋 | 라이선스 |
 | --- | --- | --- | --- |
-| pstack (https://github.com/cursor/plugins/tree/main/pstack) | 0.15.36 | 작업 시 기록 | MIT (Lauren Tan) |
+| pstack (https://github.com/cursor/plugins/tree/main/pstack) | 0.15.46(처음 0.15.36) | `UPSTREAM.md`에 기록 | MIT (Lauren Tan) |
 | mattpocock-skills (claude-plugins-official) | 1.3.1 | `49dd158d1076134a641b33efb035946536778336` | MIT (Matt Pocock) |
 | agent-orchestra (https://github.com/vananaHope/agent-orchestra, 2026-11-14 아카이브된 원본) | 0.20.0 | `c62be33381a546fb7127088795a83378cfe35371` | MIT (vananaHope) |
 
@@ -524,6 +524,19 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 - 0.24.0 전 프로젝트 설정에 남은 `opencode` 항목은 어느 목록에서든 건너뛰고 한 번 알린다(`/vstack:configure`로 고침). 비면 그 목록이 다 막혔을 때의 규칙을 따른다.
 - 지휘 그림의 "등급별 작업자" 문구.
 
+## 22. pstack 0.15.46 반영(2026-11-22)
+
+**까닭.** vstack이 가져온 pstack 0.15.36 뒤로 0.15.46까지 커밋 다섯이 들어왔다. 스킬 본문을 줄이고, 기본 모델을 Opus 5.5 중심으로 바꾸고, 에이전트에게 운영자의 규칙을 넘기는 `worker.md`를 새로 두었다. 대조의 정본은 `UPSTREAM.md` "pstack 0.15.46 대조"다.
+
+**바꾼 것(0.25.0).**
+- 원칙 24개 가운데 바뀐 14개를 원문으로 덮었다(verbatim). 뜻은 같고 더 짧으며, 다른 원칙과 스킬을 가리키던 문장이 대부분 빠졌다. 출처 참조 목록(`reference-policy.md`)을 다시 만들었다. 참조를 따르지 않는다는 규칙은 그대로라서 계약 숫자는 올리지 않았다(`vstack-contract@5`). 계약 `priority.md`가 예로 들던 `principle-prove-it-works`의 `show-me-your-work`는 원문에서 빠져, 남은 참조(`principle-type-system-discipline`의 `typescript-best-practices`)로 예를 바꿨다. 의무는 바뀌지 않는다.
+- adapted 다섯은 본문을 그대로 두었다. 바뀐 둘(`blast-radius`, `benchmark-checklist`)은 원본이 vstack에 없는 스킬을 가리키던 문장을 스스로 지운 것이고, vstack은 이미 같은 곳을 고쳐 두었다. 첫머리 버전 표시와 `UPSTREAM.md`의 원본 문장만 0.15.46에 맞췄다.
+- vstack이 쓴 레시피, `subagents.md`, `agents/explorer.md`는 바탕 원문을 비교만 하고 고치지 않았다. `how`가 서브에이전트 하나로 줄어든 것, 새 기본 모델, `worker.md`는 가져오지 않았다. 맡기기는 명세가, 지휘는 작업자 계약이 작업자에게 규칙을 넘기고, vstack은 pstack의 모델 역할을 쓰지 않는다.
+- 원칙 14개의 mattpocock-skills 겹침을 `UPSTREAM.md` 표에 채웠다(1.3.2와 비교).
+- 보완: UI 다듬기의 폴더 비교(`recipes/scripts/image_diff.py`)가 목록 없이 폴더를 훑을 때 폴더 밖으로 나가는 디렉터리 링크 아래의 PNG를 세지 않아 통과로 끝났다. `os.walk`가 기본값으로 디렉터리 링크를 따라가지 않기 때문이다. 이미 있던 테스트(`test_a_png_reached_through_a_link_that_leaves_the_folder_is_refused`)가 Linux에서 실패해 드러났다. 폴더 밖을 가리키는 링크만 따라가 그 이름을 넣고, `inside`가 거절하게 했다. 폴더 안을 가리키는 링크와 이미 훑은 폴더는 따라가지 않는다.
+
+**남긴 것.** 조사 레시피를 `how`처럼 한 번에 탐색·설명하게 줄일지는 레시피를 바꾸는 일이라 정하지 않았다. mattpocock-skills 1.3.2(설치본, vstack 기준은 1.3.1)는 `diagnosing-bugs` 5단계(강제 변경을 원본 사본과 diff해 확인) 등을 바꿨다. vstack의 adapted 사본(`diagnosing-bugs`, `tdd`)에 반영할지는 따로 본다.
+
 ## 변경 이력
 
 - 1판: 세 플러그인 조합 방향, 레시피 17개, 일괄 복사·이전 계획.
@@ -598,3 +611,4 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 - UI 다듬기 레시피(플러그인 0.11.0, `ui-polish@1`, [stage-7-plan.md](stage-7-plan.md) "UI 다듬기 레시피"): 사용자 결정으로 한 세션 갈래에서만 쓰는 레시피로 만들었다. 지휘와 계약은 건드리지 않았다(지휘에서는 레시피가 없는 것으로 보고, omp에는 맡기지 않는다). pstack에 짝이 되는 플레이북이 없어 `visual-parity`·`hillclimb`·원칙 `experience-first`를 조합했다: 손대기 전에 스크린샷 수단이 흔들리지 않는지 보고 기준을 찍는다, 항목 하나씩 바꾸고 전·후를 보고 남기거나 전부 되돌린다, 다듬지 않은 화면은 기준과 픽셀 단위로 같아야 한다. 판정은 숫자 지표 대신 항목마다 적은 관찰 가능한 문장으로 한다. 이미지 비교 스크립트 `recipes/scripts/image_diff.py`(표준 라이브러리, 허용 오차 없음, 테스트 20개)를 실었다. 원칙 `build-the-lever`를 처음으로 후보에 넣었다. 레시피를 쓴 세션이 정적인 페이지 하나로 한 번 따라 봤고(시도 넷 가운데 셋을 되돌림, 비교 화면 둘은 그대로), 거기서 나온 보완 둘을 넣었다. Codex 검토로 스크립트의 판정 결함(16비트, 투명 색, 깨지거나 구조가 틀린 파일)을 고치고, 시도마다 회귀를 확인하고 마지막 커밋에서 전부 다시 보도록 절차를 고쳤다. 실제 프로젝트에서 새 세션이 따른 적은 아직 없다.
 - UI 다듬기 레시피 첫 실사용 반영(플러그인 0.12.0, `ui-polish@2`, [stage-7-plan.md](stage-7-plan.md) "첫 실사용과 `ui-polish@2`"): `my-video-manager`에서 새 세션이 `ui-polish@1`만 보고 두 항목을 다듬었다. 가끔만 다르게 찍히는 화면이 준비 확인을 지나갔고(시작 커밋에서도 같은 차이가 일부 다시 나왔다) 첫 항목이 미통과로 끝났으며, 세션이 판정 규칙을 결과를 본 뒤에 바꿨으며, 찍기에 실패한 화면이 조용히 빠졌고, 한 줄 변경에 40분이 걸렸다. Codex의 의견을 받아 사용자가 방향을 정했다. 비교가 다르게 나오면 판정을 보류하고 시작 커밋에서 정한 횟수만 다시 찍어 가린다(흔들림이 확인돼도 통과가 아니다, 기준을 다시 찍지 않는다). 비교 화면을 필수(사용자가 짚은 것)와 추가로 나누고 필수는 빼고 완료하지 않는다(픽셀 비교가 안 되면 사용자가 정한 다른 확인으로 대신한다). 확인의 범위를 변경이 닿는 곳(국소, 공유, 모름)으로 나눠, 닿을 이유가 없는 비교 화면은 마지막 확인에서 한 번 본다(pstack `hillclimb`의 시도마다 회귀 확인을 줄였다). 찍을 때마다 촬영이 유효한지(종료 코드, 화면 목록) 본다. 첫 전·후를 긴 확인 전에 보인다. `image_diff.py`는 폴더 두 개를 목록(`--expect`)으로 한 번에 비교하고, 빠진 PNG를 드러내며, 같은 사진은 픽셀을 풀지 않아 빨라졌다(테스트 46개). 라우터는 첫 메시지를 갈래가 정해진 때에 보내고, 모양이 정해지지 않은 요청에 시안 수단을 안내한다. 계약은 그대로다(`@3`). 새 절차를 처음부터 끝까지 따라 본 적은 아직 없다.
 - 맡기기를 Claude 구현 작업자와 Codex 검토자로(플러그인 0.13.0, 13절, [delegate-claude-plan.md](delegate-claude-plan.md), [pilot-delegate.md](pilot-delegate.md)): 사용자 결정으로 omp를 쓰지 않는다. `delegate-omp.md`·`delegate-omp-spec.md`를 지우고 `delegate.md`·`delegate-spec.md`·`delegate-review-spec.md`·`subagents.md`를 두었다. v-mode에서 "실행 도구" 절을 빼고 한 세션의 기본값을 `bug-fix`·`feature` 맡기기로 바꿨다. 계획은 Codex 읽기 전용 검토 네 번(수정 필요 셋, 완료) 뒤 사용자가 승인했고, 시범 저장소에서 `bug-fix` 정상 경로를 한 번 돌렸다. 계약과 레시피 버전은 그대로다(`@3`). 지휘는 바꾸지 않았다.
+- pstack 0.15.46 반영(플러그인 0.25.0, 22절): 원칙 14개 원문 갱신, 출처 참조 목록 재생성, adapted 다섯의 버전 표시와 `UPSTREAM.md` 대조 기록, 원칙 14개의 mattpocock 겹침 판정, `image_diff.py`의 폴더 밖 링크 누락 수정. 계약과 레시피 버전은 그대로다(`vstack-contract@5`).
