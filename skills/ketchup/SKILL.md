@@ -4,7 +4,7 @@ description: "Catch the user up on what changed in this chat since their last me
 disable-model-invocation: true
 ---
 
-> vstack copy of pstack `ketchup` (0.15.36). Local edits are listed in UPSTREAM.md. In vstack the manager (the v-mode chat) runs this in the direct branch: it is read-only.
+> vstack copy of pstack `ketchup` (0.15.46). Local edits are listed in UPSTREAM.md. In vstack the manager (the v-mode chat) runs this in the direct branch: it is read-only.
 
 # Ketchup
 

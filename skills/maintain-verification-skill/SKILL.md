@@ -4,7 +4,7 @@ description: "Periodic pass that keeps a project's verification skill and featur
 disable-model-invocation: true
 ---
 
-> vstack copy of pstack `maintain-verification-skill` (0.15.36). Local edits are listed in UPSTREAM.md. In a vstack task, "the manager" is whoever assigned the task; outside one, it is the user.
+> vstack copy of pstack `maintain-verification-skill` (0.15.46). Local edits are listed in UPSTREAM.md. In a vstack task, "the manager" is whoever assigned the task; outside one, it is the user.
 
 # Maintain a verification skill
 

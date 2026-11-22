@@ -6,11 +6,11 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 | 출처 | 버전 | 커밋 | 라이선스 |
 | --- | --- | --- | --- |
-| [pstack](https://github.com/cursor/plugins/tree/main/pstack) | 0.15.36 | `6b0300214a09fd6029cfb7077043125758cd1fd2` | MIT, Copyright (c) 2026 Lauren Tan. [`licenses/pstack-LICENSE`](licenses/pstack-LICENSE) |
+| [pstack](https://github.com/cursor/plugins/tree/main/pstack) | 0.15.46 | `7a583913eb1b8d1a0ee76753d1a2cf072e7b54f9` | MIT, Copyright (c) 2026 Lauren Tan. [`licenses/pstack-LICENSE`](licenses/pstack-LICENSE) |
 | mattpocock-skills(claude-plugins-official) | 1.3.1 | `49dd158d1076134a641b33efb035946536778336` | MIT, Copyright (c) 2026 Matt Pocock. [`licenses/mattpocock-skills-LICENSE`](licenses/mattpocock-skills-LICENSE) |
 | [agent-orchestra](https://github.com/vananaHope/agent-orchestra)(아카이브된 원본, 2026-11-14) | 0.20.0 | `c62be33381a546fb7127088795a83378cfe35371` | MIT, Copyright (c) 2026 vananaHope. [`licenses/agent-orchestra-LICENSE`](licenses/agent-orchestra-LICENSE) |
 
-- pstack 커밋은 가져올 때 받은 `cursor/plugins` 저장소의 HEAD다.
+- pstack 커밋은 가져올 때 받은 `cursor/plugins` 저장소의 HEAD다. 처음 가져온 것은 0.15.36(`6b03002`)이고, 2026-11-22에 0.15.46으로 올렸다(아래 "pstack 0.15.46 대조").
 - mattpocock-skills와 agent-orchestra 커밋은 설치 기록(`installed_plugins.json`의 `gitCommitSha`)에서 읽었다. 설치 캐시 내용이 그 커밋과 같은지는 해시로 검증하지 않았다.
 - agent-orchestra는 아카이브된 원본이다(2026-11-14, vstack 0.20.0). 옮겨 온 파일은 vstack이 소유하고, 원본과 다시 대조하지 않는다. 그래서 `check-links`의 closure 검사는 `moved` 항목을 보지 않고, `--source agent-orchestra`가 필요 없다.
 
@@ -91,7 +91,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 - 뺀 절: Deep vs shallow 그림, Designing for testability(`mocking.md`와 겹침), Going deeper.
 - `dropped`: `DEEPENING.md`(용어 참고 범위 밖), `DESIGN-IT-TWICE.md`(하위 에이전트 3개 이상을 띄우는 절차라 작업자 계약과 맞지 않음).
 
-### `skills/create-verification-skill/SKILL.md`(pstack 0.15.36)
+### `skills/create-verification-skill/SKILL.md`(pstack 0.15.46, 처음 0.15.36)
 
 | 원본 줄 | 바꾼 것 | 이유 |
 | --- | --- | --- |
@@ -103,7 +103,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 `references/feature-map-example/`은 원문 그대로.
 
-### `skills/maintain-verification-skill/SKILL.md`(pstack 0.15.36, 7단계)
+### `skills/maintain-verification-skill/SKILL.md`(pstack 0.15.46, 처음 0.15.36, 7단계)
 
 원본에는 딸린 파일이 없다. 맡기기의 구현자가 경로로 읽는다(`skills/v-mode/delegate.md` "검증 스킬 점검"). 원본의 판정(clean / changed / blocked), 편집 범위, 단계 0~6과 실행 확인의 세 불변식은 그대로 두었다.
 
@@ -119,7 +119,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 37 | changed의 "one PR of proven corrections" → 작업 브랜치에 커밋. clean의 "no PR" → 커밋 없음. blocked의 "no PR" → 증명한 수정만 커밋하고 증명하지 못한 수정은 되돌려 diff로 보고(작업 트리를 깨끗하게). 어느 결과든 다룬 기능, `verified-unreachable` 전제, 확인된 어긋남, 고친 실행 수단, 찾은 제품 고장을 보고 | 맡기기의 권한과 관리자의 수용 기준(`delegate.md` "검증 스킬 점검"). blocked에서 이미 증명한 수정을 버리지 않으면서 관리자의 확인(깨끗한 작업 트리)과 사용자의 선택(이어 가기, 증명된 것만 받기, 그만두기)으로 이어지게 했다 |
 | 39 | scratch → 저장소 밖(OS 임시 폴더) | 작업 트리를 깨끗하게 둔다 |
 
-### `skills/ketchup/SKILL.md`(pstack 0.15.36, 7단계)
+### `skills/ketchup/SKILL.md`(pstack 0.15.46, 처음 0.15.36, 7단계)
 
 원본에는 딸린 파일이 없다. v-mode "그 밖의 요청"이 경로로 읽고, 바로 갈래에서 관리자가 따른다(읽기 전용). 모으기·답 쓰기·그림 규칙과 낱말 수는 그대로다.
 
@@ -131,7 +131,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 15 | 모으는 곳에 vstack의 맡기기 기록, 지휘 작업 상태, Orca 받은 편지함을 더함. 기록은 메인 저장소([main-repo.md](skills/v-mode/main-repo.md))에서 읽음 | 관리자가 작업자의 결과와 기록이 기다리는 것을 따라잡게. `/vstack:ketchup`을 홈 레포에서 바로 불러도 제품 저장소의 기록을 읽게 |
 | 37, 43 | `/visualize` 언급 → "a chart" | `visualize`는 vstack에 없다 |
 
-### `skills/benchmark-checklist/SKILL.md`(pstack 0.15.36, 7단계)
+### `skills/benchmark-checklist/SKILL.md`(pstack 0.15.46, 처음 0.15.36, 7단계)
 
 원본에는 딸린 파일이 없다. 성능 레시피(`skills/v-mode/recipes/perf.md`)와 그 검토 명세가 경로로 읽는다. 질문 1~7과 "Report"의 앞 세 항목은 그대로다(마지막 항목은 아래 34줄).
 
@@ -140,7 +140,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 3 | description 끝에 "vstack recipes (perf) read this file by path" | 다른 adapted 사본과 같다 |
 | 6 뒤 | "vstack copy of pstack …"과 "the manager"가 누구인지 한 줄 | 같다 |
 | 17 | `uptime`·`nproc`에 Windows에서 쓸 명령을 괄호로 더함 | 사용자의 환경이 Windows다 |
-| 34 | "Keep a PR body to one primary number, per the **Opening a PR** playbook" → 머리 숫자는 하나, 실행 기록과 범위와 한계 요인은 작업이 정한 곳(맡기기면 완료 보고) | vstack에 그 플레이북이 없고, 작업자는 PR을 쓰지 않는다 |
+| 34 | "Keep a PR body to one primary number"(0.15.36까지는 뒤에 "per the **Opening a PR** playbook"이 있었다) → 머리 숫자는 하나, 실행 기록과 범위와 한계 요인은 작업이 정한 곳(맡기기면 완료 보고) | vstack에 그 플레이북이 없고, 작업자는 PR을 쓰지 않는다 |
 | 38~39 | Perf issue·Hillclimb 플레이북 언급 → vstack 성능 레시피 링크 하나 | Hillclimb는 가져오지 않았다 |
 
 ### `skills/v-mode/recipes/perf.md`(vstack이 씀, pstack 0.15.36 `poteto-mode/playbooks/perf-issue.md`에서, 7단계)
@@ -163,7 +163,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 
 분류는 `own`이다(원문 문장을 복사하지 않았다).
 
-### `skills/blast-radius/SKILL.md`(pstack 0.15.36, 7단계)
+### `skills/blast-radius/SKILL.md`(pstack 0.15.46, 처음 0.15.36, 7단계)
 
 원본에는 딸린 파일이 없다. 원본이 이름으로 가리키던 스킬(`how`, `why`, `arena`, `unslop`)은 vstack에 없어서, 그 문장을 지우거나 같은 뜻의 문장으로 바꿨다.
 
@@ -172,8 +172,7 @@ vstack은 세 곳에서 파일을 가져온다. 무엇을 어떻게 가져오는
 | 3 | description에 `/vstack:blast-radius` 추가 | Claude Code의 플러그인 명령 접두사 |
 | 6 뒤 | "vstack copy of pstack …" 한 줄 | 다른 adapted 사본과 같다 |
 | 11 | "Companion to `how` and `why` …" → 두 스킬의 이름 없이 "코드가 무엇을 하는지, 왜 그런 모양인지와는 다른 질문이다" | `how`·`why`는 vstack에 없다 |
-| 33 | "Use `why` step 2 to pull the PR and commits." → 그 단계의 명령(`git log`, `gh pr view`)을 직접 적고, vstack 작업이면 대상이 `git diff <B>...<H>`라고 적음 | `why`는 vstack에 없다 |
-| 36 | "Same rules as `why`." 삭제(뒤의 규칙 문장은 그대로) | 같음 |
+| 33 | "Pull the PR and its commits."(0.15.36은 "Use `why` step 2 to pull the PR and commits.") → 그 명령(`git log`, `gh pr view`)을 직접 적고, vstack 작업이면 대상이 `git diff <B>...<H>`라고 적음 | 원본은 명령을 적지 않는다. 0.15.36이 가리키던 `why`는 vstack에 없다. 0.15.36의 36줄 "Same rules as `why`."는 vstack이 지웠던 것을 0.15.46 원본도 지웠다 |
 | 37 | 끝에 "스크립트는 아래 'Where the proof lives'가 말한 곳에 두고 제품 트리에 두지 않는다" | 검토자는 제품 소스·테스트를 고치지 않는다(작업자 계약) |
 | 38 | "run it as an `arena`. Ask more than one model …" → "한 번 읽은 것으로는 부족하다고 보고하고 가장 자신 없는 부분을 적는다. 다른 계열의 두 번째 읽기는 관리자가 정한다. 스스로 다른 에이전트를 띄우지 않는다" | `arena`는 vstack에 없고, 작업자는 다른 작업자를 띄우지 않는다 |
 | 43 | "If you couldn't prove it, write unproven." 뒤에 "돌려 보니 사실이 거짓이면(일부 조건에서만 거짓이어도) disproven이라고 쓰고 조건을 적고, 깨지는 것을 Risks에 적는다" | 평가에서 검토자가 "증명됨/증명 못 함" 둘뿐이라 반증된 경우의 표기를 스스로 만들었다 |
@@ -251,7 +250,7 @@ vstack이 새로 쓴 파일이고, 아래 문장의 뜻을 pstack에서 가져�
 
 vstack이 더한 것: 누구에게 적용하는가(바로와 맡기기 갈래의 Claude. 2026-11-14 전에는 "한 세션 갈래"라고 불렀다. 계약 작업자와 Codex 검토자는 아님), 쓰는 때와 쓰지 않는 때, 맡기지 않는 일, 한 번에 셋까지, Orca 작업자를 띄우지 않는다.
 
-분류: `upstream.json`에서는 레시피와 같은 `own`이다. 원문의 문장을 복사하지 않고 뜻만 가져와 한국어로 새로 썼기 때문이다(`extracted`는 원문의 일부를 떼어 파일로 만드는 방식이다). 계획(`docs/delegate-claude-plan.md`)은 `extracted`라고 적었는데 실행하면서 이렇게 바꿨다. 그래서 이 파일은 closure 검사와 import 갱신의 대상이 아니다. pstack 버전을 올릴 때는 `poteto-mode/SKILL.md`의 "Subagents" 절과 19줄이 바뀌었는지 위 표의 줄 번호로 손으로 비교한다.
+분류: `upstream.json`에서는 레시피와 같은 `own`이다. 원문의 문장을 복사하지 않고 뜻만 가져와 한국어로 새로 썼기 때문이다(`extracted`는 원문의 일부를 떼어 파일로 만드는 방식이다). 계획(`docs/delegate-claude-plan.md`)은 `extracted`라고 적었는데 실행하면서 이렇게 바꿨다. 그래서 이 파일은 closure 검사와 import 갱신의 대상이 아니다. pstack 버전을 올릴 때는 `poteto-mode/SKILL.md`의 "Subagents" 절과 19줄이 바뀌었는지 손으로 비교한다. 위 표의 줄 번호는 0.15.36 기준이다. 0.15.46에서는 100 → 98, 96 → 88, 19 → 19, 102 → 100, 94 → 86, 96·98 → 88~96이다.
 
 ### vstack 자체 레시피의 변경(`own`, 7단계)
 
@@ -326,6 +325,32 @@ vstack이 더한 것: 누구에게 적용하는가(바로와 맡기기 갈래의
 
 mattpocock-skills 1.3.1에는 에이전트 정의가 없다(설치본에서 확인). 겹치지 않는다. 분류는 `own`이다(원문 문장을 복사하지 않았다).
 
+### pstack 0.15.46 대조(2026-11-22, vstack 0.25.0)
+
+0.15.36(`6b03002`)에서 0.15.46(`7a58391`)까지 pstack에 커밋 다섯이 들어왔다(#1236, #1249, #1283, #1284, #1292). 큰 흐름은 셋이다. 스킬 본문을 줄였다(`how`·`why`·`architect`·`reflect`의 참조 파일을 지우고 한 파일로 합침). 기본 모델을 Opus 5.5 중심으로 바꾸고 강도를 `xhigh`까지로 묶었다. 띄우는 에이전트에게 운영자의 규칙을 넘기는 `poteto-mode/worker.md`를 새로 두었다. `upstream.json`의 항목마다 `git diff 6b03002 7a58391 -- pstack/<from>`으로 비교했다.
+
+**verbatim(원칙 24개).** 14개가 바뀌어 `node scripts/import.mjs`로 원문을 덮었다: `attack-the-premise`, `boundary-discipline`, `build-the-lever`, `explain-the-number`, `fix-root-causes`, `foundational-thinking`, `make-operations-idempotent`, `minimize-reader-load`, `model-the-domain`, `prove-it-works`, `separate-before-serializing-shared-state`, `sequence-verifiable-units`, `test-behavior-not-implementation`, `type-system-discipline`. 모두 같은 뜻을 더 짧게 쓴 것이고, 다른 원칙과 스킬을 가리키던 문장이 대부분 빠졌다. 나머지 10개는 그대로다. 덮기 전에 vstack 사본 24개가 0.15.36 원문과 같음을 확인했다.
+
+**출처 참조.** `collect-references.mjs`로 [reference-policy.md](skills/v-mode/contracts/reference-policy.md)를 다시 만들었다. 바깥 참조는 `show-me-your-work`(`prove-it-works`에서 빠짐)가 없어지고 `typescript-best-practices` 하나가 남았다. 안쪽 참조는 14개에서 `benchmark-checklist` 하나로 줄었다. 참조를 따르지 않는다는 규칙과 남은 참조의 대신 따를 것은 그대로라서 계약 숫자는 올리지 않았다(`vstack-contract@5`).
+
+**adapted.** `blast-radius`와 `benchmark-checklist`만 바뀌었다. 둘 다 원본이 vstack에 없는 스킬(`why`)과 플레이북(Opening a PR)을 가리키던 문장을 스스로 지운 것이고, vstack은 이미 같은 곳을 고쳐 두었다. 그래서 사본의 본문은 그대로 두고 "고친 내용" 표의 원본 문장만 0.15.46에 맞췄다(`blast-radius` 33줄, 지운 36줄 행, `benchmark-checklist` 34줄). 줄 번호는 바뀌지 않았다. `create-verification-skill`, `maintain-verification-skill`, `ketchup`은 바뀌지 않았다. 다섯 사본의 첫머리 버전 표시를 0.15.46으로 고쳤다. `create-verification-skill`이 근거로 든 `docs/harness/claude-code.md`의 "Paths"도 그대로다.
+
+**vstack이 쓴 파일(`own`)의 바탕.** 원문을 손으로 비교했다. 레시피와 서브에이전트 규칙은 고치지 않았다.
+
+| 바탕 | 0.15.46에서 바뀐 것 | vstack에서 |
+| --- | --- | --- |
+| `poteto-mode/SKILL.md` "Subagents" 절(`subagents.md`) | 자기 서브에이전트 종류를 정하는 스킬이 `interrogate`, `swarm` 둘로 줄었다(`how`, `why`가 빠짐). 역할별 기본 모델이 Opus 5.5 `xhigh-fast`와 세 계열 패널로 바뀌고, 강도는 `xhigh`까지다. Fable 5.2는 예외로만 쓴다. "새 일은 새 서브에이전트"와 "부른 쪽이 책임진다"는 짧아졌을 뿐 뜻이 같다 | 그대로. vstack은 "사용자가 실행한 스킬이 정하면 그 스킬을 따른다"로 넓혀 가져왔고, 모델 역할과 `/setup-pstack`은 가져오지 않았다 |
+| `poteto-mode/worker.md`(새 파일) | 에이전트를 띄울 때 요청문 첫 줄에 이 파일을 읽으라고 쓴다. 운영자의 규칙(요청문의 기준이 전부, 묻는 도구를 쓰지 않음, PR 형식)이 에이전트에게 전해지게 하려는 것이다 | 가져오지 않음. 맡기기는 명세(`delegate-spec.md`)가, 지휘는 작업자 계약이 작업자에게 규칙을 경로로 넘긴다. 서브에이전트는 `agents/explorer.md` 본문에 규칙이 있다 |
+| `how/SKILL.md`, `why/SKILL.md`, `playbooks/investigation.md`(`investigation.md`) | `how`가 단순·복잡 나누기와 탐색자 여러 개를 버리고 서브에이전트 하나가 탐색과 설명을 한 번에 한다. `why`는 "기록에서 답하고, 저자가 쓴 것을 인용하고, 추론은 추론이라고 밝히고, 기록이 답하지 않는 것을 말한다"는 한 문단만 남았고 참조 파일(신뢰 단계, 근거 범주, 종합 요청문)을 모두 지웠다. 플레이북은 "`how`로 보낸다"를 "코드를 따라간다"로 바꿨다 | 그대로. 조사 레시피(`investigation@3`)는 0.15.36에서 뜻을 가져와 vstack이 소유한다. `how`처럼 나누기를 없앨지는 레시피를 바꾸는 일이라 따로 정한다. `why`의 남은 한 문단은 레시피 단계 3·4와 같은 뜻이다 |
+| `playbooks/perf-issue.md`(`perf.md`) | "`how`로 가설을 세운다"를 "코드를 따라가 가설을 세운다"로 바꿨다. 기본 모델이 바뀌었다 | 그대로. vstack은 이미 `how` 없이 프로파일로 한계 요인을 찾는다 |
+| `playbooks/bug-fix.md`·`feature.md`·`refactoring.md`·`hillclimb.md`(`bug-fix`·`feature`·`refactoring`·`ui-polish` 레시피) | `how` 대신 "따라간다", `architect`의 "병렬 설계 탐색"을 "모양을 정한다"로, 기본 모델 변경, Comments 절 언급 삭제 | 그대로. vstack 레시피는 이 스킬과 모델 역할을 쓰지 않는다 |
+| `agents/poteto-agent.md`(`agents/explorer.md`) | `model: claude-opus-5-5-xhigh-fast` 줄을 더했다 | 그대로. `vstack:explorer`는 `sonnet`이다(읽기 전용 조사라 가장 강한 모델이 필요 없다) |
+| `correct/SKILL.md`(`correct.md`), `playbooks/visual-parity.md`(`ui-polish`) | 바뀌지 않음 | 그대로 |
+
+가져온 적 없는 스킬(`statechart`, `setup-pstack`, `technical-writing`, `unslop`, `reflect`, `architect` 등)의 변경은 보지 않았다.
+
+**mattpocock-skills와의 겹침(원칙 14개).** 이번에 손댄 원칙을 아래 "mattpocock-skills와의 겹침" 표에 채웠다. 비교한 것은 이 환경에 설치된 mattpocock-skills 1.3.2다(vstack이 가져온 기준은 1.3.1).
+
 ## mattpocock-skills와의 겹침
 
 pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적는다. 비교한 mattpocock-skills는 1.3.1(`49dd158`)이다.
@@ -340,8 +365,13 @@ pstack에서 가져온 것마다 "가져오는 방식"의 확인 결과를 적�
 | `skills/v-mode/recipes/perf.md`, `skills/benchmark-checklist` | `diagnosing-bugs` | 일부 겹침 | mattpocock `diagnosing-bugs`는 성능 회귀도 다룬다("Perf branch": 기준 측정 뒤 이분 탐색, 측정 먼저). vstack은 그 사본을 레시피가 경로로 읽고, 그 위에 측정 검증(benchmark-checklist의 질문 일곱, 교차 반복, 결론 넷)과 성능 주문 목록을 얹었다. 측정이 믿을 만한지 따지는 스킬과 회귀가 아닌 느림을 줄이는 절차는 mattpocock에 없다(스킬 38개의 원문에서 "benchmark", "profil"을 찾았고 `diagnosing-bugs`만 나옴, 2026-11-14) |
 | `skills/maintain-verification-skill` | `retro`, `setup-pre-commit`, `diagnosing-bugs` | 겹치지 않음 | 프로젝트의 검증 스킬과 기능 지도를 앱에 맞춰 관리하는 스킬은 mattpocock-skills에 없다(스킬 38개의 원문에서 "feature map", "verification skill", "verify-"를 찾았고 나오지 않음). `retro`는 자동 검사가 연결되지 않았거나 깨진 것을 개선 후보로 보일 뿐이다. `setup-pre-commit`은 Husky·lint-staged 훅을 설치한다. `diagnosing-bugs`의 되먹임 고리는 버그 하나를 위한 것이다(2026-11-14, 위 셋의 원문을 읽음) |
 | `skills/v-mode/subagents.md`(pstack `poteto-mode`의 "Subagents" 절에서 일부) | `code-review`, `codebase-design`(DESIGN-IT-TWICE), `implement-spec`, `ask-matt`(PHASE-BOUNDARIES), `research` | 일부 겹침 | 서브에이전트를 어떻게 쓸지 정하는 같은 역할의 스킬은 없다. 스킬마다 자기 서브에이전트를 따로 정할 뿐이다(두 검토 서브에이전트, 설계안 서브에이전트, 구현 서브에이전트, 혼자 돌릴 수 있는 일의 위임, 조사 맡기기). 같은 생각은 둘 있다: `implement-spec`의 "내용을 복제하지 말고 가리킨다", `code-review` 설명서(`docs/engineering/code-review.md`)의 "서브에이전트의 출력은 가설이지 증거가 아니다". 그래도 따로 두는 이유는, 맡긴 작업자가 레시피를 따르는 동안 지킬 규칙이 어디에도 없기 때문이다. 사용자가 mattpocock 스킬을 실행하면 그 스킬이 정한 서브에이전트를 따른다 |
+| 원칙 `test-behavior-not-implementation`, `sequence-verifiable-units`(0.15.46) | `tdd` | 일부 겹침 | `tdd`의 "좋은 테스트"(공개 인터페이스로 동작을 확인)와 반패턴 "Implementation-coupled"·"Tautological"이 앞 원칙의 두 가지 가상 편집과 같은 생각이다. `tdd`의 "한 번에 한 조각"은 뒤 원칙의 "작은 단위, green이 아니면 나아가지 않음"과 맞닿는다. 다른 점: `tdd`는 red → green 고리와 seam을 사용자와 정하는 절차이고, 원칙은 레시피가 후보 원칙으로 가리키는 짧은 기준이다. 뒤 원칙은 테스트에 한정되지 않는다(일괄 수정, 이전, 기준선 먼저). 같은 말을 하므로 둘이 어긋나지 않는다 |
+| 원칙 `boundary-discipline`, `minimize-reader-load`(0.15.46) | `codebase-design` | 일부 겹침 | `codebase-design`의 "의존을 받고, 결과를 돌려준다"가 앞 원칙의 "순수 함수와 얇은 셸"과, deletion test가 뒤 원칙의 "전달만 하는 층을 접는다"와 같은 판단이다. 다른 점: `codebase-design`은 모듈 인터페이스의 깊이를 말하는 어휘이고, 앞 원칙은 검증을 어디에 두는지, 뒤 원칙은 상태의 범위까지 다룬다. `codebase-design`은 "boundary"라는 말을 피하라고 하지만, 이 원칙의 boundary는 seam이 아니라 시스템 바깥과 맞닿는 곳(CLI 인자, 설정, 외부 API)이다 |
+| 원칙 `model-the-domain`(0.15.46) | `domain-modeling` | 겹치지 않음 | 이름은 닮았지만 `domain-modeling`은 대화 중에 `GLOSSARY.md`와 ADR로 용어와 결정을 다듬는 일이다. 원칙은 코드에서 조건문 대신 데이터 구조(상태 기계, 타입 모델, 표)를 고르는 일이다 |
+| 원칙 `fix-root-causes`, `prove-it-works`(0.15.46) | `diagnosing-bugs` | 일부 겹침 | `diagnosing-bugs`의 되먹임 고리, 재현, 계측이 앞 원칙의 "재현 먼저, 실제 상태를 읽는다"와 겹친다. 다른 점: `diagnosing-bugs`는 버그 하나를 진단하는 절차이고, 원칙은 고칠 곳(증상이 아니라 처음 잘못한 곳, 같은 결함 전부)과 확인 기준(대리 지표는 확인이 아니다)이다. vstack의 `diagnosing-bugs` 사본과 함께 레시피가 쓴다 |
+| 원칙 `attack-the-premise`, `build-the-lever`, `explain-the-number`, `foundational-thinking`, `make-operations-idempotent`, `separate-before-serializing-shared-state`, `type-system-discipline`(0.15.46) | 전체 스킬 설명 | 겹치지 않음 | 같은 역할의 스킬이 없다. `explain-the-number`가 가리키는 `benchmark-checklist`는 vstack 안에 있다. `setup-ts-deep-modules`는 패키지 경계 검사를 설치하는 일이라 `type-system-discipline`과 다르다 |
 
-이 규칙을 두기 전에 pstack에서 가져온 것(원칙 24개, `create-verification-skill`, 레시피 `bug-fix`·`feature`·`refactoring`의 바탕이 된 플레이북)은 이 표에 없다. 다시 손댈 때 확인해 채운다. 이와 따로, `tdd`와 `diagnosing-bugs`는 pstack이 아니라 mattpocock-skills에서 고쳐 가져온 사본이고 레시피가 그 사본을 쓴다.
+이 규칙을 두기 전에 pstack에서 가져온 것 가운데 원칙 10개(0.15.46에서 바뀌지 않음), `create-verification-skill`, 레시피 `bug-fix`·`feature`·`refactoring`의 바탕이 된 플레이북은 이 표에 없다. 다시 손댈 때 확인해 채운다. 원칙 14개는 0.15.46으로 올리며 채웠다(2026-11-22, mattpocock-skills 1.3.2의 스킬 설명 전부와 `tdd`·`codebase-design`·`domain-modeling`의 원문을 읽음). 이와 따로, `tdd`와 `diagnosing-bugs`는 pstack이 아니라 mattpocock-skills에서 고쳐 가져온 사본이고 레시피가 그 사본을 쓴다.
 
 앞으로 가져올 후보와 먼저 비교할 스킬: 프로토타입 ↔ `prototype`.
 

@@ -4,8 +4,8 @@
     "pstack": {
       "repo": "https://github.com/cursor/plugins",
       "path": "pstack",
-      "version": "0.15.36",
-      "commit": "6b0300214a09fd6029cfb7077043125758cd1fd2",
+      "version": "0.15.46",
+      "commit": "7a583913eb1b8d1a0ee76753d1a2cf072e7b54f9",
       "license": "MIT",
       "copyright": "Copyright (c) 2026 Lauren Tan",
       "license_file": "licenses/pstack-LICENSE"

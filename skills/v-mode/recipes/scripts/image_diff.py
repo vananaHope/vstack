@@ -371,9 +371,23 @@ def unique(names):
 
 
 def png_names(folder):
-    """폴더 아래 모든 PNG의 이름(폴더 기준 상대 경로, `/`로 구분)."""
+    """폴더 아래 모든 PNG의 이름(폴더 기준 상대 경로, `/`로 구분).
+
+    폴더 밖으로 나가는 디렉터리 링크 아래의 PNG도 이름에 넣는다. 그래야 `inside`가 그 이름을 거절한다.
+    `os.walk`는 기본값으로 디렉터리 링크를 따라가지 않으므로(Linux의 심볼릭 링크, Python 3.12부터 Windows의
+    junction), 넣지 않으면 목록 없이 훑을 때 바깥 파일이 조용히 빠져 통과로 끝난다. 폴더 안을 가리키는 링크와
+    이미 훑은 폴더는 따라가지 않는다(같은 파일을 두 번 세거나 링크가 돌고 도는 것을 막는다).
+    """
     names = []
-    for root, _dirs, files in os.walk(folder):
+    seen = set()
+    for root, dirs, files in os.walk(folder, followlinks=True):
+        seen.add(os.path.realpath(root))
+        for sub in list(dirs):
+            full = os.path.join(root, sub)
+            if not (os.path.islink(full) or getattr(os.path, "isjunction", lambda _p: False)(full)):
+                continue
+            if os.path.realpath(full) in seen or inside(folder, os.path.relpath(os.path.join(full, "x"), folder)):
+                dirs.remove(sub)
         for name in files:
             if name.lower().endswith(".png"):
                 names.append(os.path.relpath(os.path.join(root, name), folder).replace(os.sep, "/"))

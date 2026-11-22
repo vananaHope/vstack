@@ -4,7 +4,7 @@ description: "Vet a perf measurement (limiter, tuning, limits, errors, repeatabi
 disable-model-invocation: true
 ---
 
-> vstack copy of pstack `benchmark-checklist` (0.15.36). Local edits are listed in UPSTREAM.md. In a vstack task, "the manager" is whoever assigned the task; outside one, it is the user.
+> vstack copy of pstack `benchmark-checklist` (0.15.46). Local edits are listed in UPSTREAM.md. In a vstack task, "the manager" is whoever assigned the task; outside one, it is the user.
 
 # Benchmark checklist
 
