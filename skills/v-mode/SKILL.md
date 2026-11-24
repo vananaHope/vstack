@@ -48,12 +48,13 @@ disable-model-invocation: true
 
 - 속하면 크기와 관계없이 지휘 절차로 보낸다. 그 작업의 수정, 검토 반영, "PR 올려", "병합해", "병합됐어", "그만둬"는 [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md) 6단계 표와 [../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "그만둘 때"를 따른다. 지휘 중인 작업의 코드를 이 대화가 직접 고치지 않는다(관리자는 작업자 역할을 맡지 않는다, [contracts/worker-contract.md](contracts/worker-contract.md)).
   - 사용자가 그 작업의 코드를 고쳐 달라고 하면(작은 수정 포함) 검토 지적처럼 받는다. 요청을 `.local/vstack/<작업 이름>/user-request-<k>.md`에 지적 형식(심각도, 내용, 근거: 사용자 요청과 시각)으로 적는다. orchestrate-issues 5단계 판정으로 `지금 고침`에 넣고 [../orchestrate-issues/fixes.md](../orchestrate-issues/fixes.md)대로 지적 수정을 맡긴다. 수정 명세의 "검토 보고서 경로"에는 그 파일(검토 보고서가 있으면 함께)을 적는다. 그 worktree에서 작업자가 일하는 중이면 그 작업자의 보고를 받은 뒤에 맡긴다(두 역할이 같은 worktree에 동시에 쓰지 않는다). 수정은 대상을 바꾸므로 재검증과 새 `review` 시도가 따른다. 그 비용이 요청에 비해 크면 맡기기 전에 말한다(고정 규칙 6).
+  - 그 작업에 속하지 않는 새 일이면: 바로 갈래는 할 수 있다. 새 맡기기는 [delegate.md](delegate.md) "지휘와 함께 진행"의 조건(관리자가 이 세션, 쓰는 곳과 검증 자원이 겹치지 않음)이 맞으면 함께 맡긴다. 새 이슈 진행은 지휘 절차로 보낸다.
 - 관리자가 바뀌었거나 다시 시작했으면 orchestrate-issues가 `state.md`와 보관된 증거로 이어 간다([../orchestrate-issues/vstack.md](../orchestrate-issues/vstack.md) "관리자 재시작", [contracts/archive.md](contracts/archive.md) "중단 복구"). 시범으로 돌려 본 것은 구현 중에 끊긴 경우 하나다. 보관 도중에 끊긴 경우, 보고 없이 멈춘 작업자가 있는 경우는 아직이다. 이어 가기 전에 사용자에게 어느 경우인지와 그 사실을 알린다.
 - `소유: vstack`이 아닌 작업이면 건드리지 않고 사용자에게 알린다. agent-orchestra 때의 작업(`.local/orchestration/*/state.md`)도 이어받지 않는다.
 - **진행 중인 맡기기**도 여기서 본다. 메인 저장소의 `.local/vstack-delegate/*/state.md` 가운데 첫 줄이 `끝`으로 시작하지 않는 것이 기준이다.
   - 진행 중인 맡기기는 여럿일 수 있다. 요청이 어느 맡기기에 속하는지 이름, 브랜치, 하는 일로 가리고, 가릴 수 없으면 묻는다. "병합해"처럼 되돌리기 어려운 지시는 어느 맡기기인지 이름으로 확인한다.
   - 요청이 그 일에 속하면(수정, 추가 요구, 상태, 중단, 이어 가기, 반영) [delegate.md](delegate.md)로 간다. 그 기록의 관리자가 이 세션이 아니면 그 파일의 "관리자가 다시 시작했을 때"부터다. 맡긴 worktree의 코드를 이 대화가 직접 고치지 않는다.
-  - 다른 새 일이면: 바로 갈래는 할 수 있다. 새 맡기기는 [delegate.md](delegate.md) "여러 맡기기"의 조건(서로 독립, 동시에 셋까지)이 맞으면 함께 맡긴다. 지휘는 진행 중인 맡기기가 모두 끝난 뒤에 시작한다고 알린다.
+  - 다른 새 일이면: 바로 갈래는 할 수 있다. 새 맡기기는 [delegate.md](delegate.md) "여러 맡기기"의 조건(서로 독립, 동시에 셋까지)이 맞으면 함께 맡긴다. 지휘도 함께 시작할 수 있다. 지휘가 고르는 이슈마다 진행 중인 맡기기와 겹치는지 [../orchestrate-issues/SKILL.md](../orchestrate-issues/SKILL.md) "새 작업 시작 조건"이 보고, 겹치는 이슈만 그 맡기기가 끝난 뒤로 미룬다. 그 맡기기의 관리자가 이 세션이 아니면 [delegate.md](delegate.md) "관리자가 다시 시작했을 때"로 먼저 이어받는다(한 저장소의 관리자는 하나다).
 
 ### 1. 크기
 

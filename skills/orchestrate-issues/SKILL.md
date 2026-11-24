@@ -68,7 +68,7 @@ disable-model-invocation: true
   - 검토를 기다리는 작업(구현은 끝났는데 검토자가 아직 붙지 않은 것)이 1개 이하다.
   - 실창 잠금 대기가 길게 이어지고 있지 않다.
   - 새 작업이 진행 중인 작업과 같은 파일 영역을 건드리지 않는다.
-  - 메인 저장소에 진행 중인 맡기기가 없다(`.local/vstack-delegate/*/state.md`의 첫 줄이 모두 `끝`으로 시작하거나 그 폴더가 없다. `<vstack>/skills/v-mode/delegate.md` "기록"). 있으면 그 맡기기가 끝난 뒤에 시작한다.
+  - 새 작업이 메인 저장소의 진행 중인 맡기기(`.local/vstack-delegate/*/state.md` 가운데 첫 줄이 `끝`으로 시작하지 않는 것. `<vstack>/skills/v-mode/delegate.md` "기록")와 쓰는 곳·검증 자원이 겹치지 않는다. 새 작업의 예정 쓰기 영역(`task.md` Target의 주로 건드릴 영역)과 검증 자원(`task.md` Constraints의 "검증 자원")을 맡기기 기록의 예정 쓰기 영역·검증 자원과 견준다. 판정 방법은 `<vstack>/skills/v-mode/delegate.md` "여러 맡기기"·"지휘와 함께 진행"이다. 겹치면 그 이슈만 그 맡기기가 끝난 뒤로 미루고, 다른 프런티어 이슈는 계속 고른다. 그 맡기기 기록의 관리자가 이 세션이 아니면 새 작업을 시작하지 않고 사용자에게 알린다(한 저장소의 관리자는 하나다). 지적 수정이나 리뷰 반영으로 진행 중인 작업의 쓰는 곳이 넓어질 때도 맡기기 전에 다시 본다. 겹치게 되면 넓히지 않고 사용자에게 알린다.
   - "지시 대기"·"PR 열림" 작업이 3개 이하다(병합 방식이 `지시`인 프로젝트). 넘으면 사용자에게 지시를 기다리는 목록을 알린다.
 
   하나라도 깨지면 새 작업을 시작하지 않는다. 진행 중인 작업은 멈추지 않고, 끝나는 대로 수가 자연히 줄게 둔다. 같은 원인의 병합 충돌이 반복될 때도 새 작업을 멈춘다.
@@ -92,7 +92,7 @@ disable-model-invocation: true
 
 **맡길 이슈**이고, 선행 이슈가 모두 끝났고, 지금 진행 중이 아닌 이슈가 프런티어다. 무엇이 맡길 이슈이고 선행 관계를 어디서 읽는지는 [trackers.md](trackers.md)를 따른다.
 
-**진행 중**은 셋 중 하나라도 맞는 것이다: 그 작업의 작업자가 떠 있다, `state.md`가 있고 `끝`이 아니다, 그 이슈를 가리키는 열린 PR이 있다(`gh pr list --state open --search "<이슈 표시>"`, 또는 브랜치가 `<작업 이름>-`로 시작). 지휘를 처음 시작할 때는 `.local/vstack/*/state.md`를 먼저 훑어 이어 갈 작업을 사용자에게 알린다. 이어 갈 작업이 있으면 [vstack.md](vstack.md) "관리자 재시작"대로 이어 간다. agent-orchestra 때의 작업 파일(`.local/orchestration/*/state.md`)에 끝나지 않은 작업이 있으면 이어받지 않고 사용자에게 알린다(소유권은 `<vstack>/skills/v-mode/contracts/state-and-rollback.md`).
+**진행 중**은 셋 중 하나라도 맞는 것이다: 그 작업의 작업자가 떠 있다, `state.md`가 있고 `끝`이 아니다, 그 이슈를 가리키는 열린 PR이 있다(`gh pr list --state open --search "<이슈 표시>"`, 또는 브랜치가 `<작업 이름>-`로 시작). 지휘를 처음 시작할 때는 `.local/vstack/*/state.md`를 먼저 훑어 이어 갈 작업을 사용자에게 알린다. 진행 중인 맡기기(`.local/vstack-delegate/*/state.md`)도 훑어 함께 진행할 맡기기와 그 예정 쓰기 영역을 알린다. 이어 갈 작업이 있으면 [vstack.md](vstack.md) "관리자 재시작"대로 이어 간다. agent-orchestra 때의 작업 파일(`.local/orchestration/*/state.md`)에 끝나지 않은 작업이 있으면 이어받지 않고 사용자에게 알린다(소유권은 `<vstack>/skills/v-mode/contracts/state-and-rollback.md`).
 
 시작 조건을 만족하는 동안 **임계 경로**에 있는 것부터 하나씩 고른다. 뒤에 이어지는 이슈 사슬이 가장 긴 이슈가 먼저이고, 같으면 번호(작업 이름)가 앞선 것이 먼저다.
 
@@ -131,6 +131,7 @@ disable-model-invocation: true
 - **질문**: 이슈, 프로젝트 설정의 스펙·문서에 답이 있으면 **답하기**로 답한다. 사용자만 정할 수 있는 결정이면 사용자에게 묻고, 받은 답을 전달한다. 권한 승인처럼 사람이 직접 눌러야 하는 요청이면 사용자에게 알린다.
 - **완료 보고**: [vstack.md](vstack.md) "완료 보고를 받으면"(보관, 결과 대상 확정, 결론 보기). 결론이 `막힘`이면 4단계로 가지 않고 그 문서의 "복구"로 간다.
 - **보고 없이 멈춤**(`escalation`, 작업자가 사라짐): [vstack.md](vstack.md) "복구"(정지 확인 뒤, 구현이 끝났는지에 따라 재검증 또는 새 수정 이어받기).
+- **맡기기의 메시지**: 진행 중인 맡기기와 같은 Run을 쓰므로 맡기기 작업자의 메시지도 깨운다. 맡기기 기록의 Dispatch 이력에 있는 메시지는 `<vstack>/skills/v-mode/delegate.md` 절차로 처리한다. 어느 지휘 작업의 시도 표·맡김 기록에도, 맡기기 기록에도 없는 메시지는 처리하지 않고 사용자에게 알린다.
 
 ### 4. 교차 검토
 
@@ -175,7 +176,7 @@ disable-model-invocation: true
 
 1. 브랜치를 push하고([vstack.md](vstack.md) "원격 반영") [pr-template.md](pr-template.md)로 PR을 만든다. GitHub 이슈면 본문에 `Closes #<n>`을 넣고, 다른 저장소면 이슈 위치를 적는다. PR 번호는 `gh pr create`가 출력한 URL에서 읽어 `state.md`에 적는다. 이슈 번호와 같다고 보지 않는다(이슈와 PR은 번호를 함께 쓴다).
 2. `main`이 그사이 앞으로 갔으면, **원래 구현자**에게 `main` 위로 rebase하고 관련 테스트를 다시 돌리라고 맡긴다. 남겨 둔 구현자가 있으면 **보내기**하고, 닫혔으면 같은 worktree에 구현자와 **같은 계열**의 작업자를 새로 **띄우기**한다. 충돌 해결도 그 작업자가 한다([vstack.md](vstack.md) "rebase"). rebase 작업자는 레시피의 "구현자: rebase"를 따르고(작업 종류 `rebase`), 끝나면 [vstack.md](vstack.md) "대상이 바뀌면"대로 재검증한다. "main 변경" 안내는 **진행 중인 작업이 구현일 때만** **보내기**한다. 검토 중인 이슈는 그 검토가 끝난 뒤 다음 구현 지시에 rebase를 넣는다(검토자에게 rebase 안내를 보내지 않는다).
-3. [vstack.md](vstack.md) "병합 관문"을 한다. 관문을 통과해야만 `gh pr merge <PR> --<병합 방법> --match-head-commit <H> --subject "<제목> (<이슈 표시>)"`로 병합한다. `MERGED`를 확인한 뒤 원격 브랜치를 지운다. 병합 방법은 프로젝트 설정 "병합" 절(`merge`/`squash`/`rebase`, 없으면 `merge`)이다.
+3. 맡기기의 반영(`<vstack>/skills/v-mode/delegate.md` "절차" 15)이 진행 중이면 그것이 끝난 뒤에 한다(반영과 병합은 한 번에 하나다). [vstack.md](vstack.md) "병합 관문"을 한다. 관문을 통과해야만 `gh pr merge <PR> --<병합 방법> --match-head-commit <H> --subject "<제목> (<이슈 표시>)"`로 병합한다. `MERGED`를 확인한 뒤 원격 브랜치를 지운다. 병합 방법은 프로젝트 설정 "병합" 절(`merge`/`squash`/`rebase`, 없으면 `merge`)이다.
 4. 메인 저장소의 `main`을 pull하고, GitHub 이슈가 아니면 이슈를 닫는다([trackers.md](trackers.md)). `state.md`를 `끝`으로 바꾼다.
 5. 이 작업의 작업자들을 **정리**한다.
 6. **병합한 worktree는 바로 지운다**(디스크 용량 확보: worktree마다 의존성 설치와 빌드 결과가 있어 크다). 지우기 전에 아래 셋과 [vstack.md](vstack.md) "worktree 지우기 전"(시도 정산)을 확인한다.
