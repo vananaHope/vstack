@@ -15,9 +15,10 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 ## 준비
 
-지휘 세션 전체에 Run 하나를 쓴다. `orca orchestration run-current`로 이 관리자에 묶인 Run을 본다. 없으면:
+관리자 세션 전체에 Run 하나를 쓴다. 같은 세션이 함께 진행하는 맡기기도 이 Run을 쓴다(`<vstack>/skills/v-mode/delegate.md` "지휘와 함께 진행"). `orca orchestration run-current`로 이 관리자에 묶인 Run을 본다. 없으면:
 
 - 끝나지 않은 작업의 `state.md`에 `Run:` 줄이 있으면(관리자를 다시 시작했다) `orca orchestration run-use --id <그 Run>`으로 그 Run에 묶는다. 새 Run을 만들지 않는다. 이전 관리자가 띄운 작업자의 보고와 시도 표의 dispatch가 그 Run에 있다. 결과의 `runId`가 그 값인지 본다.
+- 끝나지 않은 지휘 작업은 없고 진행 중인 맡기기 기록(`.local/vstack-delegate/*/state.md`)에 Run이 있으면, 그 Run에 `run-use`로 묶는다. 새 Run을 만들지 않는다. 그 Run을 새 작업의 `state.md` `Run:` 줄에 적는다.
 - 그 밖에는 `orca orchestration run-create --objective "<저장소> 이슈 지휘"`로 만든다. 새로 만든 Run을 `state.md`의 `Run:` 줄에 적는다.
 
 아래의 `<run>`이 그 Run이다. 다른 Run이 함께 있으면 명령마다 `--run <run>`을 붙인다.
