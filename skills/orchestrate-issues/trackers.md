@@ -20,7 +20,7 @@
 | 읽기 | `gh issue view <n> --json title,body,comments`. 작업자와 검토자도 직접 읽을 수 있다. `--comments`만 주면 터미널이 아닌 곳(작업자의 셸 도구)에서는 본문 없이 댓글만 나온다(댓글이 없으면 빈 출력. 측정: gh, 2026-11-08). |
 | 진행 중 표시 | `state.md`와 열린 PR로 안다(SKILL.md 1단계). 설정에 진행 중 라벨이 있으면 맡길 때 붙이고 끝날 때 뗀다(`gh issue edit --add-label`/`--remove-label`). |
 | 댓글 | `gh issue comment <n> --body "..."` |
-| 닫기 | PR 본문의 `Closes #<n>`으로 병합 때 닫힌다. |
+| 닫기 | PR 본문의 `Closes #<n>`으로 병합 때 닫힌다. GitHub는 기본 브랜치로 병합한 PR에서만 이렇게 닫으므로, 지휘의 기준 브랜치가 기본 브랜치가 아니면 병합을 확인한 뒤 `gh issue close <n> --comment "<기준 브랜치>에 병합: <PR URL>"`로 닫는다. 닫지 않으면 목록에 다시 나오고, 그 이슈를 선행으로 둔 이슈가 프런티어에 들지 않는다. |
 
 - 작업 이름: `issue-<n>`
 - 완료 기준: 기본은 이슈 본문의 체크리스트.
