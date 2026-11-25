@@ -53,7 +53,7 @@
 6. **명세 채우기**: [task-template.md](task-template.md) 또는 [review-template.md](review-template.md)의 "vstack 계약" 절을 채운다. 증거 폴더는 `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`, scratch는 `<worktree>/.vstack/scratch/<시도 ID>/`.
 7. **띄우기**: 바로 전에 archive.md "준비" 5(띄우기 직전 `HEAD`·status 기록)를 한다. 그다음 `--worktree path:<worktree 경로>`. 결과의 `dispatchId`, `terminal`(세션)을 시도 표에 적는다.
 
-`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@5 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
+`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@6 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
 
 ## 완료 보고를 받으면
 
@@ -198,9 +198,11 @@ SKILL.md 4단계에서:
 
 기준 브랜치나 다른 작업의 브랜치에는 어떤 경우에도 push하지 않는다. 예외는 SKILL.md "기준 브랜치"의 첫 게시와 8단계의 사용자 지시뿐이다.
 
+병합 위치가 `로컬`이면 이 절을 하지 않는다(아래 "로컬 병합").
+
 ## 병합 관문
 
-SKILL.md 6단계에서 **병합 명령을 내리기 바로 전에** 한다. "병합해" 지시, 자동 병합, rebase·수정·리뷰 반영 뒤 모두 같다.
+SKILL.md 6단계에서 **병합 명령을 내리기 바로 전에** 한다. "병합해" 지시, 자동 병합, rebase·수정·리뷰 반영 뒤 모두 같다. 병합 위치가 `로컬`이면 1·2·6·7 대신 아래 "로컬 병합"을 따른다.
 
 1. 위 "원격 반영"을 한다.
 2. 원격의 대상을 읽는다: `H` = `gh pr view <PR> --json headRefOid`, `B` = `git ls-remote origin refs/heads/<기준 브랜치>`.
@@ -226,11 +228,26 @@ SKILL.md 6단계에서 **병합 명령을 내리기 바로 전에** 한다. "병
 4. worktree는 병합되지 않았으므로 지우지 않는다. state-and-rollback.md "새로 시작"처럼 보존하고, 지울지는 사용자가 정한다(미병합 변경 삭제는 안전 멈춤이다).
 5. PR을 닫았으면 이슈를 맡길 상태로 되돌린다. `state.md`를 `끝`, 소유를 `소유: 포기(<날짜>, 그만둠)`로 쓴다. 나중에 다시 맡기면 새 작업 이름을 쓴다(state-and-rollback.md "다시 맡길 때의 작업 이름").
 
+## 로컬 병합
+
+병합 위치가 `로컬`일 때(SKILL.md "기준 브랜치") SKILL.md 6단계를 이렇게 바꿔 한다. 판정식과 진입점은 그대로이고, 대상 읽기와 병합 명령·확인은 merge-gate.md "로컬 병합"이다([ADR 0016](../../docs/adr/0016-local-merge-orchestration.md)). 이 길은 돌려 보지 않았다.
+
+- **원격에 올리지 않는다.** 위 "원격 반영"을 하지 않는다. 작업 브랜치도 기준 브랜치도 push하지 않고, `state.md` "게시" 절은 비어 있다.
+- **사용자 지시**: "PR 올려"는 없다. 사용자가 그렇게 말하면 병합 위치가 `로컬`이라 이슈 PR을 만들지 않는다고 알리고 "병합해"를 기다린다. "병합해"는 PR 번호 대신 지시가 가리키는 이슈 표시나 작업 이름을 이 작업과 대조한다. "리뷰 반영해"는 없다. 사람의 리뷰는 8단계의 PR에서 받는다. "병합됐어"는 merge-gate.md "로컬 병합" 6이다. `state.md`는 `지시 대기`에서 병합 뒤 `끝`으로 가고 `PR 열림`·`병합 대기`를 쓰지 않는다.
+- **6단계 1**: 하지 않는다.
+- **6단계 2**: `main`은 로컬 기준 브랜치다. 그사이 다른 이슈나 맡기기가 병합돼 앞으로 갔으면 지금처럼 rebase를 맡긴다.
+- **6단계 3**: 위 "병합 관문"의 3·4·5(대조, 판정, 기록)를 merge-gate.md "로컬 병합" 1·2 뒤에 하고, 그 절의 3·4로 병합하고 확인한다. 반영과 병합은 한 번에 하나라는 규칙은 같다.
+- **6단계 4**: pull하지 않는다. PR의 `Closes`가 없으므로 이슈는 늘 관리자가 닫는다. GitHub 이슈면 `gh issue close <n> --comment "<기준 브랜치>에 로컬 병합: <M>"`이다.
+- **6단계 6**: "병합됐다"는 관문 기록의 `로컬 병합 확인(<M>)`이 있고 `git merge-base --is-ancestor <M> <기준 브랜치>`가 참인지로 본다. "남은 변경이 없다"는 아래 "worktree 지우기 전"이다.
+- **관리자 재시작**: 관문 통과 줄은 있는데 결과가 `로컬 병합 확인`이 아닌 작업은 merge-gate.md "로컬 병합" 5로 이어 간다. 결과가 이미 `로컬 병합 확인(<M>)`인데 `state.md` 첫 줄이 `끝`이 아니면(병합 뒤 정리 전에 끊겼다) 관문과 병합을 다시 하지 않고 6단계 4부터 이어 간다. 이 둘은 위 "관리자 재시작" 5의 표보다 먼저 본다.
+- **그만둘 때**: PR이 없으므로 아래 "그만둘 때" 3은 건너뛰고, 5는 PR을 닫았을 때처럼 한다.
+- **잃는 것**: 이슈마다의 PR 기록, PR에서 받는 사람의 리뷰와 "리뷰 반영해", 이슈마다 도는 원격 검사, 진행 중인 작업의 원격 백업이 없다. 이슈의 검증 기록은 병합 커밋 메시지(pr-template.md 본문)와 `state.md`에 남고, 8단계 PR 본문이 이슈마다 모아 적는다.
+
 ## worktree 지우기 전
 
 SKILL.md 6단계 6의 확인에 둘을 맞춘다.
 
-- "남은 변경이 없다"는 `@{u}`(upstream)로 보지 않는다. 병합 뒤 원격 브랜치를 지우면 upstream이 사라지기 때문이다. 대신 `git -C <worktree> status --porcelain`이 비었고, `git -C <worktree> rev-parse HEAD`가 `state.md` "게시" 절의 마지막 게시 SHA와 같은지 본다(게시하지 않은 커밋이 없다).
+- "남은 변경이 없다"는 `@{u}`(upstream)로 보지 않는다. 병합 뒤 원격 브랜치를 지우면 upstream이 사라지기 때문이다. 대신 `git -C <worktree> status --porcelain`이 비었고, `git -C <worktree> rev-parse HEAD`가 `state.md` "게시" 절의 마지막 게시 SHA와 같은지 본다(게시하지 않은 커밋이 없다). 병합 위치가 `로컬`이면 게시 절이 비어 있으므로 `로컬 병합 확인`을 적은 관문 줄의 `H`와 같은지 본다(병합하지 않은 커밋이 없다).
 - 이 작업의 시도가 모두 **정산됐다**(archive.md "정산"). 정산되지 않았으면 지우지 않는다.
 
 ## PR 본문
