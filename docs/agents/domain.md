@@ -20,7 +20,7 @@ This repo is single-context:
 ├── docs/adr/
 │   ├── 0001-move-agent-orchestra-into-vstack.md
 │   ├── ...
-│   └── 0013-delegation-alongside-orchestration.md
+│   └── 0014-one-manager-per-record.md
 └── skills/
 ```
 
