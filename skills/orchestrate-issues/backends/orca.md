@@ -29,13 +29,13 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 작업자를 새 worktree로 띄울 때는 이 단계 없이 `worker-start`가 만든다(아래 "띄우기"). 띄우기 전에 worktree 안에 설정 파일을 써야 할 때(Codex fast)만 먼저 만든다.
 
-`orca worktree create --name <작업 이름>-<slug> --branch <작업 이름>-<slug> --repo path:<메인 저장소> --base-branch main --setup run --json`. `--branch`를 주지 않으면 Orca의 기본 접두사가 붙어 SKILL.md가 가정하는 브랜치 이름(`<작업 이름>-`로 시작)과 달라진다. 결과의 worktree 경로와 브랜치를 `state.md`에 적어 둔다.
+`orca worktree create --name <작업 이름>-<slug> --branch <작업 이름>-<slug> --repo path:<메인 저장소> --base-branch <기준 브랜치> --setup run --json`. `--branch`를 주지 않으면 Orca의 기본 접두사가 붙어 SKILL.md가 가정하는 브랜치 이름(`<작업 이름>-`로 시작)과 달라진다. 결과의 worktree 경로와 브랜치를 `state.md`에 적어 둔다.
 
 ## 띄우기
 
 명세는 파일로 넘긴다(`--spec-file`). 셸 인자로 한국어 명세를 넘기면 따옴표·줄바꿈에서 깨지기 쉽다.
 
-- **새 worktree**: `orca orchestration worker-start --spec-file <task.md 절대 경로> --worktree new-top-level --repo path:<메인 저장소> --name <작업 이름>-<slug> --base-branch main --agent <에이전트> --task-title "<작업 이름>: <한 줄 요약>"`.
+- **새 worktree**: `orca orchestration worker-start --spec-file <task.md 절대 경로> --worktree new-top-level --repo path:<메인 저장소> --name <작업 이름>-<slug> --base-branch <기준 브랜치> --agent <에이전트> --task-title "<작업 이름>: <한 줄 요약>"`.
   `worker-start`에는 `--branch`가 없다. 띄운 뒤 `orca worktree show --worktree path:<경로> --json`으로 실제 브랜치를 읽어 `state.md`에 적는다. 이름이 `<작업 이름>-`로 시작하지 않으면 SKILL.md의 "진행 중" 판정(브랜치 접두사)이 맞지 않으므로, 브랜치 이름이 중요하면 위 "worktree 만들기"로 먼저 만든다.
 - **기존 worktree**(검토자, 지적 수정, rebase, 미리 만든 worktree): `--worktree path:<worktree 경로>`. 새 터미널이 열린다.
 - 새 worktree(`new-top-level`, `new-child`)에 띄운 작업자는 **끝나도 열린 채 남는다**(Orca 기본값). 기존 worktree에 띄운 작업자는 끝나면 스스로 닫히고, 약 2분 뒤 자동 해제된다. 기존 worktree 작업자의 터미널 상태(띄운 서버 등)를 살려 둬야 하면 `--keep-open`을 붙인다. 어느 쪽이든 아래 "정리"에서 확인한다.
