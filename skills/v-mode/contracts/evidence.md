@@ -16,14 +16,14 @@
 
 ```json
 {
-  "contract": "vstack-contract@5",
+  "contract": "vstack-contract@6",
   "task": "issue-42",
   "attempt": "rev-3ecbf1e7-1",
   "role": "rev",
   "scope": "review",
   "executor": "claude",
   "session": "3ecbf1e7",
-  "recipe": "bug-fix@8",
+  "recipe": "bug-fix@9",
   "target": { "head": "<40자 SHA>", "base": "<40자 SHA>", "base_ref": "main" },
   "tree_before": "",
   "env": {
