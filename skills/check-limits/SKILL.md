@@ -24,7 +24,7 @@ description: Codex·Claude·Antigravity 사용 한도를 실제 사용률(창별
 - **Antigravity**: `python -I <스킬 폴더>/scripts/agy_limit.py --json`
   - `agy -p /usage`의 글 보고(Quota 표)를 읽는다. 보고는 모델 그룹마다 `Weekly`·`Five Hour` 창의 남은 비율과 초기화 시각을 준다. 판정은 `Gemini Models` 그룹만 본다(Antigravity 작업자가 쓰는 모델). 다른 그룹은 `--group "<그룹 이름>"`으로 본다.
   - 창은 `five_hour`와 `weekly`이고 `used_percent`는 100에서 남은 비율을 뺀 값이다. 초기화 시각이 1970년인 창은 아직 열리지 않은 창이라 뺀다.
-  - `/usage`가 사용량을 쓰는지는 문서에 없다. 보고 형식은 문서에 없고 2026-11-26 사용자 컴퓨터의 출력에 맞췄다. 형식이 바뀌어 줄을 찾지 못하면 `unknown`이다.
+  - `/usage`가 사용량을 쓰는지는 문서에 없다. 보고 형식은 문서에 없다. 사용자 컴퓨터에서 본 두 형식(공백 정렬과 `2026-12-03 16:23 KST` 같은 지역 시각, 탭 구분과 `2026-12-03T07:23:57Z` 같은 ISO 시각)을 모두 읽고, 초기화 시각은 지역 시각으로 바꿔 낸다(`scripts/test_agy_limit.py`). 형식이 바뀌어 줄을 찾지 못하면 `unknown`이다.
   - `agy`가 없거나 로그인이 없으면 `unknown`이고 `error`에 까닭이 있다.
 
 ## 판정
