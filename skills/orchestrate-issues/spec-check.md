@@ -21,7 +21,7 @@
 3. **`antigravity[:모델][@강도]`**: Antigravity CLI의 헤드리스 실행으로 메인 저장소에서 묻는다: `cd <메인 저장소> && agy -p "<질문>" --mode plan --sandbox [--model <모델>] [--effort <강도>] --output-format json > <출력 파일> < /dev/null`. `--mode plan`은 파일을 고치지 않는 계획 모드이고, `--sandbox`는 터미널 명령을 샌드박스 안에서만 돌린다. `--dangerously-skip-permissions`는 쓰지 않는다(파일 쓰기와 명령 실행을 모두 승인한다). 모델을 빼면 `~/.gemini/antigravity-cli/settings.json`의 기본 모델이다. 출력 파일은 `.local/vstack/<작업 이름>/spec-check-answer.json`으로 두고, 답은 그 JSON의 `response`에서 읽는다.
    - 셸 도구의 시간 제한은 10분 이상으로 둔다.
    - 답을 쓰기 전에 종료 코드 0, JSON의 `status`가 성공이고 `error`가 비었는지, `response`에 답이 있는지 본다. 없는 모델 이름은 종료 코드 1로 끝난다(다른 모델로 넘어가지 않는다). 표준 오류를 파이프로 버리지 않는다. 이 길은 아직 돌려 보지 않았다. 처음 쓸 때 걸린 시간과 확인한 값을 `spec-check.md`에 적는다.
-   - 건너뛰는 조건: Antigravity가 이 지휘에서 `exhausted`로 기록됐다([limits.md](limits.md) "Antigravity"), `agy` 명령이 없다, 로그인이 없다(`authentication required`), 종료 코드가 0이 아니다, 계획 모드나 샌드박스 옵션을 받지 않는다.
+   - 건너뛰는 조건: Antigravity의 한도가 `ok`·`warning`이 아니거나 한도 오류가 기록됐다([limits.md](limits.md) "Antigravity"), `agy` 명령이 없다, 로그인이 없다(`authentication required`), 종료 코드가 0이 아니다, 계획 모드나 샌드박스 옵션을 받지 않는다.
 
 ## 질문
 
