@@ -37,4 +37,5 @@
 - 작업 파일과 상태는 메인 저장소의 `.local/vstack/<작업 이름>/`에 있다. `state.md` 첫 줄이 지금 상태다.
 - 검토에서 되풀이해 나온 지적은 `common-findings.md`에 모인다. 구현자와 검토자가 이 목록을 먼저 본다.
 - 앞부분 선행 병합과 지휘 안의 UI 다듬기는 하지 않는다([vstack.md](../../skills/orchestrate-issues/vstack.md) "첫 버전에서 하지 않는 것").
-- 한도는 지휘가 [check-limits](../../skills/check-limits/SKILL.md)로 재고, 한도가 넉넉하지 않은 에이전트는 건너뛴다.
+- 한도는 지휘가 [check-limits](../../skills/check-limits/SKILL.md)로 재고, 한도가 넉넉하지 않은 에이전트는 건너뛴다. Antigravity는 `agy -p /usage`의 보고로 잰다.
+- 작업자 계열은 `codex`, `claude`, `antigravity`(Antigravity CLI로 Gemini 모델) 셋이다. 기본 배치에서 Antigravity는 구현 목록의 Claude 앞, 검토 목록의 Codex 뒤에 있고, `agy`가 없는 컴퓨터에서는 건너뛴다([tiers.md](../../skills/orchestrate-issues/tiers.md)).

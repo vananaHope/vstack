@@ -1,11 +1,13 @@
 """등급별 배치의 작업자 표기(에이전트[:모델][@강도][+fast])가 지금 쓸 수 있는 모델·강도인지 본다.
 
 사용법:
-    python -I check_tiers.py "codex:gpt-6-astra@medium" "codex@high+fast" "claude@high"
+    python -I check_tiers.py "codex:gpt-6-astra@medium" "codex@high+fast" "claude@high" "antigravity:gemini-3.1-pro-high@high"
 
 목록은 플러그인에 박아 두지 않고 각 도구가 스스로 갱신하는 것을 읽는다.
 - Codex: $CODEX_HOME/models_cache.json(모델과 모델별 강도·fast 지원), 기본 모델은 $CODEX_HOME/config.toml의 model.
   CODEX_HOME이 없으면 ~/.codex다. Orca는 계정마다 CODEX_HOME을 따로 둔다.
+- Antigravity: `agy models`의 출력에 모델 이름이 있는지 본다. 강도는 Antigravity CLI의 `--effort` 값(low/medium/high/xhigh/max)인지만 본다.
+  모델을 빼면 Antigravity 설정의 기본 모델이라 보지 않는다.
 - Claude: 보지 않는다
 - 관리자: 검토 목록에만 쓰는 표기라 보지 않는다
 
@@ -18,10 +20,13 @@ import difflib
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
 CODEX = Path(os.environ.get('CODEX_HOME') or Path.home() / '.codex')
+ANTIGRAVITY_EFFORTS = ['low', 'medium', 'high', 'xhigh', 'max']
 
 
 def parse(notation):
@@ -50,6 +55,21 @@ def codex_default_model():
     return found.group(1) if found else None
 
 
+def antigravity_models():
+    """`agy models` 출력의 낱말을 모델 이름 후보로 돌려준다. 명령이 없거나 실패하면 None."""
+    agy = shutil.which('agy')
+    if agy is None:
+        return None
+    try:
+        done = subprocess.run([agy, 'models'], capture_output=True, text=True, encoding='utf-8',
+                              errors='replace', timeout=60, stdin=subprocess.DEVNULL)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if done.returncode != 0:
+        return None
+    return sorted(set(re.findall(r'[A-Za-z0-9][A-Za-z0-9._-]*', done.stdout)))
+
+
 def unknown(kind, name, choices):
     near = difflib.get_close_matches(name, choices, n=1, cutoff=0.3)
     hint = f', 가까운 이름 `{near[0]}`' if near else ''
@@ -73,9 +93,22 @@ def check(notation, lists):
         if tier is not None and tier not in models[name]['tiers']:
             return f'`{name}`은(는) `+{tier}`를 지원하지 않음(가능: {"/".join(models[name]["tiers"]) or "없음"})'
         return None
+    if agent == 'antigravity':
+        if effort and effort not in ANTIGRAVITY_EFFORTS:
+            return f'Antigravity 강도 `{effort}`이(가) 없음(가능: {"/".join(ANTIGRAVITY_EFFORTS)})'
+        if model is None:
+            return None
+        if 'antigravity' not in lists:
+            lists['antigravity'] = antigravity_models()
+        models = lists['antigravity']
+        if models is None:
+            return '확인 못 함: `agy models`를 실행하지 못함(명령 없음, 로그인 없음 등)'
+        if model not in models:
+            return unknown('Antigravity 모델', model, models)
+        return None
     if agent in ('claude', '관리자'):
         return None
-    return f'에이전트 `{agent}`은(는) codex/claude/관리자가 아님'
+    return f'에이전트 `{agent}`은(는) codex/claude/antigravity/관리자가 아님'
 
 
 def main():
