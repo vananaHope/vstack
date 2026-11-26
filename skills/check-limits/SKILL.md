@@ -1,6 +1,6 @@
 ---
 name: check-limits
-description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화 시각)로 재서 ok/warning/exhausted/unknown으로 판정한다. 한도·사용량·남은 양을 물을 때, 작업을 맡기기 전에 한도를 판단해야 할 때 사용.
+description: Codex·Claude·Antigravity 사용 한도를 실제 사용률(창별 %·초기화 시각)로 재서 ok/warning/exhausted/unknown으로 판정한다. 한도·사용량·남은 양을 물을 때, 작업을 맡기기 전에 한도를 판단해야 할 때 사용.
 ---
 
 # 한도 확인
@@ -9,7 +9,7 @@ description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화
 
 ## 재기
 
-이 SKILL.md가 있는 폴더(`/vstack:check-limits`로 실행했으면 `Base directory for this skill`)의 `scripts/`에 있는 스크립트를 쓴다. 기본은 둘 다 잰다. 사용자가 하나만 물었으면 그것만 잰다.
+이 SKILL.md가 있는 폴더(`/vstack:check-limits`로 실행했으면 `Base directory for this skill`)의 `scripts/`에 있는 스크립트를 쓴다. 기본은 Codex와 Claude를 잰다. Antigravity는 `agy` 명령이 있을 때 함께 잰다. 사용자가 하나만 물었으면 그것만 잰다.
 
 - **Codex**: `python -I <스킬 폴더>/scripts/codex_limit.py --json`
   - Codex 로그인 정보(`$CODEX_HOME/auth.json`, 없으면 `~/.codex/auth.json`)로 Codex의 `/status`가 쓰는 사용량 API를 읽는다. 사용량이 들지 않고 1초 안에 끝나므로 필요할 때마다 다시 잰다. 결과의 `source`가 `usage-api`다.
@@ -21,7 +21,11 @@ description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화
   - 창은 `five_hour`와 `seven_day`이고, 창마다 `elapsed_percent`(창이 지난 비율)도 낸다. 아직 열리지 않은 창(쓴 적이 없는 5시간 창 등)은 결과에 없다.
   - 사용량이 들지 않는다. 자주 부르면 API가 막으므로(HTTP 429) 결과를 1분 동안 보관했다가 다시 쓴다(`source`가 `cache`). 조회가 실패하면 10분 안의 보관 결과를 쓰고 실패 이유를 `api_error`에 적는다. 그 밖에는 `source`가 `usage-api`다.
 
-- **Antigravity**: 재지 않는다. 사용량을 읽을 방법이 없다. 지휘는 한도 오류 기록으로 판정한다(`orchestrate-issues/limits.md` "Antigravity"). 사용자가 Antigravity 한도를 물으면 잴 수 없다고 답한다.
+- **Antigravity**: `python -I <스킬 폴더>/scripts/agy_limit.py --json`
+  - `agy -p /usage`의 글 보고(Quota 표)를 읽는다. 보고는 모델 그룹마다 `Weekly`·`Five Hour` 창의 남은 비율과 초기화 시각을 준다. 판정은 `Gemini Models` 그룹만 본다(Antigravity 작업자가 쓰는 모델). 다른 그룹은 `--group "<그룹 이름>"`으로 본다.
+  - 창은 `five_hour`와 `weekly`이고 `used_percent`는 100에서 남은 비율을 뺀 값이다. 초기화 시각이 1970년인 창은 아직 열리지 않은 창이라 뺀다.
+  - `/usage`가 사용량을 쓰는지는 문서에 없다. 보고 형식은 문서에 없고 2026-11-26 사용자 컴퓨터의 출력에 맞췄다. 형식이 바뀌어 줄을 찾지 못하면 `unknown`이다.
+  - `agy`가 없거나 로그인이 없으면 `unknown`이고 `error`에 까닭이 있다.
 
 ## 판정
 
@@ -36,6 +40,7 @@ description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화
 
 `unknown`이면 추측하지 않는다. 원인을 함께 알린다.
 - Claude: 사용량 API가 실패했고 10분 안의 보관 결과도 없다. 스크립트가 낸 `error`를 보여 준다. 로그인 토큰이 없거나 만료됐으면(HTTP 401 포함) Claude Code를 한 번 실행해 로그인을 갱신하라고 안내한다. 스크립트는 토큰을 직접 갱신하지 않는다.
+- Antigravity: `agy -p /usage`가 실패했거나 보고에서 그룹 줄을 찾지 못했다. 스크립트가 낸 `error`를 보여 준다. 로그인 오류면 `agy`를 한 번 대화형으로 실행해 로그인하라고 안내한다.
 - Codex: 사용량 API와 `codex exec`가 둘 다 실패했다(로그인 만료, 세션 기록에 `rate_limits` 없음 등). 스크립트가 낸 `api_error`와 `error` 끝부분을 보여 준다.
 
 ## 보고
@@ -45,6 +50,7 @@ description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화
 ```
 Claude ok — 5시간 26%(14:40 초기화), 7일 50%(10-22 07:00 초기화) · 10:55 측정
 Codex warning — primary 83%(13:10 초기화), secondary 41%(10-23 09:00 초기화) · 10:56 측정
+Antigravity ok — 5시간 4%(21:23 초기화), 주간 2%(12-03 16:23 초기화) · 10:56 측정
 ```
 
 **완료 기준**: 잰 에이전트마다 판정과 창별 숫자, 초기화 시각, 측정 시각이 보고에 있다. `unknown`이면 원인이 있다.

@@ -4,7 +4,7 @@ id: perf · version: 6 · contract: vstack-contract@7
 
 pstack의 `playbooks/perf-issue.md`를 따른다. 고치는 일마다 측정을 붙이고, 소스를 읽는 것으로 측정을 대신하지 않는다. 측정이 믿을 만한지는 [benchmark-checklist](../../benchmark-checklist/SKILL.md)로 본다. 성능 회귀의 원인을 좁힐 때는 [diagnosing-bugs](../../diagnosing-bugs/SKILL.md)의 Phase 4 "Perf branch"(기준 측정 뒤 이분 탐색)를 쓴다. 원본의 하위 에이전트 구현 위임, 모델 지정, `how`·`architect` 단계, PR 단계, 지표를 오래 올리는 hillclimb는 뺐다. 가져온 것과 뺀 것은 저장소의 `UPSTREAM.md`에 있다.
 
-**맡기기 갈래에서 작업자에게 맡긴다.** 지휘에는 연결하지 않았다. 그래서 검토자 절차, 지적 수정·rebase·재검증 절차, 증거 만들기 단계가 없다. 검토는 맡기기의 Codex 검토자가 하고, 맡기는 절차는 [delegate.md](../delegate.md)에 있다. 아래 "구현자"는 맡기기의 구현자(Orca 작업자)이고 "관리자"는 맡기기의 관리자다. "사용자에게 묻는다"는 구현자가 `ask`로 관리자에게 묻고, 관리자가 사용자에게 물어 답을 보낸다는 뜻이다.
+**맡기기 갈래에서 작업자에게 맡긴다.** 지휘에는 연결하지 않았다. 그래서 검토자 절차, 지적 수정·rebase·재검증 절차, 증거 만들기 단계가 없다. 검토는 맡기기의 맡기기의 검토자(기본 Codex)가 하고, 맡기는 절차는 [delegate.md](../delegate.md)에 있다. 아래 "구현자"는 맡기기의 구현자(Orca 작업자)이고 "관리자"는 맡기기의 관리자다. "사용자에게 묻는다"는 구현자가 `ask`로 관리자에게 묻고, 관리자가 사용자에게 물어 답을 보낸다는 뜻이다.
 
 ## 언제
 

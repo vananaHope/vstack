@@ -34,6 +34,7 @@
 | 추가 완료 조건 | 없음 | 예 |
 | 실창 검사 (선택) | 실창 잠금을 명세에 넣지 않는다 | 예 |
 | 확인 자료 (선택) | 없음 | 예 |
+| 맡기기 배치 (선택) | 구현자 `claude:opus`, 검토자 `codex` → `antigravity` → `claude` | 예(맡기기만) |
 
 ## 병합 절 예시
 
@@ -54,8 +55,8 @@
 
 - Orca 안에서 실행 중인가(맡기기와 지휘 모두).
 - `gh`가 로그인돼 있는가(지휘 전제).
-- `claude`, `codex` 명령이 있는가(지휘 전제). 등급별 배치나 명세 점검에 `antigravity`를 적었으면 `agy`가 있고 로그인돼 있는가.
-- Codex와 Claude의 한도를 잴 수 있는가(지휘 전제). Antigravity는 재지 않는다.
+- `claude`, `codex` 명령이 있는가(지휘 전제). `antigravity`를 쓰는 목록이 있으면 `agy`가 있고 로그인돼 있는가(없으면 건너뛴다고 알릴 뿐 막지 않는다).
+- Codex와 Claude의 한도를 잴 수 있는가(지휘 전제). `agy`가 있으면 Antigravity도 잰다.
 - `.local/`이 Git에서 빠졌는가.
 - mattpocock 설정(`docs/agents/issue-tracker.md` 또는 `AGENTS.md`의 `## Agent skills` 절)이 있는가. 없으면 `/mattpocock-skills:setup-matt-pocock-skills`를 안내한다.
 - 테스트 명령 같은 검증 수단이 있는가.

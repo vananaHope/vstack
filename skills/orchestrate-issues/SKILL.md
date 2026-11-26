@@ -22,7 +22,7 @@ disable-model-invocation: true
 
 - **vstack 계약**: 이 지휘는 vstack 계약(`<vstack>/skills/v-mode/contracts/`)을 따른다. 단계마다 어떻게 적용하는지는 [vstack.md](vstack.md)에 있고, 아래 단계는 해당 위치에서 그 절을 가리킨다. 레시피가 없는 이슈는 맡기지 않는다([vstack.md](vstack.md) "레시피가 없는 작업").
 - **자주 나온 지적**: 프로젝트 설정과 같은 폴더의 `common-findings.md`가 이 프로젝트의 검토 지적 누적 목록이다. 명세와 검토에 이 파일의 절대 경로를 넣는다.
-- **한도**: [check-limits](../check-limits/SKILL.md)를 읽고 그 방법으로 Codex와 Claude를 잰다. Antigravity는 재지 않고 기록으로 판정한다. 다시 재는 때와 판정별 모드는 [limits.md](limits.md)에 있다.
+- **한도**: [check-limits](../check-limits/SKILL.md)를 읽고 그 방법으로 Codex와 Claude를 잰다. `agy`가 있으면 Antigravity도 잰다. 다시 재는 때와 판정별 모드는 [limits.md](limits.md)에 있다.
 - **이슈 저장소**: 이슈를 고르고 읽고 표시하고 닫는 방법은 [trackers.md](trackers.md)의 이 프로젝트 종류 절을 따른다. 이 문서에서 "이슈에 댓글", "이슈를 닫는다"는 그 방법으로 한다.
 - **스킬 폴더**: 사용자가 `/vstack:orchestrate-issues`로 실행했으면 그때 받은 기본 디렉터리(`Base directory for this skill`), 이 파일을 경로로 읽어 따르는 중이면 이 SKILL.md가 있는 폴더다. 플러그인 버전이 바뀌면 경로도 바뀌므로, 명세에는 매번 지금 경로를 절대 경로로 쓴다.
 - **실창 잠금**: 프로젝트 설정에 "실창 검사" 절이 있으면 `python -I <스킬 폴더>/scripts/desktop_lock.py install`로 잠금 스크립트를 고정 경로에 둔다([desktop.md](desktop.md) "고정 경로").

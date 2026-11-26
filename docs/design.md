@@ -1,6 +1,6 @@
 # vstack 설계
 
-상태(2026-11-26): 플러그인 0.30.0. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고(지휘와 맡기기의 기준 브랜치·병합 위치는 23~26절, 지휘의 Antigravity 계열은 27절), 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
+상태(2026-11-26): 플러그인 0.30.0. 갈래는 바로 / 맡기기 / 지휘이고 관리자는 바로 갈래 말고는 제품 코드를 쓰지 않는다(14절). 지금 규칙의 정본은 스킬(`skills/`)과 결정 기록([adr/](adr/))이다. 이 문서의 1절, 14절, 15절, 16절이 지금 상태의 요약이고(지휘와 맡기기의 기준 브랜치·병합 위치는 23~26절, Antigravity 계열은 27절), 2~13절과 변경 이력은 만들어 온 과정의 기록이다(그때의 이름과 기본값이 남아 있다). 전체 검수는 [audit-2026-11-14.md](audit-2026-11-14.md).
 
 만들 때의 상태: 3판 + 0단계 완료(2026-11-08, 6차 Codex 검토 "0단계 완료, 1단계로 가도 됨"). 첫 시범·두 번째 시범 완료(2026-11-08, [pilot-1.md](pilot-1.md), [pilot-2.md](pilot-2.md)). 계약의 정본은 `skills/v-mode/contracts/`(지금 `vstack-contract@7`)이고, 이 문서의 3절은 요약이다. 둘이 다르면 contracts가 우선한다(차이는 변경 이력 "0단계"에 있다).
 
@@ -644,26 +644,29 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 
 **문서를 읽는 사람별로 나눔(2026-11-25).** 문서만 옮겼고 동작은 바꾸지 않아 버전은 그대로다. README 하나에 처음 보는 사람, 쓰는 사람, agent-orchestra에서 넘어오는 사람, vstack을 고치는 사람의 내용이 섞여 있었다. Orca 저장소의 문서 구조(README는 소개와 링크, 사용자 문서는 깊이 순서, 기여자 문서는 따로)를 참고해 나눴다. README는 소개, 상태 줄, 설치, 처음 쓰기, 세 갈래, 문서 안내만 남겼다. 쓰는 사람의 문서는 `docs/guide/`(처음 쓰기, 개념, 맡기기, 지휘, 기능 브랜치에서 지휘하기, 프로젝트 설정, 문제 해결, agent-orchestra에서 넘어오기)로, 구성·검사·관례는 `CONTRIBUTING.md`로 옮겼다. 사용 안내는 실행 문서를 줄여 옮기고 링크를 건다. 규칙의 정본은 그대로 `skills/`의 실행 문서이고, 동작을 바꾸면 안내도 같은 PR에서 고친다(`CONTRIBUTING.md` "관례"). `check-links`는 `skills/`만 보므로 안내의 링크는 이번에 따로 확인했다.
 
-## 27. 지휘의 셋째 계열 Antigravity(2026-11-26, ADR 0017)
+## 27. 셋째 계열 Antigravity(2026-11-26, ADR 0017)
 
-**까닭.** 사용자가 vstack에서 Gemini 모델을 쓰려 했다. 관리자와 서브에이전트는 Claude Code 안에서 돌고 Agent 도구는 Claude 모델만 받는다. 지휘의 계열은 ADR 0012 뒤로 `codex`, `claude` 둘이었고, `check_tiers.py`는 그 밖의 에이전트를 거절했다. 사용자가 쓰는 도구는 Gemini CLI가 아니라 Antigravity CLI(`agy`)다.
+**까닭.** 사용자가 vstack에서 Gemini 모델을 Claude·Codex와 같은 급으로 쓰려 했다. 관리자와 서브에이전트는 Claude Code 안에서 돌고 Agent 도구는 Claude 모델만 받는다. 지휘의 계열은 ADR 0012 뒤로 `codex`, `claude` 둘이었고, `check_tiers.py`는 그 밖의 에이전트를 거절했다. 맡기기는 Claude 구현자와 Codex 검토자로 고정이었다(ADR 0009). 사용자가 쓰는 도구는 Gemini CLI가 아니라 Antigravity CLI(`agy`)다.
 
 **확인한 것.**
 - Orca의 `worker-start`는 `--agent antigravity`를 받고, `--model`(공급자 모델 ID)과 `--effort`를 Antigravity에도 준다. 로컬 worktree에서는 Orca가 Antigravity의 신뢰 설정을 미리 해 주고, SSH 원격 worktree는 지원하지 않는다(Orca 문서, 2026-11-26).
 - `agy -p`는 한 번 묻고 끝나는 헤드리스 실행이다. `--model`, `--effort`(low~max), `--sandbox`, `--mode`, `--output-format json`이 있고, 없는 모델은 종료 코드 1로 끝난다. 설정은 `~/.gemini/antigravity-cli/settings.json`, 로그인은 대화형으로 한 번 해 둔다(Antigravity CLI 헤드리스 문서).
-- Antigravity의 사용량을 읽는 길은 찾지 못했다.
+- `/usage`(`/quota`)는 모델 그룹(Gemini, Claude·GPT)마다 5시간·주간 한도를 보여 준다(문서). 비대화형 조회는 문서에 없다. 사용자 컴퓨터에서 받은 보고는 `<그룹>  <Weekly|Five Hour> Limit Remaining  <n>%  <YYYY-MM-DD HH:MM> <시간대>` 줄이고, 쓰지 않은 창의 초기화 시각은 1970년이다.
 
-**바꾼 것(0.30.0).**
-- 계열을 셋으로(`tiers.md` "기본 배치"). 기본 배치와 명세 점검 기본값은 그대로이고, 프로젝트 설정 목록에 적은 프로젝트만 쓴다. 표기는 `antigravity[:모델][@강도]`다.
-- `check_tiers.py`: `antigravity`를 받는다. 모델은 `agy models` 출력에서, 강도는 low/medium/high/xhigh/max에서 본다. `agy`를 실행하지 못하면 "확인 못 함" 경고다.
-- 명세 점검과 2차 의견: `agy -p ... --mode plan --sandbox --output-format json`으로 메인 저장소에서 묻는다(`spec-check.md` "누구에게" 3). `--dangerously-skip-permissions`는 쓰지 않는다.
-- 한도(`limits.md` "Antigravity"): 재지 않고, 한도 오류가 나면 `state.md`에 적어 그 지휘에서 건너뛴다. 로그인 오류는 `실패`로 넘기고 알린다.
+**바꾼 것(0.30.0).** 사용자 결정: Claude·Codex와 같은 주 계열로(설정 카드, 2026-11-26).
+- 계열을 셋으로(`tiers.md` "기본 배치"). 기본 배치의 구현 목록은 `codex` → `antigravity` → `claude`(강도는 등급대로), 검토 목록은 끝에 `antigravity`, `UI` 검토 목록은 `codex` → `antigravity` → `claude`다. `UI` 구현은 Claude 고정 그대로다. `agy`가 없거나 로그인이 없으면 어느 목록에서든 건너뛴다. 명세 점검 기본값은 `claude` 그대로다.
+- `check_tiers.py`: `antigravity`를 받는다. 모델은 `agy models` 출력에서, 강도는 low/medium/high/xhigh/max에서 본다.
+- 한도: `check-limits/scripts/agy_limit.py`가 `agy -p /usage`의 보고를 읽어 `Gemini Models` 그룹으로 `ok`/`warning`/`exhausted`/`unknown`을 낸다(`--input`으로 저장한 보고를 읽어 시험한다). 지휘(`limits.md` "Antigravity")는 `exhausted`면 건너뛰고, `unknown`이어도 지휘 전제로 막지 않고 Antigravity만 건너뛴다. 한도 오류 기록과 로그인 오류 처리도 둔다. 대체 모드에서 Antigravity가 Codex·Claude의 빈 몫을 목록 순서대로 받는다.
+- 명세 점검과 2차 의견: `agy -p ... --mode plan --sandbox --output-format json`(`spec-check.md` "누구에게" 3). 2차 의견은 검토 대상 worktree에서 돌린다(PR 58 리뷰). `--dangerously-skip-permissions`는 쓰지 않는다.
 - 띄우기(`backends/orca.md`): `--agent antigravity --model --effort`. 첫 실행에서 Orca가 턴을 보는지 확인한다.
-- 설정 창(`setup.md`): `agy`가 있으면 Antigravity를 넣은 묶음을 선택지로 더하고, 전제 확인에서 `agy models`를 본다.
+- 맡기기(`delegate.md` "배치"): 프로젝트 설정 "맡기기 배치"로 구현자와 검토자 목록을 고른다. 기본은 구현자 `claude:opus`, 검토자 `codex` → `antigravity` → `claude`. 검토자는 구현자와 다른 계열이고 쓸 수 있는 첫 항목이다. 첫 검토 전에 검토자를 쓸 수 없으면 목록의 다음 다른 계열로 바꾼다. 명세 양식의 "Codex"·"Claude"를 자리표시로 바꿨다. 설정 창(`setup.md`)에 "맡기기 배치" 창과 양식 절을 더했다.
+- 설정 창: `agy`가 없으면 추천 묶음에서 Antigravity를 빼고, 있으면 뺀 묶음을 넷째 선택지로 낸다. 전제 확인은 `agy models`와 Antigravity 한도를 알리기만 한다.
 - 계약 `vstack-contract@7`: 역할 자격과 작업자 계약의 계열에 `antigravity`, manifest `executor`에 `antigravity`. 판정식(G1~G5)은 그대로다. 레시피 일곱의 버전을 올리고 머리말을 `@7`로 바꿨다. 계약 예시는 `@7`로 다시 판정했다(예시의 작업자가 모두 `codex`·`claude`라 판정은 같다).
-- 용어집에 "계열"을 더했다. ADR 0012에 바뀐 사실을 적었다.
+- 용어집에 "계열"을 더했다. ADR 0009·0012에 바뀐 사실을 적었다.
 
-**바꾸지 않은 것.** 맡기기(Claude 구현자, Codex 검토자), `UI` 줄의 Claude 구현 고정, Codex fast.
+**바꾸지 않은 것.** `UI` 구현의 Claude 고정, Codex fast(Antigravity에 같은 것이 없다), 명세 점검 기본값. 그림(`docs/images/*.svg`)은 기본 배치를 그린 것이라 그대로 두었다.
+
+**돌려 보지 않았다.** Antigravity 작업자(지휘·맡기기), `agy -p --mode plan --sandbox`의 읽기 전용 동작, Orca의 턴 관측, 실제 `agy -p /usage` 실행(붙여 받은 출력으로만 확인).
 
 **ADR.** [ADR 0017](adr/0017-antigravity-family.md).
 
@@ -748,4 +751,4 @@ pstack `shipping`(`playbooks/shipping.md:5~8`)의 "검토 결과는 실제 패�
 - 지휘의 병합 위치(플러그인 0.29.0, 26절, ADR 0016, 계약 `vstack-contract@6`): 프로젝트 설정 "병합" 절에 병합 위치(`원격` 기본 / `로컬`)를 더했다. `로컬`이면 기본 브랜치가 아닌 기준 브랜치에 이슈를 관리자가 로컬로 병합하고(병합 관문 G1~G5는 그대로, 대상은 로컬에서 읽고 병합 커밋의 부모와 트리로 확인), 원격은 8단계에서만 쓴다. 로컬 기준 브랜치 확인은 기록된 병합과 견주고, 지휘 중 맡기기의 로컬 병합을 허용한다.
 - README를 지금 상태로(문서만, 플러그인 0.29.0 그대로, 26절 끝): 상태 줄, 기준 브랜치와 함께 진행, "기능 브랜치에서 지휘하기" 절(병합 위치 `로컬` 설정 예시와 순서), 그림의 계약 번호와 병합 방법 표기. 동작과 계약은 그대로다(`vstack-contract@6`).
 - 문서를 읽는 사람별로 나눔(문서만, 플러그인 0.29.0 그대로, 26절 끝): README를 소개·설치·처음 쓰기·세 갈래·문서 안내로 줄이고, 사용 안내를 `docs/guide/`에, 구성·검사·관례를 `CONTRIBUTING.md`에 두었다. 동작과 계약은 그대로다(`vstack-contract@6`).
-- 지휘의 셋째 계열 Antigravity(플러그인 0.30.0, 27절, ADR 0017, 계약 `vstack-contract@7`): 작업자 계열에 `antigravity`(Antigravity CLI로 Gemini 모델)를 더했다. 기본 배치에는 넣지 않고 프로젝트 설정 목록에 적은 프로젝트만 쓴다. Orca `--agent antigravity`로 띄우고, 명세 점검·2차 의견은 `agy -p --mode plan --sandbox`, 한도는 재지 않고 한도 오류를 기록해 건너뛴다. `check_tiers.py`가 `agy models`로 모델을 본다. 맡기기는 그대로다.
+- 셋째 계열 Antigravity(플러그인 0.30.0, 27절, ADR 0017, 계약 `vstack-contract@7`): 작업자 계열에 `antigravity`(Antigravity CLI로 Gemini 모델)를 더했다. 기본 배치의 구현 목록 Claude 앞·검토 목록 Codex 뒤에 두고 `agy`가 없으면 건너뛴다. Orca `--agent antigravity`로 띄우고, 명세 점검·2차 의견은 `agy -p --mode plan --sandbox`, 한도는 `agy_limit.py`가 `agy -p /usage`로 잰다. 맡기기의 구현자·검토자를 "맡기기 배치"로 고른다(기본 Claude 구현자, Codex 검토자).

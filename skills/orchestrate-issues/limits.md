@@ -8,7 +8,7 @@
 - 새 작업을 맡기기 직전
 - 모드를 바꾸거나 되돌리기 직전
 - 메모리나 기록에 "한도 소진"이 있을 때
-- 둘 다 사용량이 들지 않으므로 깨어날 때마다 봐도 된다. 단, Codex 측정이 `codex exec`로 넘어간 동안(`source`가 `exec`)은 직전 측정이 30분 넘게 지났을 때만 다시 잰다.
+- Codex와 Claude는 사용량이 들지 않으므로 깨어날 때마다 봐도 된다. Antigravity는 `agy -p /usage`가 사용량을 쓰는지 모르므로 지휘를 시작할 때와 Antigravity에게 새 작업을 맡기기 직전에만 잰다. 단, Codex 측정이 `codex exec`로 넘어간 동안(`source`가 `exec`)은 직전 측정이 30분 넘게 지났을 때만 다시 잰다.
 
 ## 판정에 따른 처리
 
@@ -37,12 +37,14 @@ Claude 구현의 몫을 Codex가 맡는다(목록에 Antigravity가 있으면 �
 
 ## Antigravity
 
-Antigravity는 사용량을 잴 방법이 없어 [check-limits](../check-limits/SKILL.md)가 재지 않는다. 그래서 판정은 측정이 아니라 기록으로 정한다.
+Antigravity도 [check-limits](../check-limits/SKILL.md)의 `agy_limit.py`로 재고, 판정에 따른 처리는 위 "판정에 따른 처리"와 같다. 다른 점만 적는다.
 
-- 프로젝트 설정의 목록에 `antigravity`가 있으면, 이 지휘에서 아래 기록이 없는 동안 `ok`로 본다. 위 "판정에 따른 처리"의 `unknown`(새 작업을 맡기지 않음)을 따르지 않는다.
-- 작업자나 `agy -p`가 한도·할당량 오류로 끝나면 `state.md`에 `Antigravity exhausted(<시각>, <오류 한 줄>)`를 적고 사용자에게 알린다. 그 뒤로 이 지휘에서는 `exhausted`로 보고 목록에서 건너뛴다. 오류에 초기화 시각이 있으면 그 시각 뒤에, 없으면 사용자가 돌아왔다고 알릴 때 기록을 지우고 `ok`로 돌린다.
-- 로그인 오류(`authentication required`)는 한도가 아니다. 그 작업자를 `실패`로 넘기고(`tiers.md` "맡김 기록"), 사용자에게 `agy`를 한 번 대화형으로 실행해 로그인하라고 알린다. 로그인했다는 답을 받기 전에는 `exhausted`처럼 건너뛴다.
-- Antigravity가 건너뛰어져도 대체 모드는 따로 없다. 목록에서 빠질 뿐이고, 다른 계열의 규칙은 위 절들을 따른다. Antigravity가 구현한 일의 검토는 `codex`나 `claude`가 다른 계열이다.
+- `agy`가 없는 컴퓨터에서는 재지 않고, 목록의 `antigravity` 항목을 건너뛴다([tiers.md](tiers.md) "고르기" 1). 알림은 지휘를 시작할 때 한 번만 한다.
+- `warning`이면 사용률과 초기화 시각을 알리고 그대로 쓴다. 절약 모드는 따로 없다.
+- `exhausted`면 목록에서 건너뛴다. Antigravity의 몫은 목록의 다음 항목이 맡는다. 검토에서 다른 계열이 남지 않으면 위 "대체 모드"의 같은 계열 규칙(새 작업자, 2차 의견 필수)을 따른다.
+- `unknown`인데 `agy`는 있다(보고 형식이 바뀜 등): 사용자에게 알리고 `antigravity` 항목을 건너뛴다.
+- 재지 못한 동안이나 잰 뒤에도 작업자나 `agy -p`가 한도·할당량 오류로 끝나면 `state.md`에 `Antigravity exhausted(<시각>, <오류 한 줄>)`를 적고 사용자에게 알린다. 다음 측정이 `ok`나 `warning`이면 그 기록을 지운다.
+- 로그인 오류(`authentication required`)는 한도가 아니다. 그 작업자를 `실패`로 넘기고(`tiers.md` "맡김 기록"), 사용자에게 `agy`를 한 번 대화형으로 실행해 로그인하라고 알린다. 로그인했다는 답을 받기 전에는 건너뛴다.
 
 ## 둘 다 `exhausted`
 

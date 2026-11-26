@@ -20,10 +20,10 @@
 
 | 등급 | 구현 목록(앞부터) | 검토 목록(앞부터) |
 | --- | --- | --- |
-| `light` | `codex@medium` → `claude` | `관리자` → `claude` → `codex` |
-| `standard` | `codex@medium` → `claude` | `claude` → `codex` |
-| `hard` | `codex@high` → `claude@high` | `claude` → `codex` |
-| `UI` | `claude`(고정) | `codex` → `claude` |
+| `light` | `codex@medium` → `antigravity@medium` → `claude` | `관리자` → `claude` → `codex` → `antigravity` |
+| `standard` | `codex@medium` → `antigravity@medium` → `claude` | `claude` → `codex` → `antigravity` |
+| `hard` | `codex@high` → `antigravity@high` → `claude@high` | `claude` → `codex` → `antigravity` |
+| `UI` | `claude`(고정) | `codex` → `antigravity` → `claude` |
 | `max` | 관리자 | 사용자 |
 
 - 2차 의견: 같은 계열 검토일 때만(아래 "2차 의견")
@@ -32,7 +32,7 @@
 
 - Codex 표기 끝의 `+fast`는 fast로 띄웠다는 뜻이다(예: `codex@high+fast`). 표에는 적지 않는다. 관리자가 띄울 때마다 [codex-fast.md](codex-fast.md)의 기준으로 정하고 기록에만 붙인다.
 
-- **계열**은 `codex`, `claude`, `antigravity` 셋이다. `antigravity`는 Antigravity CLI(`agy`)로 Gemini 모델을 쓰는 작업자다. 기본 배치에는 넣지 않았고, 프로젝트 설정의 목록에 적었을 때만 쓴다([ADR 0017](../../docs/adr/0017-antigravity-family.md)). 한도는 재지 않는다([limits.md](limits.md) "Antigravity"). 0.24.0 전에 만든 프로젝트 설정에 `opencode` 항목이 남아 있으면 어느 목록(구현, 검토, 명세 점검)에서든 건너뛰고, 처음 읽을 때 한 번 "설정에 뺀 계열 `opencode`가 남아 있다. `/vstack:configure`로 고칠 수 있다"고 알린다. 건너뛴 뒤 목록이 비면 그 목록이 다 막혔을 때의 규칙(아래 "고르기" 2, "검토자 고르기" 3, [spec-check.md](spec-check.md)의 마지막 `claude`)을 따른다. `관리자`는 Claude가 하므로 `claude` 계열로 본다.
+- **계열**은 `codex`, `claude`, `antigravity` 셋이다. `antigravity`는 Antigravity CLI(`agy`)로 Gemini 모델을 쓰는 작업자다. 기본 배치의 구현 목록에서 Claude 앞, 검토 목록에서 Codex 뒤에 있다. `agy`가 없거나 로그인이 없는 컴퓨터에서는 어느 목록에서든 건너뛴다(아래 "고르기" 1)([ADR 0017](../../docs/adr/0017-antigravity-family.md)). 한도는 [limits.md](limits.md) "Antigravity"를 따른다. 0.24.0 전에 만든 프로젝트 설정에 `opencode` 항목이 남아 있으면 어느 목록(구현, 검토, 명세 점검)에서든 건너뛰고, 처음 읽을 때 한 번 "설정에 뺀 계열 `opencode`가 남아 있다. `/vstack:configure`로 고칠 수 있다"고 알린다. 건너뛴 뒤 목록이 비면 그 목록이 다 막혔을 때의 규칙(아래 "고르기" 2, "검토자 고르기" 3, [spec-check.md](spec-check.md)의 마지막 `claude`)을 따른다. `관리자`는 Claude가 하므로 `claude` 계열로 본다.
 - `UI` 줄의 구현은 Claude로 고정이다. 검토 목록만 바꿀 수 있다.
 - **2차 의견**은 프로젝트 설정 표 아래 줄에서 `같은 계열 검토일 때만` / `standard 이상` / `모든 검토` 중 하나로 정한다. 없으면 `같은 계열 검토일 때만`이다.
 
