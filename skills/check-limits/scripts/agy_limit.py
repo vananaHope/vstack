@@ -18,8 +18,12 @@ import sys
 WARN_PERCENT = 80.0
 DEFAULT_GROUP = 'Gemini Models'
 WINDOWS = {'Five Hour': ('five_hour', 5 * 60), 'Weekly': ('weekly', 7 * 24 * 60)}
-LINE = re.compile(r'^\s*(?P<group>\S.*?)\s{2,}(?P<kind>Weekly|Five Hour) Limit Remaining\s+'
-                  r'(?P<remaining>\d+(?:\.\d+)?)%\s+(?P<reset>\d{4}-\d{2}-\d{2} \d{2}:\d{2})', re.MULTILINE)
+# 칸 사이는 공백 여럿이나 탭이다. 초기화 시각은 `2026-12-03 16:23 KST`(지역 시각) 또는
+# `2026-12-03T07:23:57Z`(ISO, UTC) 두 형식을 보았다(2026-11-26, 같은 사용자의 두 실행).
+LINE = re.compile(r'^[ \t]*(?P<group>\S.*?)[ \t]+(?P<kind>Weekly|Five Hour) Limit Remaining[ \t]+'
+                  r'(?P<remaining>\d+(?:\.\d+)?)%[ \t]+'
+                  r'(?P<reset>\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)',
+                  re.MULTILINE)
 RELOGIN = '`agy`를 한 번 대화형으로 실행해 로그인하세요'
 
 
@@ -40,6 +44,14 @@ def run_usage():
     return done.stdout, None
 
 
+def parse_reset(text):
+    """초기화 시각을 지역 시각의 naive datetime으로. 시간대가 붙은 ISO는 지역 시각으로 바꾼다."""
+    value = datetime.datetime.fromisoformat(text.replace('Z', '+00:00').replace(' ', 'T', 1))
+    if value.tzinfo is not None:
+        value = value.astimezone().replace(tzinfo=None)
+    return value
+
+
 def parse(text, group):
     """그룹의 창 목록. 그 그룹의 줄이 하나도 없으면 None."""
     windows, seen = [], False
@@ -48,14 +60,14 @@ def parse(text, group):
             continue
         seen = True
         name, minutes = WINDOWS[match['kind']]
-        reset = datetime.datetime.strptime(match['reset'], '%Y-%m-%d %H:%M')
+        reset = parse_reset(match['reset'])
         if reset.year <= 1970:
             continue
         windows.append({
             'name': name,
             'used_percent': round(100.0 - float(match['remaining']), 1),
             'window_minutes': minutes,
-            'resets_at': match['reset'],
+            'resets_at': reset.strftime('%Y-%m-%d %H:%M'),
         })
     return windows if seen else None
 
