@@ -28,15 +28,15 @@
 
 - 2차 의견: 같은 계열 검토일 때만(아래 "2차 의견")
 
-표기는 `에이전트[:모델][@강도]`다. 모델을 빼면 그 에이전트의 기본 모델, 강도를 빼면 기본 강도다. 예: `codex@medium`, `claude:opus@high`, `codex:gpt-6-astra@high`. 검토 목록에는 `관리자`(관리자가 diff를 직접 확인)도 쓸 수 있다.
+표기는 `에이전트[:모델][@강도]`다. 모델을 빼면 그 에이전트의 기본 모델, 강도를 빼면 기본 강도다. 예: `codex@medium`, `claude:opus@high`, `codex:gpt-6-astra@high`, `antigravity:gemini-3.1-pro-high@high`. 검토 목록에는 `관리자`(관리자가 diff를 직접 확인)도 쓸 수 있다.
 
 - Codex 표기 끝의 `+fast`는 fast로 띄웠다는 뜻이다(예: `codex@high+fast`). 표에는 적지 않는다. 관리자가 띄울 때마다 [codex-fast.md](codex-fast.md)의 기준으로 정하고 기록에만 붙인다.
 
-- **계열**은 `codex`, `claude` 둘이다. 0.24.0 전에 만든 프로젝트 설정에 `opencode` 항목이 남아 있으면 어느 목록(구현, 검토, 명세 점검)에서든 건너뛰고, 처음 읽을 때 한 번 "설정에 뺀 계열 `opencode`가 남아 있다. `/vstack:configure`로 고칠 수 있다"고 알린다. 건너뛴 뒤 목록이 비면 그 목록이 다 막혔을 때의 규칙(아래 "고르기" 2, "검토자 고르기" 3, [spec-check.md](spec-check.md)의 마지막 `claude`)을 따른다. `관리자`는 Claude가 하므로 `claude` 계열로 본다.
+- **계열**은 `codex`, `claude`, `antigravity` 셋이다. `antigravity`는 Antigravity CLI(`agy`)로 Gemini 모델을 쓰는 작업자다. 기본 배치에는 넣지 않았고, 프로젝트 설정의 목록에 적었을 때만 쓴다([ADR 0017](../../docs/adr/0017-antigravity-family.md)). 한도는 재지 않는다([limits.md](limits.md) "Antigravity"). 0.24.0 전에 만든 프로젝트 설정에 `opencode` 항목이 남아 있으면 어느 목록(구현, 검토, 명세 점검)에서든 건너뛰고, 처음 읽을 때 한 번 "설정에 뺀 계열 `opencode`가 남아 있다. `/vstack:configure`로 고칠 수 있다"고 알린다. 건너뛴 뒤 목록이 비면 그 목록이 다 막혔을 때의 규칙(아래 "고르기" 2, "검토자 고르기" 3, [spec-check.md](spec-check.md)의 마지막 `claude`)을 따른다. `관리자`는 Claude가 하므로 `claude` 계열로 본다.
 - `UI` 줄의 구현은 Claude로 고정이다. 검토 목록만 바꿀 수 있다.
 - **2차 의견**은 프로젝트 설정 표 아래 줄에서 `같은 계열 검토일 때만` / `standard 이상` / `모든 검토` 중 하나로 정한다. 없으면 `같은 계열 검토일 때만`이다.
 
-- 모델과 강도 값은 에이전트·모델마다 다르고 도구가 업데이트되면 바뀐다. 없는 값을 쓰면 시작이 실패한다. 표기를 새로 쓰거나 고칠 때는 `python -I <스킬 폴더>/scripts/check_tiers.py <표기...>`로 본다. 이 스크립트는 각 도구가 스스로 갱신하는 목록(Codex `$CODEX_HOME/models_cache.json`(없으면 `~/.codex`))을 읽는다.
+- 모델과 강도 값은 에이전트·모델마다 다르고 도구가 업데이트되면 바뀐다. 없는 값을 쓰면 시작이 실패한다. 표기를 새로 쓰거나 고칠 때는 `python -I <스킬 폴더>/scripts/check_tiers.py <표기...>`로 본다. 이 스크립트는 각 도구가 스스로 갱신하는 목록(Codex `$CODEX_HOME/models_cache.json`(없으면 `~/.codex`), Antigravity `agy models`)을 읽는다.
 
 ## 고르기
 
@@ -66,7 +66,7 @@
 주 검토와 따로, 같은 diff를 맥락 없는 새 세션에 보여 2차 의견을 받는다. 검토 보고서의 지적과 함께 판정한다.
 
 - **언제**: 같은 계열끼리 검토할 때는 항상(위 "검토자 고르기" 2). 그 밖에는 프로젝트 설정의 2차 의견 값(`standard 이상` / `모든 검토`)을 따른다. 관리자 확인과 rebase 작업 자체에는 받지 않는다. rebase 뒤에 맡기는 rev `review` 시도가 같은 계열이면 그 검토에는 받는다(계약의 같은 계열 조건).
-- **누구에게**: 주 검토자와 다른 계열이고 한도가 `ok`이면 그 계열에 묻는다. Claude면 관리자가 띄우는 읽기 전용 서브에이전트, Codex면 `codex exec -s read-only`다. 같은 계열 검토라 다른 계열을 쓸 수 없으면, 같은 계열이되 주 검토자와 **다른 모델**의 새 세션에 묻는다(예: 주 검토가 `claude:opus`면 `claude:sonnet`, `codex:gpt-6-astra`면 `codex:gpt-6.1-sol`). Claude가 `warning`이라 주 검토가 `claude:sonnet`이면 2차 의견은 `claude:haiku`다. 어느 쪽도 한도가 `ok`가 아니면 2차 의견 없이 검토하지 않고 위 "검토자 고르기" 3대로 기다린다.
+- **누구에게**: 주 검토자와 다른 계열이고 한도가 `ok`이면 그 계열에 묻는다. Claude면 관리자가 띄우는 읽기 전용 서브에이전트, Codex면 `codex exec -s read-only`, Antigravity면 [spec-check.md](spec-check.md) "누구에게" 3의 `agy -p` 읽기 전용 실행이다. 같은 계열 검토라 다른 계열을 쓸 수 없으면, 같은 계열이되 주 검토자와 **다른 모델**의 새 세션에 묻는다(예: 주 검토가 `claude:opus`면 `claude:sonnet`, `codex:gpt-6-astra`면 `codex:gpt-6.1-sol`, `antigravity:gemini-3.1-pro-high`면 `antigravity:gemini-3.8-flash-high`). Claude가 `warning`이라 주 검토가 `claude:sonnet`이면 2차 의견은 `claude:haiku`다. 어느 쪽도 한도가 `ok`가 아니면 2차 의견 없이 검토하지 않고 위 "검토자 고르기" 3대로 기다린다.
 - **묻는 내용**: diff 범위(`<기준 브랜치>..HEAD`), 이슈의 완료 기준, `common-findings.md`의 절대 경로를 주고, 유형별로 해당하는 결함이 있는지 파일·줄 근거와 함께 답하게 한다. 파일 수정, 테스트 실행, git 쓰기는 하지 않게 한다.
 - **쓰는 법**: 2차 의견의 지적은 관리자가 근거를 직접 확인한 것만 판정에 넣는다. 주 검토 보고서와 겹치지 않는 지적이 있으면 보고서 옆에 `second-opinion-<k>.md`로 남긴다. 누구에게 물었는지(표기)를 `state.md`에 적는다.
 
@@ -79,7 +79,7 @@ vstack 첫 버전에서 관리자 확인은 **검토 결론이 아니다**. 사�
 
 ## 띄우기
 
-구현자, 검토자, 지적 수정, rebase 작업자 모두 같은 방법으로 띄운다. 2차 의견은 작업자가 아니므로 위 "2차 의견"의 방법(서브에이전트 또는 `codex exec -s read-only`)으로 묻는다. 명령은 실행 환경 문서의 "띄우기"에 있다([SKILL.md](SKILL.md) "실행 환경").
+구현자, 검토자, 지적 수정, rebase 작업자 모두 같은 방법으로 띄운다. 2차 의견은 작업자가 아니므로 위 "2차 의견"의 방법(서브에이전트, `codex exec -s read-only`, `agy -p`)으로 묻는다. 명령은 실행 환경 문서의 "띄우기"에 있다([SKILL.md](SKILL.md) "실행 환경").
 
 - **모델·강도**: 표기(`에이전트[:모델][@강도]`)대로 준다. 강도만 정했으면 모델은 그 에이전트 설정의 기본 모델이다. 둘 다 없으면 그 에이전트의 기본값으로 띄운다.
 - **Codex fast**: Codex는 **띄울 때마다** fast를 켤지 정한다([codex-fast.md](codex-fast.md)). 껐어도 정한 결과를 `state.md`에 적는다. `state.md`에 fast 기록이 없으면 이 단계를 빠뜨린 것이다. 띄우는 절차를 스크립트나 반복문으로 만들어 쓰고 있으면 거기에도 이 단계를 넣는다.

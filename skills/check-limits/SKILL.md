@@ -21,6 +21,8 @@ description: Codex·Claude 사용 한도를 실제 사용률(창별 %·초기화
   - 창은 `five_hour`와 `seven_day`이고, 창마다 `elapsed_percent`(창이 지난 비율)도 낸다. 아직 열리지 않은 창(쓴 적이 없는 5시간 창 등)은 결과에 없다.
   - 사용량이 들지 않는다. 자주 부르면 API가 막으므로(HTTP 429) 결과를 1분 동안 보관했다가 다시 쓴다(`source`가 `cache`). 조회가 실패하면 10분 안의 보관 결과를 쓰고 실패 이유를 `api_error`에 적는다. 그 밖에는 `source`가 `usage-api`다.
 
+- **Antigravity**: 재지 않는다. 사용량을 읽을 방법이 없다. 지휘는 한도 오류 기록으로 판정한다(`orchestrate-issues/limits.md` "Antigravity"). 사용자가 Antigravity 한도를 물으면 잴 수 없다고 답한다.
+
 ## 판정
 
 스크립트가 내는 `status`를 그대로 쓴다.

@@ -19,7 +19,7 @@ vstack 자체를 고치는 사람을 위한 문서다. vstack을 쓰는 방법�
 .claude-plugin/          플러그인·마켓플레이스 정의
 skills/v-mode/
   SKILL.md               라우터(고정 규칙, 갈래 고르기, 후보 원칙)
-  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@6)
+  contracts/             관리자와 작업자가 지키는 계약(vstack-contract@7)
   recipes/               레시피 형식과 레시피(bug-fix, feature, refactoring, ui-polish, investigation, correct, perf)
                          ui-polish는 맡기기 갈래에서만 쓴다. scripts/image_diff.py는 PNG 비교
   delegate*.md           한 단위의 일을 작업자에게 맡기는 절차와 명세 양식(구현, 검토)

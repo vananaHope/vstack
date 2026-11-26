@@ -53,7 +53,7 @@
 6. **명세 채우기**: [task-template.md](task-template.md) 또는 [review-template.md](review-template.md)의 "vstack 계약" 절을 채운다. 증거 폴더는 `<worktree>/.vstack/evidence/<작업 이름>/<시도 ID>/`, scratch는 `<worktree>/.vstack/scratch/<시도 ID>/`.
 7. **띄우기**: 바로 전에 archive.md "준비" 5(띄우기 직전 `HEAD`·status 기록)를 한다. 그다음 `--worktree path:<worktree 경로>`. 결과의 `dispatchId`, `terminal`(세션)을 시도 표에 적는다.
 
-`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@6 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
+`state.md`는 state-and-rollback.md "state.md 형식"으로 쓴다(셋째 줄 `workflow: vstack · contract: vstack-contract@7 · recipe: <id>@<버전> · 소유: vstack`, 수용 기준·시도·관문 절).
 
 ## 완료 보고를 받으면
 

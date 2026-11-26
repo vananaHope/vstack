@@ -42,7 +42,8 @@ SKILL.md의 동작([SKILL.md](../SKILL.md) "실행 환경")을 Orca에서 하는
 
 에이전트별 모델·강도:
 
-- **Claude·Codex**: `--model <모델> --effort <강도>`. `--effort`는 `--model`이 있어야 한다. 강도만 정했으면 모델은 그 에이전트 설정의 기본 모델을 적는다. 둘 다 없으면 두 옵션을 뺀다.
+- **Claude·Codex·Antigravity**: `--model <모델> --effort <강도>`. Antigravity는 `--agent antigravity`이고 모델은 `agy models`가 보여 주는 이름(예: `gemini-3.1-pro-high`)이다. `--effort`는 `--model`이 있어야 한다. 강도만 정했으면 모델은 그 에이전트 설정의 기본 모델을 적는다. 둘 다 없으면 두 옵션을 뺀다.
+- **Antigravity**: Orca는 로컬 worktree에서만 Antigravity 작업자의 신뢰 설정을 미리 해 준다. SSH 원격 worktree에는 띄우지 않는다. `agy`가 로그인돼 있어야 한다(한 번 대화형으로 실행). 이 길은 아직 돌려 보지 않았다. 처음 띄울 때 Orca가 턴의 시작과 끝을 보는지(아래 "기다리기")를 확인하고 `state.md`에 적는다. 보지 못하면 그 작업자를 `실패`로 넘기고 사용자에게 알린다.
 - **Codex fast**: `worker-start`에는 Codex 설정을 넘길 옵션이 없다. 아래 "Codex fast"대로 worktree의 Codex 설정으로 준다.
 
 `worker-start`가 실패하면 같은 명령을 다시 돌리지 않는다. 결과의 `failedStage`를 보고 `orca skills get orchestration --reference references/recovery-and-cleanup.md`를 따른다.

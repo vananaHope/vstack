@@ -63,16 +63,19 @@
 4. **등급별 배치**([tiers.md](tiers.md)): 질문 3개. `light`·`standard`·`hard` 구현 목록을 하나씩 묻는다. `max`는 관리자 몫이라 묻지 않는다.
    - 선택지는 목록 묶음이다. 첫 선택지는 [tiers.md](tiers.md)의 기본 배치에 "(추천)"을 붙인다. 나머지는 강도를 한 단계 올리거나 내린 묶음, 순서를 바꾼 묶음으로 채운다. 예: `light`면 "codex@medium → claude (추천)", "codex@low → claude", "claude → codex@medium".
    - 설명에 지금 기본 모델을 적는다: Codex는 `$CODEX_HOME/config.toml`(없으면 `~/.codex/config.toml`. Orca는 계정마다 `CODEX_HOME`을 따로 둔다)의 `model`·`model_reasoning_effort`.
-   - 다른 모델이나 강도는 "Other"로 `에이전트[:모델][@강도]` 표기를 받는다.
+   - `agy` 명령이 있으면 넷째 선택지로 기본 배치 앞에 Antigravity를 둔 묶음을 더한다. 예: `light`면 "antigravity → codex@medium → claude". 설명에 `agy models`가 보여 주는 기본 모델을 적는다. `agy`가 없으면 이 선택지를 내지 않는다.
+   - 다른 모델이나 강도는 "Other"로 `에이전트[:모델][@강도]` 표기를 받는다. 에이전트는 `codex`, `claude`, `antigravity`다.
    - 답을 받으면 세 목록의 표기를 모두 `python -I <스킬 폴더>/scripts/check_tiers.py <표기...>`로 본다. 경고가 나오면 막지 않고, 경고와 가까운 이름을 질문에 적어 그 등급만 다시 묻는다. 첫 선택지는 가까운 이름으로 고친 표기 "(추천)", 둘째는 입력한 그대로다.
 5. **검토 배치**([tiers.md](tiers.md) "검토자 고르기"): 질문 4개. `light`·`standard`·`hard` 검토 목록을 하나씩 묻고, 마지막으로 2차 의견을 묻는다. `UI` 검토 목록은 "UI 작업" 절이 있을 때만 묻고, 그때는 질문이 5개가 되므로 2차 의견을 다음 창으로 넘긴다.
    - 첫 선택지는 [tiers.md](tiers.md)의 기본 검토 목록에 "(추천)"을 붙인다. 나머지는 Codex를 앞에 둔 묶음(Claude 몫을 줄임), 강도를 한 단계 올린 묶음으로 채운다. 예: `standard`면 "claude → codex (추천)", "codex@high → claude", "claude@high → codex@high".
    - 설명에 바로 앞 창에서 고른 구현 목록을 적고, 구현자와 같은 계열은 건너뛴다는 규칙을 한 줄로 적는다.
+   - 앞 창의 구현 목록에 `antigravity`가 있거나 `agy` 명령이 있으면, Antigravity를 검토 목록 끝에 더한 묶음을 넷째 선택지로 낸다. 예: `standard`면 "claude → codex → antigravity".
    - 2차 의견 선택지: "같은 계열 검토일 때만 (추천)", "standard 이상", "모든 검토".
    - 답을 받으면 검토 목록 표기도 `check_tiers.py`로 본다(`관리자`는 통과).
 6. **명세 점검**([spec-check.md](spec-check.md)): 질문 2개. 점검자 목록 `codex[:모델][@강도]` → `claude[:모델][@강도]`의 두 항목을 하나씩 묻는다. 순서는 이대로이고, 바꾸려면 "Other"나 마지막 확인 창에서 목록을 직접 쓴다.
    - Codex 점검 모델: "쓰지 않음 (추천)"(기본값과 같다), "`codex@medium`", "`codex@low`". 설명에 `$CODEX_HOME/config.toml`(없으면 `~/.codex/config.toml`)의 `model`·`model_reasoning_effort`를 적는다. 다른 모델은 "Other"로 `모델[@강도]`(예: `gpt-6-astra@medium`)를 받는다. `codex` 명령이 없으면 이 질문을 빼고 "쓰지 않음"으로 둔다.
    - Claude 점검 모델(앞 점검자를 쓰지 않거나 못 쓸 때): "관리자와 같은 모델 (추천)", "sonnet", "haiku", "opus". 강도는 "Other"로 `모델@강도`(예: `sonnet@high`)를 받는다.
+   - Antigravity 점검자는 "Other"로 `antigravity[:모델][@강도]`를 받아 목록 맨 앞에 둔다. 표기는 `check_tiers.py`로 본다.
    - 답으로 목록을 만든다. 쓰지 않는 항목은 뺀다. 예: `codex@medium → claude:sonnet`, Codex를 쓰지 않으면 `claude:sonnet`. 모델을 설정·관리자 그대로 두면 모델을 뺀다(`claude`). Codex 표기는 `check_tiers.py`로 본다(4와 같이 처리).
 7. **명령**: 환경 준비 명령, 관련 테스트 명령, 추가 완료 조건. 찾은 명령(`package.json` scripts, `Makefile`, 설정 스크립트)을 선택지로 낸다.
 8. **작성 규칙**: 메시지 언어(최근 커밋 메시지·PR에서 찾은 언어를 추천), PR 서명 줄("🤖 Generated with Claude Code")을 넣을지. `AGENTS.md`에 이미 정해져 있으면 이 창은 건너뛴다.
@@ -157,7 +160,7 @@ vstack 플러그인의 맡기기와 지휘(`orchestrate-issues`)가 읽는 이 �
 
 ## 명세 점검 (선택)
 
-- 점검자(앞부터): <예: codex@medium → claude:sonnet. 쓸 수 있는 에이전트는 codex, claude. 모델을 빼면 Codex는 config.toml의 모델, Claude는 관리자와 같은 모델>
+- 점검자(앞부터): <예: codex@medium → claude:sonnet. 쓸 수 있는 에이전트는 codex, claude, antigravity. 모델을 빼면 Codex는 config.toml의 모델, Claude는 관리자와 같은 모델, Antigravity는 settings.json의 기본 모델>
 
 ## 추가 완료 조건
 
@@ -192,8 +195,8 @@ Settings for the vstack plugin (delegation and the `orchestrate-issues` skill). 
 
 - **Orca**: `orca orchestration run-current`가 답한다(Orca 안에서 실행 중). 맡기기와 지휘 모두 Orca가 있어야 한다(명령은 실행 환경 문서 [backends/orca.md](backends/orca.md)).
 - **GitHub**(지휘 전제): 코드 저장소가 GitHub(회사 GitHub Enterprise 포함)이면 `gh`가 그 호스트에 로그인돼 있다(`gh auth status`).
-- **작업자 도구**(지휘 전제): 실행 환경 문서([SKILL.md](SKILL.md) "실행 환경")가 요구하는 명령과 `codex` 명령이 있다. 맡기기는 `claude`, `codex`만 쓴다.
-- **한도**(지휘 전제): [check-limits](../check-limits/SKILL.md)로 잰 Codex와 Claude가 둘 다 `unknown`이 아니다. `unknown`이면 그 스킬이 알려 주는 원인을 사용자에게 전한다.
+- **작업자 도구**(지휘 전제): 실행 환경 문서([SKILL.md](SKILL.md) "실행 환경")가 요구하는 명령과 `codex` 명령이 있다. 맡기기는 `claude`, `codex`만 쓴다. 등급별 배치나 명세 점검에 `antigravity`가 있으면 `agy models`가 종료 코드 0으로 끝난다(명령이 있고 로그인돼 있다). 아니면 `agy`를 설치하고 한 번 대화형으로 실행해 로그인하라고 알린다.
+- **한도**(지휘 전제): [check-limits](../check-limits/SKILL.md)로 잰 Codex와 Claude가 둘 다 `unknown`이 아니다. `unknown`이면 그 스킬이 알려 주는 원인을 사용자에게 전한다. Antigravity는 재지 않는다([limits.md](limits.md) "Antigravity").
 - **작업 파일 무시**: `git check-ignore -q .local/x`가 0이다(`.local/vstack/`, `.local/vstack-delegate/`가 커밋되지 않는다). 아니면 3단계 "쓰기"의 첫 문단("`.local/`을 Git에서 뺀다")대로 하라고 알린다.
 - **mattpocock 설정**: `docs/agents/issue-tracker.md`가 있거나 `AGENTS.md`/`CLAUDE.md`에 `## Agent skills` 절이 있다. 없으면 지휘의 정렬 단계(`to-spec`, `to-tickets`)가 이슈 저장소를 모르므로, 사용자에게 `/mattpocock-skills:setup-matt-pocock-skills`를 실행하라고 안내한다. vstack이 그 일을 대신하지 않는다.
 - **검증 수단**: "테스트" 절의 명령(없으면 1단계에서 찾은 테스트 명령)이 저장소에 있다. 없으면 맡기기와 지휘의 수용 기준을 정하기 어렵다고 알린다(v-mode 고정 규칙 7이 그때 검증 수단부터 만든다).

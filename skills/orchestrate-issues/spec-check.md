@@ -10,7 +10,7 @@
 
 ## 누구에게
 
-점검자는 프로젝트 설정 "명세 점검" 절의 점검자 목록을 앞부터 쓴다. 절이 없으면 `claude`다. 표기는 [tiers.md](tiers.md)와 같은 `에이전트[:모델][@강도]`이고, 쓸 수 있는 에이전트는 `codex`, `claude` 둘이다. 앞 항목이 아래 1·2의 건너뛰는 조건에 걸리면 다음 항목을 쓴다. 0.24.0 전 설정에 남은 `opencode` 항목은 건너뛴다([tiers.md](tiers.md) "기본 배치"의 계열). 목록이 다 막히면 모델·강도를 정하지 않은 `claude`(2)로 한다.
+점검자는 프로젝트 설정 "명세 점검" 절의 점검자 목록을 앞부터 쓴다. 절이 없으면 `claude`다. 표기는 [tiers.md](tiers.md)와 같은 `에이전트[:모델][@강도]`이고, 쓸 수 있는 에이전트는 `codex`, `claude`, `antigravity` 셋이다. 앞 항목이 아래 1·2의 건너뛰는 조건에 걸리면 다음 항목을 쓴다. 0.24.0 전 설정에 남은 `opencode` 항목은 건너뛴다([tiers.md](tiers.md) "기본 배치"의 계열). 목록이 다 막히면 모델·강도를 정하지 않은 `claude`(2)로 한다.
 
 1. **`codex[:모델][@강도]`**: 읽기 전용 샌드박스로 메인 저장소에서 묻는다: `codex exec -s read-only -C <메인 저장소> [-m <모델>] [-c model_reasoning_effort='"<강도>"'] -o <출력 파일> "<질문>" < /dev/null`. 모델을 빼면 `$CODEX_HOME/config.toml`(없으면 `~/.codex/config.toml`)의 `model`, 강도를 빼면 그 파일의 `model_reasoning_effort`다. 출력 파일은 `.local/vstack/<작업 이름>/spec-check-answer.md`로 두고, 답은 이 파일에서 읽는다. fast는 켜지 않는다(작업자가 아니라 [codex-fast.md](codex-fast.md)를 따르지 않는다).
    - 셸 도구의 시간 제한은 10분 이상으로 둔다.
@@ -18,6 +18,10 @@
    - 건너뛰는 조건: Codex의 한도가 `ok`가 아니다([limits.md](limits.md)), `codex` 명령이 없다, 종료 코드가 0이 아니다(없는 모델 포함), 머리말의 모델이나 샌드박스가 다르다.
 2. **`claude[:모델][@강도]`**: Agent 도구로 새 서브에이전트를 띄워 같은 질문을 준다. 이 대화의 내용은 넣지 않는다. 표기의 모델은 Agent 도구의 `model`(`sonnet`, `opus`, `haiku`, `fable`)로, 강도는 `effort`(`low`~`max`)로 준다. 프로젝트 설정이 정한 값이라 그대로 넣는다. 빼면 그 값을 주지 않는다(관리자와 같은 모델, 기본 강도).
    - 건너뛰는 조건: Agent 도구가 그 모델 이름을 받지 않는다(그때는 사용자에게 알린다). 서브에이전트는 관리자 세션에서 돌므로 한도는 따로 보지 않는다.
+3. **`antigravity[:모델][@강도]`**: Antigravity CLI의 헤드리스 실행으로 메인 저장소에서 묻는다: `cd <메인 저장소> && agy -p "<질문>" --mode plan --sandbox [--model <모델>] [--effort <강도>] --output-format json > <출력 파일> < /dev/null`. `--mode plan`은 파일을 고치지 않는 계획 모드이고, `--sandbox`는 터미널 명령을 샌드박스 안에서만 돌린다. `--dangerously-skip-permissions`는 쓰지 않는다(파일 쓰기와 명령 실행을 모두 승인한다). 모델을 빼면 `~/.gemini/antigravity-cli/settings.json`의 기본 모델이다. 출력 파일은 `.local/vstack/<작업 이름>/spec-check-answer.json`으로 두고, 답은 그 JSON의 `response`에서 읽는다.
+   - 셸 도구의 시간 제한은 10분 이상으로 둔다.
+   - 답을 쓰기 전에 종료 코드 0, JSON의 `status`가 성공이고 `error`가 비었는지, `response`에 답이 있는지 본다. 없는 모델 이름은 종료 코드 1로 끝난다(다른 모델로 넘어가지 않는다). 표준 오류를 파이프로 버리지 않는다. 이 길은 아직 돌려 보지 않았다. 처음 쓸 때 걸린 시간과 확인한 값을 `spec-check.md`에 적는다.
+   - 건너뛰는 조건: Antigravity가 이 지휘에서 `exhausted`로 기록됐다([limits.md](limits.md) "Antigravity"), `agy` 명령이 없다, 로그인이 없다(`authentication required`), 종료 코드가 0이 아니다, 계획 모드나 샌드박스 옵션을 받지 않는다.
 
 ## 질문
 
